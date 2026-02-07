@@ -1,1 +1,0 @@
-# TradeCircle-Platform
