@@ -1,6 +1,6 @@
 import express from 'express';
 import { logReq, globalErr } from './middleware/middlewares.js';
-import db from './db/conn.js';
+import connectDB from './db/conn.js';
 // Route Imports
 import userRoutes from './routes/userRoutes.js';
 import authRoutes from './routes/authRoutes.js';
@@ -19,7 +19,7 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 // Connect to DB
-db();
+connectDB();
 
 // Middlewares
 app.use(express.json());
