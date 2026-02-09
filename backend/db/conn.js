@@ -1,23 +1,13 @@
-import { MongoClient } from "mongodb";
-import dotenv from "dotenv";
+import mongoose from "mongoose";
 
-dotenv.config();
-
-const connectionStr = process.env.MONGO_URI || "";
-
-const client = new MongoClient(connectionStr);
-
-let conn;
-
-try {
-  conn = await client.connect();
-
-  console.log(`MongoDB Connected...`);
-} catch (error) {
-  console.error(error);
-  process.exit(1);
-}
-
-let db = conn.db("trade_circle");
+const db = async () => {
+  try {
+    await mongoose.connect(process.env.MONGODB_URI);
+    console.log("MongoDB connected with Mongoose");
+  } catch (error) {
+    console.error("Database connection error:", error);
+    process.exit(1);
+  }
+};
 
 export default db;
