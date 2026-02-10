@@ -1,6 +1,6 @@
-import express from 'express';
 import User from '../models/User.js';
 import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
 
 // Registration
 export const userRegistration = async (req, res) => {
@@ -17,9 +17,15 @@ export const userRegistration = async (req, res) => {
             return res.status(400).json({ message: "Invalid email format" });
         }
 
-        const existingUser = await User.findOne({ email });
+        //Check email isn't already in use
+        const existingEmail = await User.findOne({ email });
+        if(existingEmail) {
+            return res.status(404).json({ message: "Email already taken" });
+        }
+
+        const existingUser = await User.findOne({ userName });
         if(existingUser) {
-            return res.status(404).json({ message: "User already exists" });
+            return res.status(404).json({ message: "Username already taken" });
         }
 
         //Validate password format
@@ -102,12 +108,25 @@ export const userLogout = async (req, res) => {
     }
 }
 
-export const passwordReset = async (req, res) => {
-    try {
-        const { email, password } = req.body;
+//Delete a user
+export const deleteUser = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { password } = req.body;
 
-        
-    } catch (error) {
-        res.status(500).json({ message: error.message });
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
     }
-}
+
+    const isCorrect = await bcrypt.compare(password, user.password);
+    if (!isCorrect) {
+      return res.status(401).json({ message: "Incorrect password" });
+    }
+
+    await User.findByIdAndDelete(userId);
+    res.status(200).json({ message: "User deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};

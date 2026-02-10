@@ -1,14 +1,19 @@
+import skillSchema from "./Skills.js";
+
 const mongoose = require("mongoose");
 
 const UserSchema = new mongoose.Schema({
     userName: {
         type: String,
         required: true,
+        unique: true,
+        index: true,
     },
     email: {
         type: String,
         required: true,
         unique: true,
+        index: true,
     },
     password: {
         type: String,
@@ -33,6 +38,11 @@ const UserSchema = new mongoose.Schema({
     totalTrades: {
         type: Number,
         default: 0,
+    },
+    skills: [skillSchema],  // Use skill schema as sub-schema
+    createdAt: {
+        type: Date,
+        default: Date.now,
     },
     createdAt: {
         type: Date,
