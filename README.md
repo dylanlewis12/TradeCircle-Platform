@@ -150,5 +150,5 @@ Tokens are issued upon successful login or registration and expire after 1 day.
 Created by Dylan Lewis
 
 Connect with me:
-* GitHub: [@dmikelewis12](https://github.com/dylanlewis12)
-* LinkedIn: [Dylan Lewis](https://linkedin.com/in/dylanlewis12)
+* GitHub: (https://github.com/dylanlewis12)
+* LinkedIn: (https://linkedin.com/in/dylanlewis12)
