@@ -1,5 +1,3 @@
-import skillSchema from "./Skills.js";
-
 const mongoose = require("mongoose");
 
 const UserSchema = new mongoose.Schema({
@@ -39,7 +37,6 @@ const UserSchema = new mongoose.Schema({
         type: Number,
         default: 0,
     },
-    skills: [skillSchema],  // Use skill schema as sub-schema
     createdAt: {
         type: Date,
         default: Date.now,

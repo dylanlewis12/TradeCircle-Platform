@@ -8,12 +8,12 @@ const router = express.Router();
 router.post("/register", userRegistration);
 
 //User logout route
-router.post("logout", userLogout);
+router.post("/logout", userLogout);
 
 //User login route
-router.post("login", userLogin);
+router.post("/login", userLogin);
 
 //Delete user route
-router.delete("delete-account", protect, deleteUser);
+router.delete("/delete-account", protect, deleteUser);
 
 export default router;
