@@ -63,41 +63,27 @@ The server will start on `http://localhost:3000`
 ```
 TradeCircle-Platform/
 ├── backend/
-│   ├── server.js                    # Express server entry point
+│   ├── server.js                   
 │   ├── package.json
-│   ├── .env                         # Environment variables
+│   ├── .env                       
 │   ├── models/
-│   │   ├── User.js                  # User schema
-│   │   ├── Skill.js                 # Skill schema
-│   │   ├── Trade.js                 # Trade schema
-│   │   ├── Review.js                # Review schema
-│   │   └── Message.js               # Message schema
+│   │   ├── User.js                  
+│   │   ├── Skill.js                
+│   │   ├── Trade.js                
 │   ├── controllers/
 │   │   ├── authController.js        # Authentication logic
 │   │   ├── userController.js        # User profile logic
-│   │   ├── skillController.js       # Skill listing logic
-│   │   ├── tradeController.js       # Trade request logic
-│   │   ├── reviewController.js      # Review logic
-│   │   └── communityController.js   # Community discovery logic
 │   ├── routes/
 │   │   ├── authRoutes.js            # Auth endpoints
 │   │   ├── userRoutes.js            # User endpoints
 │   │   ├── skillRoutes.js           # Skill endpoints
-│   │   ├── tradeRoutes.js           # Trade endpoints
-│   │   ├── reviewRoutes.js          # Review endpoints
-│   │   └── communityRoutes.js       # Community endpoints
 │   ├── middleware/
 │   │   └── authMiddleware.js        # JWT verification
+|   |   └── middlewares.js
 │   ├── db/
 │   │   └── conn.js                  # Database connection
 │   └── controllers/
 └── frontend/
-    ├── index.html
-    ├── styles/
-    │   └── style.css
-    ├── scripts/
-    │   └── script.js
-    └── pages/
 ```
 
 ## API Endpoints
@@ -113,27 +99,27 @@ TradeCircle-Platform/
 
 ### User Routes
 
-| Method | Route | Description | Authentication | CRUD |
-|--------|-------|-------------|-----------------|------|
-| GET | `/api/users/profile` | Get authenticated user's profile | Yes | READ |
-| PUT | `/api/users/profile` | Update authenticated user's profile | Yes | UPDATE |
-| PUT | `/api/users/profile-picture` | Update user's profile picture | Yes | UPDATE |
-| GET | `/api/users/:id` | Get another user's public profile | No | READ |
-| GET | `/api/users/:id/skills` | Get skills posted by user | No | READ |
-| GET | `/api/users/:id/reviews` | Get reviews for a user | No | READ |
+| Method | Route | Description | 
+|--------|-------|-------------|
+| GET | `/api/users/profile` | Get authenticated user's profile |
+| PUT | `/api/users/profile` | Update authenticated user's profile | 
+| PUT | `/api/users/profile-picture` | Update user's profile picture | 
+| GET | `/api/users/:id` | Get another user's public profile | 
+| GET | `/api/users/:id/skills` | Get skills posted by user | 
+| GET | `/api/users/:id/reviews` | Get reviews for a user |
 
 ### Skill Routes
 
-| Method | Route | Description | Authentication | CRUD |
-|--------|-------|-------------|-----------------|------|
-| POST | `/api/skills` | Create a new skill listing | Yes | CREATE |
-| GET | `/api/skills` | Get all active skill listings | No | READ |
-| GET | `/api/skills/search` | Search skills by name or category | No | READ |
-| GET | `/api/skills/category/:category` | Get skills by category | No | READ |
-| GET | `/api/skills/:id` | Get details of a specific skill | No | READ |
-| PUT | `/api/skills/:id` | Update a skill listing | Yes | UPDATE |
-| DELETE | `/api/skills/:id` | Delete a skill listing | Yes | DELETE |
-| GET | `/api/skills/trending` | Get trending skills | No | READ |
+| Method | Route | Description | 
+|--------|-------|-------------|
+| POST | `/api/skills` | Create a new skill listing | 
+| GET | `/api/skills` | Get all active skill listings |
+| GET | `/api/skills/search` | Search skills by name or category | 
+| GET | `/api/skills/category/:category` | Get skills by category | 
+| GET | `/api/skills/:id` | Get details of a specific skill | 
+| PUT | `/api/skills/:id` | Update a skill listing | 
+| DELETE | `/api/skills/:id` | Delete a skill listing | 
+| GET | `/api/skills/trending` | Get trending skills | 
 
 ## Authentication
 
