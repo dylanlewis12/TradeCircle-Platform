@@ -105,7 +105,17 @@ export const getTotalTrades = async (req, res) => {
 //Get a specific user
 export const getUser = async (req, res) => {
     try {
-        
+        const userId = req.params.id;
+
+        const user = await User.findById(userId).select("-password");
+
+        if(!user) {
+            return res.status(404).json({message: "User could not be found"});
+        }
+
+        res.status(200).json({
+            message: "User found successfully"
+        })
     } catch(error) {
         res.status(500).json({ message: error.message });
     }
