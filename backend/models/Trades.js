@@ -52,6 +52,9 @@ const TradeSchema = new mongoose.Schema({
     completedAt: {
         type: Date,
     },
+    cancelledAt: {
+        type: Date,
+    }
 });
 
 export default mongoose.model("Trade", TradeSchema);

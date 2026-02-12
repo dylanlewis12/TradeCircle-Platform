@@ -68,6 +68,9 @@ const SkillSchema = new mongoose.Schema({
         type: Date,
         default: Date.now,
     },
+    updatedAt: {
+        type: Date,
+    }
 });
 
 //Create Skill schema indexes
