@@ -4,15 +4,15 @@ import { protect } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
+// No authentication needed
 //User registration route
 router.post("/register", userRegistration);
-
-//User logout route
-router.post("/logout", userLogout);
-
 //User login route
 router.post("/login", userLogin);
 
+//Authentication required use protect
+//User logout route
+router.post("/logout", protect, userLogout);
 //Delete user route
 router.delete("/delete-account", protect, deleteUser);
 
