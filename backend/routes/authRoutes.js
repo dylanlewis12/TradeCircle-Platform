@@ -4,7 +4,6 @@ import { protect } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-// No authentication needed
 //User registration route
 router.post("/register", userRegistration);
 //User login route

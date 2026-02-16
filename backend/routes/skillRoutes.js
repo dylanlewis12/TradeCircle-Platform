@@ -5,7 +5,7 @@ import {
   getUserSkill,
   deleteUserSkill,
   updateSkill
-} from '../controllers/skillController.js';
+} from '../controllers/skillsControllers.js';
 import { protect } from '../middleware/authMiddleware.js';
 
 const router = express.Router();

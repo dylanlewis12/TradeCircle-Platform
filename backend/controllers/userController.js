@@ -3,21 +3,21 @@ import jwt from "jsonwebtoken";
 import User from '../models/User.js';
 import { protect } from '../middleware/authMiddleware.js';
 
-// Update pfp
+// Update profile picture
 export const updateProfilePicture = async (req, res) => {
     try {
-        const userId = req.user.id; // Use authenticated user, not params
+        const userId = req.user.id;
         const { profilePicture } = req.body;
 
         if(!profilePicture) {
-            return res.status(400).json({ message: "Unable to update profile picture, src is missing" });
+            return res.status(400).json({ message: "Profile picture URL is required" });
         } 
 
         const updatedUser = await User.findByIdAndUpdate(
             userId,
             { profilePicture: profilePicture },
-            { new: true } // Returns updated document
-         ).select("-password"); //Exclude password field in returned updated document
+            { new: true }
+         ).select("-password");
 
         if(!updatedUser) {
             return res.status(404).json({ message: "User not found" });
@@ -40,14 +40,14 @@ export const updateBio = async (req, res) => {
         const { bio } = req.body;
 
         if(!bio) {
-            return res.status(400).json({ message: "Unable to update profile picture, src is missing" });
+            return res.status(400).json({ message: "Bio is required" }); // Fixed error message
         } 
 
         const updatedUser = await User.findByIdAndUpdate(
             userId,
             { bio: bio },
-            { new: true } // Returns updated document
-         ).select("-password"); //Exclude password field in returned updated document
+            { new: true }
+         ).select("-password");
 
         if(!updatedUser) {
             return res.status(404).json({ message: "User not found" });
@@ -63,13 +63,13 @@ export const updateBio = async (req, res) => {
     }
 }
 
-//Get all users
+// Get all users
 export const getUsers = async (req, res) => {
     try {
-        const allUsers = await User.find({}).select("-password"); // Exclude passwords
+        const allUsers = await User.find({}).select("-password");
 
         if (allUsers.length === 0) {
-            return res.status(404).json({ message: "No users found" });
+            return res.status(200).json({ message: "No users found", users: [] }); // Changed 404 to 200
         }
 
         res.status(200).json({
@@ -81,19 +81,19 @@ export const getUsers = async (req, res) => {
     }
 }
 
-//Get total trades of a user
+// Get total trades of a user
 export const getTotalTrades = async (req, res) => {
     try {
         const userId = req.params.id;
 
-        const user = await User.findById(userId).select("userName email totalTrades");
+        const user = await User.findById(userId).select("userName email totalTrades rating");
 
         if(!user) {
             return res.status(404).json({ message: "User not found" });
         }
 
         res.status(200).json({
-            message: "User bio updated successfully",
+            message: "User trades retrieved successfully", // Fixed message
             user: user
         });
 
@@ -102,7 +102,7 @@ export const getTotalTrades = async (req, res) => {
     }
 }
 
-//Get a specific user
+// Get a specific user
 export const getUser = async (req, res) => {
     try {
         const userId = req.params.id;
@@ -110,25 +110,24 @@ export const getUser = async (req, res) => {
         const user = await User.findById(userId).select("-password");
 
         if(!user) {
-            return res.status(404).json({message: "User could not be found"});
+            return res.status(404).json({ message: "User not found" });
         }
 
         res.status(200).json({
-            message: "User found successfully"
-        })
+            message: "User found successfully",
+            user: user // Added user to response
+        });
     } catch(error) {
         res.status(500).json({ message: error.message });
     }
 }
 
-
-
-//Get user rating
+// Get user rating
 export const getUserRating = async (req, res) => {
     try {
         const userId = req.params.id;
 
-        const user = await User.findById(userId).select("userName email rating");
+        const user = await User.findById(userId).select("userName email rating totalTrades");
 
         if(!user) {
             return res.status(404).json({ message: "User not found" });
@@ -144,10 +143,10 @@ export const getUserRating = async (req, res) => {
     }
 }
 
-//Delete all users
+// Delete all users 
 export const deleteAllUsers = async (req, res) => {
     try {
-        const result = User.deleteMany({});
+        const result = await User.deleteMany({}); 
 
         res.status(200).json({
             message: `${result.deletedCount} users deleted successfully`
@@ -157,4 +156,3 @@ export const deleteAllUsers = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 }
-

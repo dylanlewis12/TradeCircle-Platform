@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const SkillSchema = new mongoose.Schema({
     userId: {
@@ -74,8 +74,6 @@ const SkillSchema = new mongoose.Schema({
 });
 
 //Create Skill schema indexes
-SkillSchema.index({name: 1})
-SkillSchema.index({category: 1})
 SkillSchema.index({ category: 1, listingType: 1 }); // Browse offerings by category
 SkillSchema.index({ userId: 1, status: 1 }); // User's active skills
 SkillSchema.index({ status: 1, listingType: 1 }); // Active offerings/seekings
