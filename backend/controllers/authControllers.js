@@ -3,6 +3,8 @@ import RefreshToken from '../models/RefreshToken.js';
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import generateTokens from '../utils/tokenUtils.js';
+import dotenv from 'dotenv';
+dotenv.config();
 
 // Registration
 export const userRegistration = async (req, res) => {
@@ -132,7 +134,8 @@ export const userLogout = async (req, res) => {
     }
 }
 
-export const tokenRefresh = async = (req, res) => {
+//Refresh cookie endpoint
+export const tokenRefresh = async (req, res) => {
     const { refreshToken } = req.cookies;
 
     if (!refreshToken) {
@@ -177,19 +180,3 @@ export const deleteUser = async (req, res) => {
   }
 };
 
-//Refresh cookie endpoint
-export const refreshToken = async (req, res) => {
-    const { refreshToken } = req.cookies;
-
-    if(!refreshToken) {
-        return res.status(401).json({ message: 'No refresh token' });
-    }
-
-    try {
-        const decoded = jwt.verufy(refreshToken, process.env.REFRESH_SECRET);
-        const { accessToken } = generateTokens(decoded);
-        res.json({ accessToken });
-    } catch(error) {
-       res.status(403).json({ message: 'Refresh token invalid or expired' }); 
-    }
-}
