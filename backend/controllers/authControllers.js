@@ -140,9 +140,16 @@ export const tokenRefresh = async = (req, res) => {
     }
 
     try {
-        // Verify token is still in DB (not revoked)
-        
-    }
+    // Verify token is still in DB (not revoked)
+        const tokenRecord = await RefreshToken.findOne({ token: refreshToken });
+        if (!tokenRecord) return res.status(403).json({ message: 'Token revoked' });
+
+        const decoded = jwt.verify(refreshToken, process.env.REFRESH_SECRET);
+        const { accessToken } = generateTokens(decoded);
+        res.json({ accessToken });
+  } catch (err) {
+        res.status(403).json({ message: 'Invalid token' });
+  }
 
 }
 
