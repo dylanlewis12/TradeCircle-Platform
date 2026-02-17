@@ -1,9 +1,10 @@
 import User from '../models/User.js';
+import RefreshToken from '../models/RefreshToken.js';
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
+import generateTokens from '../utils/tokenUtils.js';
 
 // Registration
-/*
 export const userRegistration = async (req, res) => {
     try {
         const { userName, email, password } = req.body;
@@ -52,27 +53,7 @@ export const userRegistration = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 }
-*/
-export const userRegistration = async (req, res) => {
-    try {
-        const { userName, email, password } = req.body;
 
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        //Create new user
-        const newUser = new User({
-            userName,
-            email,
-            password: hashedPassword
-        });
-
-        await newUser.save();
-
-        res.status(201).json({ message: "User created successfully" });
-    } catch(error) {
-        res.status(500).json({ message: error.message });
-    }
-}
 
 export const userLogin = async (req, res) => {
     try {
@@ -100,12 +81,23 @@ export const userLogin = async (req, res) => {
             return res.status(401).json({ message: "Invalid email or password" });
         }
 
-        //Generate JWT token
-        const token = jwt.sign(
-            { userId: user._id, email: user.email },
-            process.env.JWT_SECRET || "",
-            { expiresIn: "1d" }
-        );
+        //Generaye JWT token
+        const { accessToken, refreshToken } = generateTokens(user);
+
+        // Store refresh token in database
+        await RefreshToken.create({ 
+            token: refreshToken, 
+            userId: user._id,
+            expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+        });
+
+        // Store refresh token in httpOnly cookie
+        res.cookie('refreshToken', refreshToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict',
+            maxAge: 7 * 24 * 60 * 60 * 1000
+        });
 
         //Success response
         res.status(200).json({
@@ -122,12 +114,36 @@ export const userLogin = async (req, res) => {
     }
 }
 
+//Logout - revoke refresh token
 export const userLogout = async (req, res) => {
+    const { refreshToken } = req.cookies;
+
     try {
+        if(refreshToken) {
+            await RefreshToken.deleteOne({ token: refreshToken });
+        }
+
+        res.clearCookie('refreshToken');
+
         res.status(200).json({ message: "Logged out successfully" });
+
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
+}
+
+export const tokenRefresh = async = (req, res) => {
+    const { refreshToken } = req.cookies;
+
+    if (!refreshToken) {
+        return res.status(401).json({ message: 'No refresh token' });
+    }
+
+    try {
+        // Verify token is still in DB (not revoked)
+        
+    }
+
 }
 
 //Delete a user
@@ -153,3 +169,20 @@ export const deleteUser = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+//Refresh cookie endpoint
+export const refreshToken = async (req, res) => {
+    const { refreshToken } = req.cookies;
+
+    if(!refreshToken) {
+        return res.status(401).json({ message: 'No refresh token' });
+    }
+
+    try {
+        const decoded = jwt.verufy(refreshToken, process.env.REFRESH_SECRET);
+        const { accessToken } = generateTokens(decoded);
+        res.json({ accessToken });
+    } catch(error) {
+       res.status(403).json({ message: 'Refresh token invalid or expired' }); 
+    }
+}

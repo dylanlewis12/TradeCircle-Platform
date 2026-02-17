@@ -13,6 +13,9 @@ import cors from "cors";
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3001;
+const ACCESS_SECRET = process.env.ACCESS_SECRET;
+const REFRESH_SECRET = process.env.REFRESH_SECRET;
+app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 
 // Connect to DB
 connectDB();
