@@ -1,17 +1,25 @@
 import { useState } from 'react';
 import axios from 'axios';
+import  '../../styles/pages/Login.css';
+import { useNavigate } from 'react-router-dom';
 
 export default function Login() {
     //const [email, setEmail] = useState('');
     //const [password, setPassword] = useState('');
     const [error, setError] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
+    const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
         email: "",
         password: "",
     })
 
+    function handleRegister() {
+        navigate('/register');
+    }
+
+    /*
     const validateField = (name: String, value: String) => {
         let error = '';
         if(name === 'email') {
@@ -24,6 +32,7 @@ export default function Login() {
             }
         }
     }
+    */ 
 
     function handleChange(e: any) {
         setFormData({...formData, [e.target.name]: e.target.value });
@@ -49,6 +58,7 @@ export default function Login() {
 
             //handle response
             console.log(res.data);
+            navigate('/home');
 
         } catch(err: any) {
             //setError(err.response.data.message || 'An error occurred');
@@ -64,40 +74,46 @@ export default function Login() {
 
     //Password validation function for missing fields
     
-    return( <>
-        <div className='logo-container'>
-            <img src='../../../public/logo.png' alt='logo'/>
-        </div>
-        <form onSubmit={handleSubmit} >
-            <h2>Login</h2>
-            {/*Setting error text styling*/}
-            {error && <p style={{ color: 'red' }}>{error}</p>}
-            <div>
-                <label htmlFor='email'>Email</label>
-                <input 
-                    type='email'
-                    id='email'
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
-                />
+    return( 
+        <div className='container'>
+            <div className='pane left'>
+                <img src='logo.svg' alt='logo'/>
             </div>
-            <div>
-                <label htmlFor='password'>Password</label>
-                <input 
-                    type='password'
-                    id='password'
-                    value={formData.password}
-                    onChange={handleChange}
-                    required
-                /> 
-            </div>
-            <button type="submit" disabled={isLoading}>
-                {isLoading ? 'Logging in...' : 'Login'}
+            <div className='divider-line'></div>
+            <form onSubmit={handleSubmit} className='pane right'>
+                <h2>Welcome to TradeCircle</h2>
+                {/*Setting error text styling*/}
                 {error && <p style={{ color: 'red' }}>{error}</p>}
-            </button>
-        </form>
-        
-    </>
+                <div>
+                    <label htmlFor='email'>Email</label>
+                    <input 
+                        type='email'
+                        id='email'
+                        name='email'
+                        value={formData.email}
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
+                <div>
+                    <label htmlFor='password'>Password</label>
+                    <input 
+                        type='password'
+                        id='password'
+                        name='password'
+                        value={formData.password}
+                        onChange={handleChange}
+                        required
+                    /> 
+                </div>
+                <button type="submit" disabled={isLoading}>
+                    {isLoading ? 'Logging in...' : 'Login'}
+                    {error && <p style={{ color: 'red' }}>{error}</p>}
+                </button>
+                <div className='register-link-container'>
+                <p>Don't have an account? <a onClick={handleRegister}>Sign up</a></p>
+                </div>
+            </form>        
+        </div>
     );
 }
