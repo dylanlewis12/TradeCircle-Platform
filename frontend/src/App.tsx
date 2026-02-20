@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import About from './components/Pages/About.tsx';
 import Chat from './components/Pages/Chat.tsx';
 import Community from './components/Pages/Community.tsx';
@@ -8,14 +8,15 @@ import Login from './components/Pages/Login.tsx';
 import Register from './components/Pages/Register.tsx';
 import Marketplace from './components/Pages/Marketplace.tsx';
 import './App.css';
-import Navbar from './components/NavBar.tsx';
+//import Navbar from './components/NavBar.tsx';
 
 function App() {
 
   return (
     <>
-      <Router>
+        {/*
         <Navbar />
+        */}
         {/*Routes*/}
         <Routes>
           <Route path="/" element={<Login />} />
@@ -27,7 +28,6 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/explore" element={<Explore />} />
         </Routes>
-      </Router>
     </>
   );
 }
