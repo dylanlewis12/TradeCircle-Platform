@@ -6,76 +6,137 @@ import { useNavigate } from 'react-router-dom';
 export default function Register() {
     //const [email, setEmail] = useState('');
     //const [password, setPassword] = useState('');
-    const [error, setError] = useState(null);
+    const [errors, setErrors] = useState<{ email?: string; userName?: string; password?: string; confirmPassword?: string; general?: string }>({});
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
         email: "",
         userName: "",
-        password1: "",
-        password2: "",
-
+        password: "",
+        confirmPassword: "",
     })
 
     function handleLogin() {
         navigate('/');
     }
 
-    /*
-    const validateField = (name: String, value: String) => {
-        let error = '';
-        if(name === 'email') {
-            if(!value) { //Missing 
-                error = 'Email is required';
-            } else if(name === 'password') {
-                if(!value) {
+    function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+        const { name, value } = e.target;
 
-                }
+        setFormData({...formData, [name]: value });
+
+        // Clear error for this field when user starts typing
+        setErrors({ ...errors, [name]: undefined });
+
+        if (name === "email" && value.length > 0) {
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+                setErrors({ ...errors, email: 'Invalid email' });
+            } else {
+                setErrors({ ...errors, email: undefined });
             }
         }
-    }
-    */ 
 
-    function handleChange(e: any) {
-        setFormData({...formData, [e.target.name]: e.target.value });
+        if (name === "password" && value.length > 0) {
+            if (value.length < 8) {
+                setErrors({ ...errors, password: 'Password must be at least 8 characters.'});
+            } else if (!/[A-Z]/.test(value)) {
+                setErrors({ ...errors, password: 'Password must contain an uppercase letter.'});
+            } else if (!/[0-9]/.test(value)) {
+                setErrors({ ...errors, password: 'Password must contain a number.'});
+            } else {
+                setErrors({ ...errors, password: undefined });
+            }
+        }
+
+        // Confirm Password validation
+        if ((name === "password" || name === "confirmPassword") && formData.confirmPassword.length > 0) {
+            if (value !== formData.confirmPassword && name === "password") {
+            setErrors({ ...errors, confirmPassword: 'Passwords do not match.' });
+            } else if (formData.password !== value && name === "confirmPassword") {
+            setErrors({ ...errors, confirmPassword: 'Passwords do not match.' });
+            } else if (formData.password === value || value === formData.password) {
+                setErrors({ ...errors, confirmPassword: undefined });
+            } else {
+                setErrors({ ...errors, confirmPassword: undefined });
+            }
+        }
     }
 
 
     
-    async function handleSubmit(e: any) {
+    async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault(); //prevent form reloading page
         setIsLoading(true); //Start loading state
-        setError(null); //Clear previous errors
+        setErrors({}); //Clear previous errors
+
+        // Validation
+        const newErrors: { email?: string; userName?: string; password?: string; confirmPassword?: string} = {};
+
+        // Email validation
+        if (!formData.email) {
+            newErrors.email = 'Email is required.';
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+            newErrors.email = 'Please enter a valid email.';
+        }
+
+        // Username validation
+        if (!formData.userName) {
+            newErrors.userName = 'Username is required.';
+        }
+
+        // Password validation
+        if (!formData.password) {
+            newErrors.password = 'Password is required.';
+        } else if (formData.password.length < 8) {
+            newErrors.password = 'Password must be at least 8 characters.';
+        } else if (!/[A-Z]/.test(formData.password)) {
+            newErrors.password = 'Password must contain an uppercase letter.';
+        } else if (!/[0-9]/.test(formData.password)) {
+            newErrors.password = 'Password must contain a number.';
+        }
+
+        // Confirm Password validation
+        if (!formData.confirmPassword) {
+            newErrors.confirmPassword = 'Please confirm your password.';
+        } else if (formData.password !== formData.confirmPassword) {
+            newErrors.confirmPassword = 'Passwords do not match.';
+        }
+
+        // Check if there are any errors
+        if (Object.keys(newErrors).length > 0) {
+            setErrors(newErrors);
+            setIsLoading(false);
+            return;
+        }
 
         try {
-            //Manipulate data to final state
-            let copy = {...formData}
+            // Remove confirmPassword before sending to server
+            const { confirmPassword, ...copy } = formData;
 
             //ex. of handling array in form data submit
             //copy.powers = copy.powers.split(',');
 
             console.log(copy);
 
-            let res = await axios.post('http://localhost:3000/api/auth/register', copy);
+            let res = await axios.post('http://localhost:3000/api/auth/login', copy);
+
+            // Store token if provided
+            if (res.data.accessToken) {
+                localStorage.setItem('accessToken', res.data.accessToken);
+            }
 
             //handle response
             console.log(res.data);
             navigate('/home');
 
         } catch(err: any) {
-            //setError(err.response.data.message || 'An error occurred');
-            alert(err.message);
+            setErrors({ general: err.response?.data.message || 'Registration failed. Please try again.'});
+            console.error(err);
         } finally {
             setIsLoading(false); //End loading state
         }
     }
-
-    //Loading state button
-
-    //Email validation function
-
-    //Password validation function for missing fields
     
     return( 
         <div className='container'>
@@ -86,9 +147,11 @@ export default function Register() {
             <form onSubmit={handleSubmit} className='pane right'>
                 <h2>Join TradeCircle</h2>
                 {/*Setting error text styling*/}
-                {error && <p style={{ color: 'red' }}>{error}</p>}
+                {errors && <p style={{ color: 'red' }}>{errors.general}</p>}
                 <div>
                     <label htmlFor='email'>Email</label>
+                    {/* Error message appears above password input */}
+                    {errors && <p className='error-message'>{errors.email}</p>}
                     <input 
                         type='email'
                         id='email'
@@ -100,6 +163,8 @@ export default function Register() {
                 </div>
                 <div>
                     <label htmlFor='userName'>Username</label>
+                    {/* Error message appears above password input */}
+                    {errors && <p className='error-message'>{errors.userName}</p>}
                     <input 
                         type='text'
                         id='userName'
@@ -111,32 +176,35 @@ export default function Register() {
                 </div>
                 <div>
                     <label htmlFor='password'>Password</label>
+                    {/* Error message appears above password input */}
+                    {errors && <p className='error-message'>{errors.password}</p>}
                     <input 
                         type='password'
                         id='password'
                         name='password'
-                        value={formData.password1}
+                        value={formData.password}
                         onChange={handleChange}
                         required
                     /> 
                 </div>
                 <div>
-                    <label htmlFor='password'>Password</label>
+                    <label htmlFor='password'>Confirm Password</label>
+                    {/* Error message appears above password input */}
+                    {errors && <p className='error-message'>{errors.confirmPassword}</p>}
                     <input 
                         type='password'
-                        id='password'
-                        name='password'
-                        value={formData.password2}
+                        id='confirmPassword'
+                        name='confirmPassword'
+                        value={formData.confirmPassword}
                         onChange={handleChange}
                         required
                     /> 
                 </div>
                 <button type="submit" disabled={isLoading}>
                     {isLoading ? 'Signing in...' : 'Sign up'}
-                    {error && <p style={{ color: 'red' }}>{error}</p>}
                 </button>
                 <div className='register-link-container'>
-                <p>Already have an account? <a onClick={handleLogin}>Login</a></p>
+                <p>Already have an account? <a onClick={handleLogin} style={{ cursor: 'pointer' }}>Login</a></p>
                 </div>
             </form>        
         </div>

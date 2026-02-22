@@ -8,15 +8,19 @@ import Login from './components/Pages/Login.tsx';
 import Register from './components/Pages/Register.tsx';
 import Marketplace from './components/Pages/Marketplace.tsx';
 import './App.css';
-//import Navbar from './components/NavBar.tsx';
+import Navbar from './components/NavBar.tsx';
+import { useLocation } from 'react-router-dom';
 
 function App() {
+  const location = useLocation();
+  // Define an array of routes where the navbar should be hidden
+  const excludedRoutes = ['/', '/register'];
 
   return (
     <>
-        {/*
-        <Navbar />
-        */}
+        {/* Conditionally render the Navbar */}
+        {!excludedRoutes.includes(location.pathname) && <Navbar />}
+        
         {/*Routes*/}
         <Routes>
           <Route path="/" element={<Login />} />

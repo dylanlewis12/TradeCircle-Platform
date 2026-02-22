@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 export default function Login() {
     //const [email, setEmail] = useState('');
     //const [password, setPassword] = useState('');
-    const [error, setError] = useState(null);
+    const [errors, setErrors] = useState<{ email?: string; password?: string; general?: string }>({});
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
 
@@ -19,31 +19,55 @@ export default function Login() {
         navigate('/register');
     }
 
-    /*
-    const validateField = (name: String, value: String) => {
-        let error = '';
-        if(name === 'email') {
-            if(!value) { //Missing 
-                error = 'Email is required';
-            } else if(name === 'password') {
-                if(!value) {
 
-                }
+    function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
+
+        // Clear error for this field when user starts typing
+        setErrors({ ...errors, [name]: undefined });
+
+        if (name === "email" && value.length > 0) {
+            if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+                setErrors({ ...errors, email: 'Please enter a valid email.' });
             }
         }
-    }
-    */ 
 
-    function handleChange(e: any) {
-        setFormData({...formData, [e.target.name]: e.target.value });
+        if (name === "password" && value.length > 0) {
+            if (value.length < 8) {
+                setErrors({ ...errors, password: 'Password must be at least 8 characters.'});
+            } else if (!/[A-Z]/.test(value)) {
+                setErrors({ ...errors, password: 'Password must contain an uppercase letter.'});
+            } else if (!/[0-9]/.test(value)) {
+                setErrors({ ...errors, password: 'Password must contain a number.'});
+            }
+        }
     }
 
 
     
-    async function handleSubmit(e: any) {
+    async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault(); //prevent form reloading page
         setIsLoading(true); //Start loading state
-        setError(null); //Clear previous errors
+        setErrors({}); //Clear previous errors
+
+        // Validation
+        const newErrors: { email?: string; password?: string } = {};
+
+        if(!formData.email) {
+            newErrors.email = 'Email is required.';
+        }
+        if(!formData.password) {
+            newErrors.password = 'Password is required.';
+        } else if(formData.password.length < 8) {
+            newErrors.password = 'Password must be at least 8 characters.';
+        }
+
+        if (Object.keys(newErrors).length > 0) { //Check if there are any errors before post request
+            setErrors(newErrors);
+            setIsLoading(false);
+            return;
+        }
 
         try {
             //Manipulate data to final state
@@ -61,18 +85,12 @@ export default function Login() {
             navigate('/home');
 
         } catch(err: any) {
-            //setError(err.response.data.message || 'An error occurred');
-            alert(err.message);
+            setErrors({ general: err.response?.data.message || 'Login failed. Please try again.'});
+            console.error(err);
         } finally {
             setIsLoading(false); //End loading state
         }
     }
-
-    //Loading state button
-
-    //Email validation function
-
-    //Password validation function for missing fields
     
     return( 
         <div className='container'>
@@ -82,14 +100,19 @@ export default function Login() {
             <div className='divider-line'></div>
             <form onSubmit={handleSubmit} className='pane right'>
                 <h2>Welcome to TradeCircle</h2>
-                {/*Setting error text styling*/}
-                {error && <p style={{ color: 'red' }}>{error}</p>}
+
+                {/* General form error - appears at top */}
+                {errors.general && <p className='error-message'>{errors.general}<br /></p>}
+
                 <div>
                     <label htmlFor='email'>Email</label>
+                    {/* Error message appears above password input */}
+                    {errors.email && <p className='error-message'>{errors.email}</p>}
                     <input 
                         type='email'
                         id='email'
                         name='email'
+                        placeholder='your@email.com'
                         value={formData.email}
                         onChange={handleChange}
                         required
@@ -97,10 +120,13 @@ export default function Login() {
                 </div>
                 <div>
                     <label htmlFor='password'>Password</label>
+                    {/* Error message appears above password input */}
+                    {errors.password && <p className='error-message'>{errors.password}</p>}
                     <input 
                         type='password'
                         id='password'
                         name='password'
+                        placeholder='••••••••'
                         value={formData.password}
                         onChange={handleChange}
                         required
@@ -108,10 +134,9 @@ export default function Login() {
                 </div>
                 <button type="submit" disabled={isLoading}>
                     {isLoading ? 'Logging in...' : 'Login'}
-                    {error && <p style={{ color: 'red' }}>{error}</p>}
                 </button>
                 <div className='register-link-container'>
-                <p>Don't have an account? <a onClick={handleRegister}>Sign up</a></p>
+                <p>Don't have an account? <a onClick={handleRegister} style={{ cursor: 'pointer' }}>Sign up</a></p>
                 </div>
             </form>        
         </div>
