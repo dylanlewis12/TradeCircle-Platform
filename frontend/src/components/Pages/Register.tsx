@@ -148,7 +148,7 @@ export default function Register() {
                 <h2>Join TradeCircle</h2>
                 {/*Setting error text styling*/}
                 {errors && <p style={{ color: 'red' }}>{errors.general}</p>}
-                <div>
+                <div className='email-input-container'>
                     <label htmlFor='email'>Email</label>
                     {/* Error message appears above password input */}
                     {errors && <p className='error-message'>{errors.email}</p>}
@@ -161,7 +161,7 @@ export default function Register() {
                         required
                     />
                 </div>
-                <div>
+                <div className='username-input-container' style={{position: "relative", width: "70%"}}>
                     <label htmlFor='userName'>Username</label>
                     {/* Error message appears above password input */}
                     {errors && <p className='error-message'>{errors.userName}</p>}
@@ -174,7 +174,7 @@ export default function Register() {
                         required
                     />
                 </div>
-                <div>
+                <div className='password-input-container'>
                     <label htmlFor='password'>Password</label>
                     {/* Error message appears above password input */}
                     {errors && <p className='error-message'>{errors.password}</p>}
@@ -187,7 +187,7 @@ export default function Register() {
                         required
                     /> 
                 </div>
-                <div>
+                <div className='confirmPassword-input-container' style={{position: "relative", width: "70%"}}>
                     <label htmlFor='password'>Confirm Password</label>
                     {/* Error message appears above password input */}
                     {errors && <p className='error-message'>{errors.confirmPassword}</p>}

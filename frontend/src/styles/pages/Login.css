@@ -247,7 +247,14 @@ form button:disabled {
   align-items: center;
   justify-content: center;
   transition: color 0.3s ease;
+  float: right
 }
+
+.password-toggle-btn:hover:not(:disabled) {
+  background-color: none;
+  transform: translateY(-2px);
+}
+
 
 .password-input-container {
   position: relative;
@@ -255,15 +262,11 @@ form button:disabled {
 }
 
 .password-input-container input {
-  padding-right: 45px;
+  padding-right: 200px;
 }
 
 /**********************************/
 .email-input-container {
   position: relative;
   width: 70%;
-}
-
-.email-input-container input {
-  padding-right: 45px;
 }

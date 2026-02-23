@@ -123,7 +123,7 @@ form button {
     width: 30%;
     padding: 14px;
     margin-top: 30px;
-    background-color: #4a9d6f;
+    background-color: #169928;
     color: white;
     border: none;
     border-radius: 6px;
@@ -173,7 +173,7 @@ form button:disabled {
   color: #d32f2f;
   font-size: 13px;
   margin-top: 8px;
-  text-align: center;
+  text-align: right;
 }
 
 /* Responsive design */
@@ -229,4 +229,61 @@ form button:disabled {
     padding: 12px;
     font-size: 14px;
   }
+}
+
+/************************/
+/* ADD THIS NEW RULE */
+.password-toggle-btn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #666666;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.3s ease;
+  float: right
+}
+
+.password-toggle-btn:hover:not(:disabled) {
+  background-color: none;
+  transform: translateY(-2px);
+}
+
+
+.password-input-container {
+  position: relative;
+  width: 70%;
+}
+
+.password-input-container input {
+  padding-right: 45px;
+}
+
+/**********************************/
+
+.username-input-container {
+  position: relative ;
+  width: 70%;
+}
+
+/**********************************/
+.confirmPassword-input-container {
+  position: relative ;
+  width: 70%;
+}
+
+.confirmPassword-input-container input {
+  padding-right: 45px ;
+}
+
+/**********************************/
+.email-input-container {
+  position: relative;
+  width: 70%;
 }
