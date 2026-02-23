@@ -2,12 +2,15 @@ import { useState } from 'react';
 import axios from 'axios';
 import  '../../styles/pages/Login.css';
 import { useNavigate } from 'react-router-dom';
+import { Eye, EyeOff } from 'lucide-react';
 
 export default function Login() {
     //const [email, setEmail] = useState('');
     //const [password, setPassword] = useState('');
     const [errors, setErrors] = useState<{ email?: string; password?: string; general?: string }>({});
     const [isLoading, setIsLoading] = useState(false);
+    // State to toggle password visibility (true for 'text', false for 'password')
+    const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
@@ -91,7 +94,7 @@ export default function Login() {
             setIsLoading(false); //End loading state
         }
     }
-    
+
     return( 
         <div className='container'>
             <div className='pane left'>
@@ -104,7 +107,7 @@ export default function Login() {
                 {/* General form error - appears at top */}
                 {errors.general && <p className='error-message'>{errors.general}<br /></p>}
 
-                <div>
+                <div className='email-input-container'>
                     <label htmlFor='email'>Email</label>
                     {/* Error message appears above password input */}
                     {errors.email && <p className='error-message'>{errors.email}</p>}
@@ -118,19 +121,26 @@ export default function Login() {
                         required
                     />
                 </div>
-                <div>
+                <div className='password-input-container'>
                     <label htmlFor='password'>Password</label>
                     {/* Error message appears above password input */}
                     {errors.password && <p className='error-message'>{errors.password}</p>}
                     <input 
-                        type='password'
+                        type={showPassword ? "text" : "password"}
                         id='password'
                         name='password'
                         placeholder='••••••••'
                         value={formData.password}
                         onChange={handleChange}
                         required
-                    /> 
+                    />
+                    <button
+                        type='button'
+                        className='password-toggle-btn'
+                        onClick={() => setShowPassword(!showPassword)}
+                    >
+                        {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                    </button>
                 </div>
                 <button type="submit" disabled={isLoading}>
                     {isLoading ? 'Logging in...' : 'Login'}
