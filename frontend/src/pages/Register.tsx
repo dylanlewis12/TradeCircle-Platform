@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import axios from 'axios';
-import  '../../styles/pages/Login.css';
+import  '../styles/pages/Register.css';
 import { useNavigate } from 'react-router-dom';
 import { Eye, EyeOff } from 'lucide-react';
+import logo from '../styles/images/logo.png';
+
 
 export default function Register() {
     //const [email, setEmail] = useState('');
@@ -144,7 +146,7 @@ export default function Register() {
     return( 
         <div className='container'>
             <div className='pane left'>
-                <img src='logo.svg' alt='logo'/>
+                <img src={logo} alt='logo'/>
             </div>
             <div className='divider-line'></div>
             <form onSubmit={handleSubmit} className='pane right'>

@@ -1,5 +1,6 @@
-import '../../styles/pages/Home.css'; 
+import '../styles/pages/Home.css'; 
 import { useNavigate } from 'react-router-dom';
+import { ArrowRight } from 'lucide-react';
 
 export default function Home() {
     const navigate = useNavigate();
@@ -22,7 +23,9 @@ export default function Home() {
             
             </div>
             */}
-            <button className='start-btn' onClick={handleStart}>Get Started</button>
+            <button className='start-btn' onClick={handleStart}>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>Get Started <ArrowRight /></span>
+            </button>
         </div>
     </>
 }

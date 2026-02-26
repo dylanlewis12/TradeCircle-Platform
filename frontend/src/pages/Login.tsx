@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import axios from 'axios';
-import  '../../styles/pages/Login.css';
+import  '../styles/pages/Login.css';
 import { useNavigate } from 'react-router-dom';
 import { Eye, EyeOff } from 'lucide-react';
-import { useAuth } from '../../context/authContext/AuthContext';
+import { useAuth } from '../context/authContext/AuthContext';
+import logo from '../styles/images/logo.png';
+
 
 export default function Login() {
     //const [email, setEmail] = useState('');
@@ -104,7 +106,7 @@ export default function Login() {
     return( 
         <div className='container'>
             <div className='pane left'>
-                <img src='logo.svg' alt='logo'/>
+                <img src={logo} alt='logo'/>
             </div>
             <div className='divider-line'></div>
             <form onSubmit={handleSubmit} className='pane right'>

@@ -37,7 +37,7 @@ body {
 .start-btn {
     position: relative;
     align-items: center;
-    width: 20%;
+    width: fit-content;
     padding: 14px;
     margin-top: 30px;
     background-color: #169928;
