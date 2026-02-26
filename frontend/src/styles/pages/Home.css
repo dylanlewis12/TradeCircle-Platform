@@ -19,8 +19,11 @@ body {
     flex-direction: column;
 }
 
-.home-section {
-   
+.home-section { 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .home-section h1 {
@@ -28,4 +31,38 @@ body {
     position: relative;
     top: 40px;
     text-align: center;
+}
+
+/* Submit button */
+.start-btn {
+    position: relative;
+    align-items: center;
+    width: 20%;
+    padding: 14px;
+    margin-top: 30px;
+    background-color: #169928;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    letter-spacing: 0.5px;
+    font-weight: bold;
+    top: 30px
+}
+
+.start-btn:hover:not(:disabled) {
+  background-color: #3d7d5a;
+  transform: translateY(-2px);
+}
+
+.start-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.start-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
 }

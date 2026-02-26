@@ -15,13 +15,19 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 const ACCESS_SECRET = process.env.ACCESS_SECRET;
 const REFRESH_SECRET = process.env.REFRESH_SECRET;
-app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 
 // Connect to DB
 connectDB();
 
-// Middlewares
-app.use(cors());
+// CORS Middleware - only ONE call
+app.use(cors({
+  origin: 'http://localhost:5173', // Vite default port
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
+// Other Middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(logReq);
@@ -37,5 +43,5 @@ app.use(globalErr);
 
 // Listener
 app.listen(PORT, () => {
-    console.log(`Server listening on PORT: ${PORT}`);
+  console.log(`Server listening on PORT: ${PORT}`);
 });

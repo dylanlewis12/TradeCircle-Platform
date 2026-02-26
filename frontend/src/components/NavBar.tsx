@@ -3,15 +3,32 @@ import { Link, NavLink } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import '../styles/components/Navbar.css'; 
 import { Search, Bell, User } from 'lucide-react';
+//import { useState } from 'react';
+//import Modal from './Modal.tsx';
 
 const Navbar = () => {
     const location = useLocation();
     const showNavbar = location.pathname !== "/" && location.pathname !== "/register";
 
+
+    //const [isModalOpen, setIsModalOpen] = useState(false); //State to control modal visibility
+
+    //const openModal = () => setIsModalOpen(true);
+    //const closeModal = () => setIsModalOpen(false);
+
+    const handleAccountUpdate = (event: any) => {
+        event.preventDefault();
+        // Handle form submission logic here
+        //alert('Account updated successfully')
+        //closeModal(); // Close the modal after submission
+
+        //Add a condition for closing modal if user presses close button
+    }
+
     return(
     <nav className="navbar">
         <div className="navbar-left">
-            <Link to="/home" className="logo"><img src='logo.svg' alt='logo'/></Link>
+            <Link to="/home" className="poke-ball"><img src='logo.svg' alt='logo'/></Link>
         </div>
         <div className="navbar-center">
             {/* Conditionally render Navbar */}
@@ -36,7 +53,7 @@ const Navbar = () => {
             <ul>
                 <li><Search size={10}/></li>
                 <li><Bell size={10}/></li>
-                <li><User size={10}/></li>
+                <li onClick={handleAccountUpdate}><User size={10}/></li>
             </ul>
         </div>
     </nav>

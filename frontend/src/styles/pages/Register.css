@@ -40,7 +40,7 @@
     background: #ffffff;
 }
 
-button[type="submit"] {
+.submit-btn {
     background-color: #169928;
     color: white;
 }
@@ -119,7 +119,7 @@ form input::placeholder {
 }
 
 /* Submit button */
-form button {
+.submit-btn {
     width: 30%;
     padding: 14px;
     margin-top: 30px;
@@ -132,6 +132,7 @@ form button {
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.1s ease;
     letter-spacing: 0.5px;
+    font-weight: bold;
 }
 
 form button:hover:not(:disabled) {
@@ -233,11 +234,11 @@ form button:disabled {
 
 /************************/
 /* ADD THIS NEW RULE */
+/* ADD THIS NEW RULE */
 .password-toggle-btn {
   position: absolute;
   right: 12px;
   top: 50%;
-  transform: translateY(-50%);
   background: none;
   border: none;
   cursor: pointer;
@@ -250,11 +251,10 @@ form button:disabled {
   float: right
 }
 
+
 .password-toggle-btn:hover:not(:disabled) {
   background-color: none;
-  transform: translateY(-2px);
 }
-
 
 .password-input-container {
   position: relative;
@@ -262,27 +262,17 @@ form button:disabled {
 }
 
 .password-input-container input {
-  padding-right: 45px;
-}
-
-/**********************************/
-
-.username-input-container {
-  position: relative ;
-  width: 70%;
-}
-
-/**********************************/
-.confirmPassword-input-container {
-  position: relative ;
-  width: 70%;
+  padding-right: 45px;  
+  line-height: 1.5;     
+  height: 44px;       
 }
 
 .confirmPassword-input-container input {
-  padding-right: 45px ;
+  padding-right: 45px;
+  line-height: 1.5;
+  height: 44px;
 }
 
-/**********************************/
 .email-input-container {
   position: relative;
   width: 70%;

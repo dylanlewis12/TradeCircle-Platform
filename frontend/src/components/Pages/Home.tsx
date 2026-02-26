@@ -1,9 +1,15 @@
 import '../../styles/pages/Home.css'; 
+import { useNavigate } from 'react-router-dom';
 
 export default function Home() {
+    const navigate = useNavigate();
 
-    let cardStyle = {
+    //let cardStyle = {
 
+    //}
+
+    function handleStart() {
+        navigate('/market-place');
     }
     return <>
         <div className="hero">
@@ -16,6 +22,7 @@ export default function Home() {
             
             </div>
             */}
+            <button className='start-btn' onClick={handleStart}>Get Started</button>
         </div>
     </>
 }

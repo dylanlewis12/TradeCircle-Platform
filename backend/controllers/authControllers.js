@@ -59,40 +59,42 @@ export const userRegistration = async (req, res) => {
 
 export const userLogin = async (req, res) => {
     try {
-        const { email, password } = req.body;
+        const { login } = useAuth();
 
+        const { email, password } = req.body;
+        
         //Validate email format
         if(!email || !email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
             return res.status(400).json({ message: "Invalid email format" });
         }
-
+        
         // Validate password exists
         if(!password) {
             return res.status(400).json({ message: "Password is required" });
         }
-
+        
         //Find user by email
         const user = await User.findOne({ email });
         if(!user) {
             return res.status(401).json({ message: "Invalid email or password" });
         }
-
+        
         // Compare passwords
         const isPasswordCorrect = await bcrypt.compare(password, user.password);
         if (!isPasswordCorrect) {
             return res.status(401).json({ message: "Invalid email or password" });
         }
-
-        //Generaye JWT token
+        
+        //Generate JWT token
         const { accessToken, refreshToken } = generateTokens(user);
-
+        
         // Store refresh token in database
         await RefreshToken.create({ 
             token: refreshToken, 
             userId: user._id,
             expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
         });
-
+        
         // Store refresh token in httpOnly cookie
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true,
@@ -100,11 +102,11 @@ export const userLogin = async (req, res) => {
             sameSite: 'strict',
             maxAge: 7 * 24 * 60 * 60 * 1000
         });
-
+        
         //Success response
         res.status(200).json({
             message: "Login successful",
-            token,
+            accessToken: accessToken,  // ← CHANGED from 'token' to 'accessToken'
             user: {
                 id: user._id,
                 userName: user.userName,

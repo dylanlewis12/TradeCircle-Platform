@@ -2,12 +2,15 @@ import { useState } from 'react';
 import axios from 'axios';
 import  '../../styles/pages/Login.css';
 import { useNavigate } from 'react-router-dom';
+import { Eye, EyeOff } from 'lucide-react';
 
 export default function Register() {
     //const [email, setEmail] = useState('');
     //const [password, setPassword] = useState('');
     const [errors, setErrors] = useState<{ email?: string; userName?: string; password?: string; confirmPassword?: string; general?: string }>({});
     const [isLoading, setIsLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
@@ -119,7 +122,7 @@ export default function Register() {
 
             console.log(copy);
 
-            let res = await axios.post('http://localhost:3000/api/auth/login', copy);
+            let res = await axios.post('http://localhost:3000/api/auth/register', copy);
 
             // Store token if provided
             if (res.data.accessToken) {
@@ -185,7 +188,14 @@ export default function Register() {
                         value={formData.password}
                         onChange={handleChange}
                         required
-                    /> 
+                    />
+                    <button
+                        type='button'
+                        className='password-toggle-btn'
+                        onClick={() => setShowPassword(!showPassword)}
+                    >
+                        {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                    </button>
                 </div>
                 <div className='confirmPassword-input-container' style={{position: "relative", width: "70%"}}>
                     <label htmlFor='password'>Confirm Password</label>
@@ -199,8 +209,15 @@ export default function Register() {
                         onChange={handleChange}
                         required
                     /> 
+                    <button
+                        type='button'
+                        className='password-toggle-btn'
+                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    >
+                        {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                    </button>
                 </div>
-                <button type="submit" disabled={isLoading}>
+                <button className='submit-btn' type="submit" disabled={isLoading}>
                     {isLoading ? 'Signing in...' : 'Sign up'}
                 </button>
                 <div className='register-link-container'>

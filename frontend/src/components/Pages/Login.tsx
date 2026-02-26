@@ -3,6 +3,7 @@ import axios from 'axios';
 import  '../../styles/pages/Login.css';
 import { useNavigate } from 'react-router-dom';
 import { Eye, EyeOff } from 'lucide-react';
+import { useAuth } from '../../context/authContext/AuthContext';
 
 export default function Login() {
     //const [email, setEmail] = useState('');
@@ -11,6 +12,7 @@ export default function Login() {
     const [isLoading, setIsLoading] = useState(false);
     // State to toggle password visibility (true for 'text', false for 'password')
     const [showPassword, setShowPassword] = useState(false);
+    const { login } = useAuth();
     const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
@@ -85,6 +87,10 @@ export default function Login() {
 
             //handle response
             console.log(res.data);
+
+            // Just call login with the form data - it handles the API call and stores everything
+            await login(copy);
+
             navigate('/home');
 
         } catch(err: any) {
@@ -142,7 +148,7 @@ export default function Login() {
                         {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                     </button>
                 </div>
-                <button type="submit" disabled={isLoading}>
+                <button className="submit-btn" type="submit" disabled={isLoading}>
                     {isLoading ? 'Logging in...' : 'Login'}
                 </button>
                 <div className='register-link-container'>
