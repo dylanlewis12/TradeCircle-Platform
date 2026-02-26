@@ -1,56 +1,72 @@
 body {
-    background-color: #f5f5f5 ;
+  background-color: #f5f5f5;
 }
 
 .hero h1 {
-    font-weight: bold;
-    font-size: 120px;
-    color: white;
-    margin: 0;
-    text-align: center;
+  font-weight: bold;
+  font-size: 120px;
+  color: white;
+  margin: 0;
+  text-align: center;
 }
 
 .hero {
-    background-color: #169928;
-    min-height: 400px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
+  background-color: #169928;
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
 }
 
-.home-section { 
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+.home-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 60px 40px;
+  width: 100%;
 }
 
 .home-section h1 {
-    font-weight: bold;
-    position: relative;
-    top: 40px;
-    text-align: center;
+  font-weight: bold;
+  text-align: center;
+  margin: 0 0 40px 0;
+  font-size: 36px;
+  color: #1a1a1a;
+}
+
+#how-it-works {
+    font-size: 45px;
+}
+
+/* Cards Container */
+.container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 20px;
+  width: 100%;
+  max-width: 1200px;
+  margin-bottom: 20px;
+  box-sizing: border-box;
 }
 
 /* Submit button */
 .start-btn {
-    position: relative;
-    align-items: center;
-    width: fit-content;
-    padding: 14px;
-    margin-top: 30px;
-    background-color: #169928;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.1s ease;
-    letter-spacing: 0.5px;
-    font-weight: bold;
-    top: 0px
+  align-items: center;
+  width: fit-content;
+  padding: 14px 24px;
+  margin-top: 60px;
+  background-color: #169928;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+  letter-spacing: 0.5px;
 }
 
 .start-btn:hover:not(:disabled) {
@@ -67,11 +83,79 @@ body {
   cursor: not-allowed;
 }
 
-.container {
-    position: relative;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    top: 15px;
-    margin-bottom: 0;
+/* Responsive design */
+@media (max-width: 1024px) {
+  .hero h1 {
+    font-size: 80px;
+  }
+
+  .container {
+    flex-wrap: wrap;
+    gap: 15px;
+    padding: 0 20px;
+  }
+
+  .home-section {
+    padding: 50px 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero h1 {
+    font-size: 48px;
+  }
+
+  .hero {
+    min-height: 300px;
+  }
+
+  .home-section {
+    padding: 40px 20px;
+  }
+
+  .home-section h1 {
+    font-size: 28px;
+    margin: 0 0 30px 0;
+  }
+
+  .container {
+    flex-direction: column;
+    gap: 15px;
+    padding: 0 10px;
+  }
+
+  .start-btn {
+    margin-top: 40px;
+    padding: 12px 20px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero h1 {
+    font-size: 32px;
+  }
+
+  .hero {
+    min-height: 250px;
+  }
+
+  .home-section {
+    padding: 30px 15px;
+  }
+
+  .home-section h1 {
+    font-size: 24px;
+    margin: 0 0 20px 0;
+  }
+
+  .container {
+    gap: 10px;
+  }
+
+  .start-btn {
+    margin-top: 30px;
+    padding: 10px 18px;
+    font-size: 13px;
+  }
 }

@@ -46,7 +46,7 @@ export default function Home() {
                 <h1>Trade skills and build connections</h1>
             </div>
             <div className='home-section'>
-                <h1>How It Works</h1><br /><br />
+                <h1 id='how-it-works'>How It Works</h1><br /><br />
                 <div className='container'>
                     {homeCards}
                 </div>
