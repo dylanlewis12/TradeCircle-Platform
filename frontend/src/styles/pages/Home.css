@@ -50,7 +50,7 @@ body {
     transition: background-color 0.3s ease, transform 0.1s ease;
     letter-spacing: 0.5px;
     font-weight: bold;
-    top: 30px
+    top: 0px
 }
 
 .start-btn:hover:not(:disabled) {
@@ -65,4 +65,13 @@ body {
 .start-btn:disabled {
   opacity: 0.7;
   cursor: not-allowed;
+}
+
+.container {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    top: 15px;
+    margin-bottom: 0;
 }
