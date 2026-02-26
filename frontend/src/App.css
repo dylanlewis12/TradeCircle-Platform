@@ -7,9 +7,10 @@
   box-sizing: border-box;
 }
 
-body {
+html, body {
   background-color: #f5f5f5;
   color: #1a1a1a;
+  width: 100%;
 }
 
 h1, h2, h3, h4, h5, h6 {

@@ -9,36 +9,42 @@
   position: sticky;
   top: 0;
   z-index: 100;
-  width: 100vw;
+  width: 100%;              /* CHANGED from 100vw */
+  box-sizing: border-box;   /* ADDED */
+  overflow-x: hidden;       /* ADDED - prevent overflow */
 }
 
 /* Logo section */
 .navbar-left {
   display: flex;
   align-items: center;
-  margin-left: -30px !important;
+  flex-shrink: 0;           /* ADDED */
+  /* Remove margin-left: -30px !important; */
 }
 
-.logo {
+.app-logo {
   cursor: pointer;
+  margin-left: -20px;
 }
 
-.logo img {
-  width: 120px;
+.app-logo img {
+  width: 100px;
   height: auto;
   transition: transform 0.3s ease;
   margin: 0;
 }
 
-.logo img:hover {
+.app-logo img:hover {
   transform: scale(1.05);
 }
 
 /* Center navigation links */
 .navbar-center {
-  flex: 1;
+  flex: 0.8;
   display: flex;
   justify-content: center;
+  padding: 0 20px;          /* CHANGED from padding-right: 0 */
+  min-width: 0;             /* ADDED */
 }
 
 .navbar-center ul {
@@ -47,6 +53,8 @@
   gap: 50px;
   margin: 0;
   padding: 0;
+  flex-wrap: nowrap;        /* ADDED */
+  white-space: nowrap;      /* ADDED */
 }
 
 .navbar-center li {
@@ -55,8 +63,8 @@
   color: #000000;
   transition: all 0.3s ease;
   cursor: pointer;
+  flex-shrink: 0;           /* ADDED */
 }
-
 
 .navbar-center a {
   color: #666666;
@@ -78,6 +86,7 @@
   display: flex;
   align-items: center;
   gap: 25px;
+  flex-shrink: 0;           /* ADDED */
 }
 
 .navbar-right ul {
@@ -93,6 +102,7 @@
   align-items: center;
   cursor: pointer;
   transition: all 0.3s ease;
+  flex-shrink: 0;           /* ADDED */
 }
 
 .navbar-right li:hover {
@@ -139,7 +149,7 @@
   }
 
   .navbar-center ul {
-    gap: 20px;
+    gap: 30px;              /* REDUCED from 50px */
   }
 
   .navbar-center a {
@@ -159,7 +169,7 @@
     margin-bottom: 10px;
   }
 
-  .logo img {
+  .app-logo img {
     width: 40px;
   }
 

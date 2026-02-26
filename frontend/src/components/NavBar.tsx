@@ -5,6 +5,7 @@ import '../styles/components/Navbar.css';
 import { Search, Bell, User } from 'lucide-react';
 //import { useState } from 'react';
 //import Modal from './Modal.tsx';
+import logo from '../styles/images/logo.png';
 
 const Navbar = () => {
     const location = useLocation();
@@ -28,7 +29,7 @@ const Navbar = () => {
     return(
     <nav className="navbar">
         <div className="navbar-left">
-            <Link to="/home" className="poke-ball"><img src='logo.svg' alt='logo'/></Link>
+            <Link to="/home" className="app-logo"><img src={logo} alt='logo'/></Link>
         </div>
         <div className="navbar-center">
             {/* Conditionally render Navbar */}
