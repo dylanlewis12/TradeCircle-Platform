@@ -1,64 +1,95 @@
-//import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import '../styles/components/Navbar.css'; 
 import { Search, Bell, User } from 'lucide-react';
-//import { useState } from 'react';
-//import Modal from './Modal.tsx';
 import logo from '../styles/images/logo.png';
 
 const Navbar = () => {
-    const location = useLocation();
-    const showNavbar = location.pathname !== "/" && location.pathname !== "/register";
+  const location = useLocation();
+  const showNavbar = location.pathname !== "/" && location.pathname !== "/register";
 
+  const handleAccountUpdate = (event: any) => {
+    event.preventDefault();
+  };
 
-    //const [isModalOpen, setIsModalOpen] = useState(false); //State to control modal visibility
-
-    //const openModal = () => setIsModalOpen(true);
-    //const closeModal = () => setIsModalOpen(false);
-
-    const handleAccountUpdate = (event: any) => {
-        event.preventDefault();
-        // Handle form submission logic here
-        //alert('Account updated successfully')
-        //closeModal(); // Close the modal after submission
-
-        //Add a condition for closing modal if user presses close button
-    }
-
-    return(
+  return (
     <nav className="navbar">
-        <div className="navbar-left">
-            <Link to="/home" className="app-logo"><img src={logo} alt='logo'/></Link>
-        </div>
-        <div className="navbar-center">
-            {/* Conditionally render Navbar */}
-            {/*User is active to conditionally render navbar links*/}
-            {showNavbar && (
-                <nav className="navbar">
-                    <ul className="nav-links">
-                        <li><NavLink to="/home" className={({ isActive }) => (isActive ? "active" : "")}>Home</NavLink></li>
-                        <li><NavLink to="/market-place" className={({ isActive }) => (isActive ? "active" : "")}>Marketplace</NavLink></li>
-                        <li><NavLink to="/dashboard" className={({ isActive }) => (isActive ? "active" : "")}>Dashboard</NavLink></li>
-                        <li><NavLink to="/community" className={({ isActive }) => (isActive ? "active" : "")}>Community</NavLink></li>
-                        <li><NavLink to="/about" className={({ isActive }) => (isActive ? "active" : "")}>About Us</NavLink></li>
-                        <li><NavLink to="/chat" className={({ isActive }) => (isActive ? "active" : "")}>Messages</NavLink></li>
-                    </ul>    
-                    {/*
-                        NavBar icon divs
-                    */}
-                </nav>
-            )}
-        </div>
-        <div className='navbar-right'>
-            <ul>
-                <li><Search size={10}/></li>
-                <li><Bell size={10}/></li>
-                <li onClick={handleAccountUpdate}><User size={10}/></li>
-            </ul>
-        </div>
+      <div className="navbar__logo">
+        <Link to="/home" className="navbar__logo-link">
+          <img src={logo} alt="TradeCircle logo" className="navbar__logo-image" />
+        </Link>
+      </div>
+
+      <div className="navbar__menu">
+        {showNavbar && (
+          <ul className="navbar__links">
+            <li className="navbar__item">
+              <NavLink 
+                to="/home" 
+                className={({ isActive }) => isActive ? "navbar__link navbar__link--active" : "navbar__link"}
+              >
+                Home
+              </NavLink>
+            </li>
+            <li className="navbar__item">
+              <NavLink 
+                to="/market-place" 
+                className={({ isActive }) => isActive ? "navbar__link navbar__link--active" : "navbar__link"}
+              >
+                Marketplace
+              </NavLink>
+            </li>
+            <li className="navbar__item">
+              <NavLink 
+                to="/dashboard" 
+                className={({ isActive }) => isActive ? "navbar__link navbar__link--active" : "navbar__link"}
+              >
+                Dashboard
+              </NavLink>
+            </li>
+            <li className="navbar__item">
+              <NavLink 
+                to="/community" 
+                className={({ isActive }) => isActive ? "navbar__link navbar__link--active" : "navbar__link"}
+              >
+                Community
+              </NavLink>
+            </li>
+            <li className="navbar__item">
+              <NavLink 
+                to="/about" 
+                className={({ isActive }) => isActive ? "navbar__link navbar__link--active" : "navbar__link"}
+              >
+                About Us
+              </NavLink>
+            </li>
+            <li className="navbar__item">
+              <NavLink 
+                to="/chat" 
+                className={({ isActive }) => isActive ? "navbar__link navbar__link--active" : "navbar__link"}
+              >
+                Messages
+              </NavLink>
+            </li>
+          </ul>
+        )}
+      </div>
+
+      <div className="navbar__actions">
+        <ul className="navbar__icon-list">
+          <li className="navbar__icon-item navbar__icon-item--search">
+            <Search size={24} />
+          </li>
+          <li className="navbar__icon-item navbar__icon-item--bell">
+            <Bell size={24} />
+          </li>
+          <li className="navbar__icon-item navbar__icon-item--user" onClick={handleAccountUpdate}>
+            <User size={24} />
+          </li>
+        </ul>
+      </div>
     </nav>
-    );
+  );
 };
 
 export default Navbar;

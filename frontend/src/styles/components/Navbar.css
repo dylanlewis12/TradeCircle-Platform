@@ -1,4 +1,4 @@
-/* Navbar container */
+/* Navbar Container */
 .navbar {
   background-color: #ffffff;
   padding: 15px 40px;
@@ -9,63 +9,61 @@
   position: sticky;
   top: 0;
   z-index: 100;
-  width: 100%;              /* CHANGED from 100vw */
-  box-sizing: border-box;   /* ADDED */
-  overflow-x: hidden;       /* ADDED - prevent overflow */
+  width: 100%;
+  box-sizing: border-box;
+  gap: 30px;
 }
 
-/* Logo section */
-.navbar-left {
+/* Logo Section */
+.navbar__logo {
   display: flex;
   align-items: center;
-  flex-shrink: 0;           
+  flex-shrink: 0;
 }
 
-.app-logo {
+.navbar__logo-link {
+  display: flex;
+  align-items: center;
   cursor: pointer;
-  margin-left: -20px;
-}
-
-.app-logo img {
-  width: 100px;
-  height: auto;
+  text-decoration: none;
   transition: transform 0.3s ease;
-  margin: 0;
 }
 
-.app-logo img:hover {
+.navbar__logo-link:hover {
   transform: scale(1.05);
 }
 
-/* Center navigation links */
-.navbar-center {
-  flex: 0.8;
-  display: flex;
-  justify-content: center;
-  padding: 0 20px;          
-  min-width: 0;         
+.navbar__logo-image {
+  width: 100px;
+  height: auto;
+  display: block;
 }
 
-.navbar-center ul {
+/* Menu/Navigation Section */
+.navbar__menu {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  min-width: 0;
+}
+
+.navbar__links {
   list-style: none;
   display: flex;
   gap: 50px;
   margin: 0;
   padding: 0;
-  flex-wrap: nowrap;        
-  white-space: nowrap;    
+  flex-wrap: nowrap;
+  white-space: nowrap;
 }
 
-.navbar-center li {
-  font-size: 18px;
+.navbar__item {
+  flex-shrink: 0;
+  font-size: 16px;
   font-weight: 500;
-  color: #000000;
-  transition: all 0.3s ease;
-  cursor: pointer;
-  flex-shrink: 0;        
 }
 
-.navbar-center a {
+.navbar__link {
   color: #666666;
   text-decoration: none;
   display: block;
@@ -74,86 +72,72 @@
   transition: all 0.3s ease;
 }
 
-.navbar-center a:hover,
-.navbar-center a.active {
+.navbar__link:hover {
   background-color: #169928;
   color: white;
 }
 
-/* Right section (icons) */
-.navbar-right {
-  display: flex;
-  align-items: center;
-  gap: 25px;
-  flex-shrink: 0;           
+.navbar__link--active {
+  background-color: #169928;
+  color: white;
 }
 
-.navbar-right ul {
+/* Actions Section (Icons) */
+.navbar__actions {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.navbar__icon-list {
   list-style: none;
   display: flex;
   gap: 25px;
   margin: 0;
   padding: 0;
-}
-
-.navbar-right li {
-  display: flex;
   align-items: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  flex-shrink: 0;       
 }
 
-.navbar-right li:hover {
-  opacity: 0.7;
-  transform: scale(1.1);
-}
-
-/* Icon styling */
-.navbar-right svg,
-.navbar-right i {
-  width: 24px;
-  height: 24px;
-  color: #666666;
-  transition: color 0.3s ease;
-}
-
-.navbar-right li:hover svg,
-.navbar-right li:hover i {
-  color: #4a9d6f;
-}
-
-/* User profile icon */
-.navbar-right .user-icon {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background-color: #e0e0e0;
+.navbar__icon-item {
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
+  cursor: pointer;
+  width: 24px;
+  height: 24px;
+  color: #666666;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
 }
 
-.navbar-right .user-icon img {
+.navbar__icon-item:hover {
+  color: #4a9d6f;
+  transform: scale(1.15);
+}
+
+.navbar__icon-item svg {
   width: 100%;
   height: 100%;
-  object-fit: cover;
 }
 
-/* Responsive design */
+/* Responsive Design */
 @media (max-width: 1024px) {
   .navbar {
     padding: 12px 20px;
+    gap: 20px;
   }
 
-  .navbar-center ul {
-    gap: 30px;          
+  .navbar__links {
+    gap: 30px;
   }
 
-  .navbar-center a {
+  .navbar__link {
     padding: 6px 12px;
     font-size: 14px;
+  }
+
+  .navbar__icon-list {
+    gap: 20px;
   }
 }
 
@@ -161,49 +145,76 @@
   .navbar {
     flex-wrap: wrap;
     padding: 10px 15px;
+    gap: 15px;
   }
 
-  .navbar-left {
+  .navbar__logo {
     width: 100%;
     margin-bottom: 10px;
   }
 
-  .app-logo img {
-    width: 40px;
+  .navbar__logo-image {
+    width: 60px;
   }
 
-  .navbar-center ul {
+  .navbar__menu {
+    width: 100%;
+    order: 3;
+  }
+
+  .navbar__links {
     gap: 15px;
     font-size: 14px;
+    width: 100%;
+    justify-content: center;
   }
 
-  .navbar-right {
+  .navbar__link {
+    padding: 6px 10px;
+    font-size: 13px;
+  }
+
+  .navbar__actions {
     width: 100%;
     justify-content: flex-end;
   }
 
-  .navbar-right ul {
+  .navbar__icon-list {
     gap: 15px;
+  }
+
+  .navbar__icon-item {
+    width: 20px;
+    height: 20px;
   }
 }
 
 @media (max-width: 480px) {
   .navbar {
     padding: 10px;
+    gap: 10px;
   }
 
-  .navbar-center ul {
+  .navbar__logo-image {
+    width: 50px;
+  }
+
+  .navbar__links {
     gap: 10px;
     font-size: 12px;
   }
 
-  .navbar-center a {
+  .navbar__link {
     padding: 4px 8px;
+    font-size: 12px;
   }
 
-  .navbar-right svg,
-  .navbar-right i {
-    width: 20px;
-    height: 20px;
+  .navbar__icon-list {
+    gap: 12px;
+  }
+
+  .navbar__icon-item {
+    width: 18px;
+    height: 18px;
   }
 }
