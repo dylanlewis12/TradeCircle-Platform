@@ -131,11 +131,8 @@
 .register-password-container {
   position: relative;
   width: 100%;
-}
-
-.register-password-container input {
-  padding-right: 45px;
-  height: 44px;
+  display: flex;
+  flex-direction: column;
 }
 
 .register-password-container input {
@@ -158,6 +155,8 @@
 .register-confirm-password-container {
   position: relative;
   width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .register-confirm-password-container input {
@@ -180,8 +179,7 @@
 .register-password-toggle {
   position: absolute;
   right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
+  bottom: 0;
   background: none !important;
   border: none !important;
   cursor: pointer;
@@ -192,7 +190,7 @@
   justify-content: center;
   transition: none !important;
   width: auto;
-  height: auto;
+  height: 44px;
 }
 
 .register-password-toggle:hover {
@@ -210,7 +208,7 @@
   width: 100%;
   max-width: 480px;
   padding: 14px;
-  margin-top: 30px;
+  margin-top: 20px;
   background-color: #169928;
   color: white;
   border: none;

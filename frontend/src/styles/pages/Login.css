@@ -10,7 +10,7 @@
 
 /* Login Pane - Left (Logo) */
 .login-pane {
-  flex: 1;
+  flex: 0 0 50%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -19,7 +19,7 @@
 }
 
 .login-pane--left {
-  flex: 1;
+  flex: 0 0 50%;
 }
 
 .login-pane--left img {
@@ -30,32 +30,29 @@
   height: auto;
   image-rendering: crisp-edges;
   image-rendering: -webkit-optimize-contrast;
+  border: none !important;
 }
 
-/* Login Divider */
+/* Register Divider */
 .login-divider {
   width: 0;
   background-color: transparent;
-  border-left: 1px solid #e0e0e0;
+  border-left: 2px solid #e0e0e0;
   margin: 0;
   padding: 0;
 }
 
-/* Login Pane - Right (Form) */
+/* Register Pane - Right (Form) */
 .login-pane--right {
-  flex: 1;
+  flex: 0 0 50%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 40px;
   background: #ffffff;
-}
-
-/* Login Form */
-.login-pane--right {
   width: 100%;
-  max-width: 400px;
+  max-width: 100%;
 }
 
 .login-pane--right h2 {
@@ -65,11 +62,15 @@
   margin-bottom: 30px;
   color: #1a1a1a;
   letter-spacing: -0.5px;
+  width: 100%;
+  max-width: 480px;
 }
 
 /* Form groups */
 .login-pane--right > div {
   margin-bottom: 25px;
+  width: 100%;
+  max-width: 480px;
 }
 
 .login-pane--right label {
@@ -121,10 +122,18 @@
   width: 100%;
 }
 
+/* Username input container */
+.login-username-container {
+  position: relative;
+  width: 100%;
+}
+
 /* Password input container */
 .login-password-container {
   position: relative;
   width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .login-password-container input {
@@ -147,7 +156,6 @@
 .login-password-toggle {
   position: absolute;
   right: 12px;
-  top: 0;
   bottom: 0;
   background: none !important;
   border: none !important;
@@ -159,7 +167,7 @@
   justify-content: center;
   transition: none !important;
   width: auto;
-  height: auto;
+  height: 44px;
 }
 
 .login-password-toggle:hover {
@@ -175,8 +183,9 @@
 /* Submit button */
 .login-submit-btn {
   width: 100%;
+  max-width: 480px;
   padding: 14px;
-  margin-top: 30px;
+  margin-top: 20px;
   background-color: #169928;
   color: white;
   border: none;
@@ -202,12 +211,14 @@
   cursor: not-allowed;
 }
 
-/* Register link container */
+/* Login link container */
 .login-register-link {
   text-align: center;
   margin-top: 20px;
   font-size: 14px;
   color: #666666;
+  width: 100%;
+  max-width: 480px;
 }
 
 .login-register-link a {
@@ -228,7 +239,7 @@
   color: #d32f2f;
   font-size: 13px;
   margin-top: 8px;
-  text-align: center;
+  text-align: right;
 }
 
 /* Responsive design */
@@ -244,7 +255,7 @@
   }
 
   .login-pane--left {
-    flex: 0;
+    flex: 0 0 auto;
     min-height: 200px;
   }
 
@@ -255,6 +266,7 @@
   .login-pane--right {
     flex: 1;
     min-height: calc(100vh - 200px);
+    overflow-y: auto;
   }
 
   .login-pane--right h2 {

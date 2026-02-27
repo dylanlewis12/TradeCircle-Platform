@@ -216,7 +216,7 @@ export default function Register() {
                 </button>
                 
                 <div className='register-login-link'>
-                    <p>Already have an account? <a onClick={handleLogin} style={{ cursor: 'pointer' }}>Login</a></p>
+                    <p>Already have an account? <a onClick={handleLogin} style={{ cursor: 'pointer' }}><b>Login</b></a></p>
                 </div>
             </form>        
         </div>
