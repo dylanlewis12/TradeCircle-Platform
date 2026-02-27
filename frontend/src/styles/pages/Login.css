@@ -1,84 +1,78 @@
 /* Container - Full page layout */
 .container {
-    display: flex;
-    width: 100vw;
-    height: 100vh;
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    background: #f5f5f5;
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  background: #ffffff;
 }
 
-/*Img side - left pane*/
-.pane {
-    flex: 1; /*Both sides take up equal space*/
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: #ffffff;
-    padding: 40px;
+/* Left pane - Logo */
+.pane.left {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #ffffff;
+  padding: 40px;
 }
 
 .pane.left img {
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
-  width: 500px;
+  width: 400px;
   height: auto;
   image-rendering: crisp-edges;
   image-rendering: -webkit-optimize-contrast;
 }
 
-/*Right pane - Form side*/
-.pane.right {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 40px;
-    background: #ffffff;
-}
-
-.submit-btn {
-    background-color: #32CD32;
-    color: white;
-}
-
-/*Vertical divider line*/
+/* Divider line */
 .divider-line {
-    width: 3px;
-    background-color: #e0e0e0;
-    margin: 0;
+  width: 1px;
+  background-color: transparent;
+  margin: 0;
 }
 
+/* Right pane - Form */
+.pane.right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  background: #ffffff;
+}
 
+/* Form styling */
 form {
-    width: 100%;
-    max-width: 50vw;
+  width: 100%;
+  max-width: 400px;
 }
 
 form h2 {
-    text-align: center;
-    font-size: 28px;
-    font-weight: 600;
-    margin-bottom: 30px;
-    color: #1a1a1a;
-    letter-spacing: -0.5px;
+  text-align: center;
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 30px;
+  color: #1a1a1a;
+  letter-spacing: -0.5px;
 }
 
-/*Form groups*/
+/* Form groups */
 form > div {
-    margin-bottom: 25px;
+  margin-bottom: 25px;
 }
 
 form label {
-    display: block;
-    margin-bottom: 8px;
-    font-size: 14px;
-    color: #666666;
-    font-weight: 500;
-    letter-spacing: 0.3px;
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: #666666;
+  font-weight: 500;
+  letter-spacing: 0.3px;
 }
 
 /* Input fields */
@@ -93,6 +87,7 @@ form input {
   box-sizing: border-box;
   background: white;
   font-family: inherit;
+  line-height: 1.5;
 }
 
 form input:focus {
@@ -101,7 +96,11 @@ form input:focus {
   box-shadow: 0 0 0 3px rgba(74, 157, 111, 0.1);
 }
 
-/* Override autofill styling */
+form input::placeholder {
+  color: #999999;
+}
+
+/* Autofill override */
 form input:-webkit-autofill,
 form input:-webkit-autofill:hover,
 form input:-webkit-autofill:focus {
@@ -110,29 +109,78 @@ form input:-webkit-autofill:focus {
   -webkit-text-fill-color: #1a1a1a !important;
 }
 
-form input:-webkit-autofill {
-  -webkit-text-fill-color: #1a1a1a !important;
+/* Email input container */
+.email-input-container {
+  position: relative;
+  width: 100%;
 }
 
-form input::placeholder {
-   color: #999999; 
+/* Password input container */
+.password-input-container {
+  position: relative;
+  width: 100%;
 }
+
+.password-input-container input {
+  padding-right: 45px;
+  width: 100%;
+  padding: 12px 14px;
+  padding-right: 45px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 15px;
+  color: #1a1a1a;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+  background: white;
+  font-family: inherit;
+  line-height: 1.5;
+}
+
+/* Password toggle button - OVERRIDE */
+.password-toggle-btn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none !important;
+  border: none !important;
+  cursor: pointer;
+  color: #666666 !important;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: none !important;
+  height: 44px;
+  width: 44px;
+}
+
+.password-toggle-btn:hover {
+  background: none !important;
+  color: #666666 !important;
+}
+
+.password-toggle-btn:active {
+  background: none !important;
+  color: #666666 !important;
+}
+
 
 /* Submit button */
 .submit-btn {
-    width: 70%;
-    padding: 14px;
-    margin-top: 30px;
-    background-color: #169928;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.1s ease;
-    letter-spacing: 0.5px;
-    font-weight: bold;
+  width: 100%;
+  padding: 14px;
+  margin-top: 30px;
+  background-color: #169928;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+  letter-spacing: 0.5px;
 }
 
 .submit-btn:hover:not(:disabled) {
@@ -140,11 +188,11 @@ form input::placeholder {
   transform: translateY(-2px);
 }
 
-form button:active:not(:disabled) {
+.submit-btn:active:not(:disabled) {
   transform: translateY(0);
 }
 
-form button:disabled {
+.submit-btn:disabled {
   opacity: 0.7;
   cursor: not-allowed;
 }
@@ -162,6 +210,7 @@ form button:disabled {
   text-decoration: none;
   font-weight: 600;
   transition: color 0.3s ease;
+  cursor: pointer;
 }
 
 .register-link-container a:hover {
@@ -174,23 +223,23 @@ form button:disabled {
   color: #d32f2f;
   font-size: 13px;
   margin-top: 8px;
-  text-align: right;
-
+  text-align: center;
 }
 
 /* Responsive design */
 @media (max-width: 768px) {
   .container {
     flex-direction: column;
+    height: auto;
+    min-height: 100vh;
   }
 
   .divider-line {
-    width: 100%;
-    height: 1px;
+    display: none;
   }
 
   .pane.left {
-    flex: 0.5;
+    flex: 0;
     min-height: 200px;
   }
 
@@ -200,6 +249,7 @@ form button:disabled {
 
   .pane.right {
     flex: 1;
+    min-height: calc(100vh - 200px);
   }
 
   form {
@@ -212,9 +262,17 @@ form button:disabled {
 }
 
 @media (max-width: 480px) {
-  .pane.left,
+  .pane.left {
+    min-height: 150px;
+  }
+
+  .pane.left img {
+    width: 200px;
+  }
+
   .pane.right {
     padding: 20px;
+    min-height: calc(100vh - 150px);
   }
 
   form h2 {
@@ -227,47 +285,8 @@ form button:disabled {
     font-size: 14px;
   }
 
-  form button {
+  .submit-btn {
     padding: 12px;
     font-size: 14px;
   }
-}
-
-/* ADD THIS NEW RULE */
-.password-toggle-btn {
-  position: absolute;
-  right: 12px;
-  top: 50%;
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: #666666;
-  padding: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: color 0.3s ease;
-  float: right
-}
-
-
-.password-toggle-btn:hover:not(:disabled) {
-  background-color: none;
-  transform: translateY(-2px);
-}
-
-
-.password-input-container {
-  position: relative;
-  width: 70%;
-}
-
-.password-input-container input {
-  padding-right: 200px;
-}
-
-/**********************************/
-.email-input-container {
-  position: relative;
-  width: 70%;
 }

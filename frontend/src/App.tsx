@@ -2,7 +2,7 @@ import { Routes, Route } from 'react-router-dom';
 import About from './pages/About.tsx';
 import Chat from './pages/Chat.tsx';
 import Community from './pages/Community.tsx';
-import Explore from './pages/Explore.tsx';
+import Dashboard from './pages/Dashboard.tsx';
 import Home from './pages/Home.tsx';
 import Login from './pages/Login.tsx';
 import Register from './pages/Register.tsx';
@@ -30,7 +30,7 @@ function App() {
           <Route path="/chat" element={<Chat />} />
           <Route path="/home" element={<Home />} />
           <Route path="/about" element={<About />} />
-          <Route path="/explore" element={<Explore />} />
+          <Route path="/dashboard" element={<Dashboard />} />
         </Routes>
     </>
   );

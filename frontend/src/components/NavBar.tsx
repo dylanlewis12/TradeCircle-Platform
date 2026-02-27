@@ -39,7 +39,7 @@ const Navbar = () => {
                     <ul className="nav-links">
                         <li><NavLink to="/home" className={({ isActive }) => (isActive ? "active" : "")}>Home</NavLink></li>
                         <li><NavLink to="/market-place" className={({ isActive }) => (isActive ? "active" : "")}>Marketplace</NavLink></li>
-                        <li><NavLink to="/explore" className={({ isActive }) => (isActive ? "active" : "")}>Explore Skills</NavLink></li>
+                        <li><NavLink to="/dashboard" className={({ isActive }) => (isActive ? "active" : "")}>Dashboard</NavLink></li>
                         <li><NavLink to="/community" className={({ isActive }) => (isActive ? "active" : "")}>Community</NavLink></li>
                         <li><NavLink to="/about" className={({ isActive }) => (isActive ? "active" : "")}>About Us</NavLink></li>
                         <li><NavLink to="/chat" className={({ isActive }) => (isActive ? "active" : "")}>Messages</NavLink></li>
