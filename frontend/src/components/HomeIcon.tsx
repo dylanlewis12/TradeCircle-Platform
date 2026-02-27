@@ -1,14 +1,14 @@
 import '../styles/components/HomeIcon.css';
 
-export default function HomeIcon({step, icon, title, text}: any) {
-  return(
+export default function HomeIcon({ step, icon, title, text }: any) {
+  return (
     <div className="home-card">
-      <h1 className='card-step'>{step}</h1>
-      <div className="card-icon">
+      <h1 className="home-card__step">{step}</h1>
+      <div className="home-card__icon">
         {icon}
       </div>
-      <h2 className='card-title'>{title}</h2>
-      <h3 className='card-text'>{text}</h3>
+      <h2 className="home-card__title">{title}</h2>
+      <p className="home-card__text">{text}</p>
     </div>
-  )
+  );
 }
