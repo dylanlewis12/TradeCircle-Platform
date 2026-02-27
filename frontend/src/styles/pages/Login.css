@@ -122,7 +122,6 @@ form input:-webkit-autofill:focus {
 }
 
 .password-input-container input {
-  padding-right: 45px;
   width: 100%;
   padding: 12px 14px;
   padding-right: 45px;
@@ -135,25 +134,26 @@ form input:-webkit-autofill:focus {
   background: white;
   font-family: inherit;
   line-height: 1.5;
+  height: 44px;  /* ADDED - match button height */
 }
 
-/* Password toggle button - OVERRIDE */
+/* Password toggle button */
 .password-toggle-btn {
   position: absolute;
   right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
+  top: 0;  /* CHANGED from top: 50% */
+  bottom: 0;  /* ADDED - fill vertical space */
   background: none !important;
   border: none !important;
   cursor: pointer;
   color: #666666 !important;
-  padding: 8px;
+  padding: 0 8px;  /* CHANGED from padding: 8px */
   display: flex;
-  align-items: center;
+  align-items: center;  /* This centers vertically */
   justify-content: center;
   transition: none !important;
-  height: 44px;
-  width: 44px;
+  width: auto;  /* CHANGED from width: 44px */
+  height: auto;  /* CHANGED from height: 44px */
 }
 
 .password-toggle-btn:hover {
@@ -165,7 +165,6 @@ form input:-webkit-autofill:focus {
   background: none !important;
   color: #666666 !important;
 }
-
 
 /* Submit button */
 .submit-btn {
