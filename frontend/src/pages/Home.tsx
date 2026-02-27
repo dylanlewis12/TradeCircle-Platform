@@ -53,7 +53,7 @@ export default function Home() {
       <section className="home-hero">
         <h1 className="home-hero__title">Trade skills and build connections</h1>
       </section>
-
+      
       <section className="home-section">
         <h2 className="home-section__title">How It Works</h2>
         

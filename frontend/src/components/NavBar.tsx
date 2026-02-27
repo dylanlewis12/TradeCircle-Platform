@@ -3,14 +3,63 @@ import { useLocation } from 'react-router-dom';
 import '../styles/components/Navbar.css'; 
 import { Search, Bell, User } from 'lucide-react';
 import logo from '../styles/images/logo.png';
+import { useState, useEffect } from 'react';
+import { useAuth } from '../context/authContext/AuthContext.js';
+import Modal from './Modal.jsx'; // Import the Modal component
+
 
 const Navbar = () => {
   const location = useLocation();
   const showNavbar = location.pathname !== "/" && location.pathname !== "/register";
+  
+  const { user } = useAuth();
+  
 
   const handleAccountUpdate = (event: any) => {
     event.preventDefault();
   };
+
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleOpen = () => setIsOpen(true);
+  const handleClose = () => setIsOpen(false);
+
+  const userData = {
+    email: user?.email,
+    userName: user?.userName,
+    profilePicture: user?.profilePicture,
+    bio: user?.bio
+  }
+
+  const modalContent = {
+
+  }
+
+  /*
+  useEffect(() => {
+    // Important: Wait for user to load
+    if (!user?.id) return;
+
+    const fetchTradeCount = async () => {
+      try {
+        const response = await axios.get(
+          'http://localhost:3000/api/trades/count',
+          {
+            headers: {
+              Authorization: `Bearer ${cookies.accessToken}`
+            }
+          }
+        );
+        setTradeCount(response.data.totalTrades);
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    };
+
+    fetchTradeCount();
+  }, [user?.id, cookies.accessToken]); // Re-run if user changes
+  */
+
 
   return (
     <nav className="navbar">
@@ -83,9 +132,19 @@ const Navbar = () => {
           <li className="navbar__icon-item navbar__icon-item--bell">
             <Bell size={24} />
           </li>
-          <li className="navbar__icon-item navbar__icon-item--user" onClick={handleAccountUpdate}>
+          <li 
+            className="navbar__icon-item navbar__icon-item--user" 
+            onClick={(e) => { e.stopPropagation(); handleOpen(); }}
+            >
             <User size={24} />
-          </li>
+            </li>
+            <Modal isOpen={isOpen} onClose={handleClose}>
+                {userData.profilePicture ? (
+                    <img src={userData.profilePicture} alt="User Profile" /> ) : 
+                    (<img src="../styles/images/user-icon.png" alt="User Profile" />)}
+            <h2>Modal Title</h2>
+            <p>This is the modal content.</p>
+            </Modal>
         </ul>
       </div>
     </nav>

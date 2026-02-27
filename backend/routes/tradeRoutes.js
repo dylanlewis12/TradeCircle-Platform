@@ -8,6 +8,7 @@ import {
   cancelTrade,
   completeTrade,
   getUserTradeHistory,
+  getUserTradeCount
 } from '../controllers/tradesControllers.js';
 import { protect } from '../middleware/authMiddleware.js';
 
@@ -20,6 +21,8 @@ router.get('/', protect, getTrades);
 router.get('/:id', protect, getTrade);
 
 router.get('/history', protect, getUserTradeHistory);
+
+router.get('/count', protect, getUserTradeCount);
 
 //router.get('/pending', protect, getUserPendingTrades);
 
