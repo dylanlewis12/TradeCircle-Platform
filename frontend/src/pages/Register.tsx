@@ -7,8 +7,6 @@ import logo from '../styles/images/logo.png';
 
 
 export default function Register() {
-    //const [email, setEmail] = useState('');
-    //const [password, setPassword] = useState('');
     const [errors, setErrors] = useState<{ email?: string; userName?: string; password?: string; confirmPassword?: string; general?: string }>({});
     const [isLoading, setIsLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
@@ -57,9 +55,9 @@ export default function Register() {
         // Confirm Password validation
         if ((name === "password" || name === "confirmPassword") && formData.confirmPassword.length > 0) {
             if (value !== formData.confirmPassword && name === "password") {
-            setErrors({ ...errors, confirmPassword: 'Passwords do not match.' });
+                setErrors({ ...errors, confirmPassword: 'Passwords do not match.' });
             } else if (formData.password !== value && name === "confirmPassword") {
-            setErrors({ ...errors, confirmPassword: 'Passwords do not match.' });
+                setErrors({ ...errors, confirmPassword: 'Passwords do not match.' });
             } else if (formData.password === value || value === formData.password) {
                 setErrors({ ...errors, confirmPassword: undefined });
             } else {
@@ -68,12 +66,10 @@ export default function Register() {
         }
     }
 
-
-    
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-        e.preventDefault(); //prevent form reloading page
-        setIsLoading(true); //Start loading state
-        setErrors({}); //Clear previous errors
+        e.preventDefault();
+        setIsLoading(true);
+        setErrors({});
 
         // Validation
         const newErrors: { email?: string; userName?: string; password?: string; confirmPassword?: string} = {};
@@ -119,9 +115,6 @@ export default function Register() {
             // Remove confirmPassword before sending to server
             const { confirmPassword, ...copy } = formData;
 
-            //ex. of handling array in form data submit
-            //copy.powers = copy.powers.split(',');
-
             console.log(copy);
 
             let res = await axios.post('http://localhost:3000/api/auth/register', copy);
@@ -131,7 +124,6 @@ export default function Register() {
                 localStorage.setItem('accessToken', res.data.accessToken);
             }
 
-            //handle response
             console.log(res.data);
             navigate('/home');
 
@@ -139,24 +131,23 @@ export default function Register() {
             setErrors({ general: err.response?.data.message || 'Registration failed. Please try again.'});
             console.error(err);
         } finally {
-            setIsLoading(false); //End loading state
+            setIsLoading(false);
         }
     }
     
     return( 
-        <div className='container'>
-            <div className='pane left'>
+        <div className='register-container'>
+            <div className='register-pane register-pane--left'>
                 <img src={logo} alt='logo'/>
             </div>
-            <div className='divider-line'></div>
-            <form onSubmit={handleSubmit} className='pane right'>
+            <div className='register-divider'></div>
+            <form onSubmit={handleSubmit} className='register-pane register-pane--right'>
                 <h2>Join TradeCircle</h2>
-                {/*Setting error text styling*/}
-                {errors && <p style={{ color: 'red' }}>{errors.general}</p>}
-                <div className='email-input-container'>
+                {errors.general && <p className='register-error-message'>{errors.general}</p>}
+                
+                <div className='register-email-container'>
                     <label htmlFor='email'>Email</label>
-                    {/* Error message appears above password input */}
-                    {errors && <p className='error-message'>{errors.email}</p>}
+                    {errors.email && <p className='register-error-message'>{errors.email}</p>}
                     <input 
                         type='email'
                         id='email'
@@ -166,10 +157,10 @@ export default function Register() {
                         required
                     />
                 </div>
-                <div className='username-input-container' style={{position: "relative", width: "70%"}}>
+                
+                <div className='register-username-container'>
                     <label htmlFor='userName'>Username</label>
-                    {/* Error message appears above password input */}
-                    {errors && <p className='error-message'>{errors.userName}</p>}
+                    {errors.userName && <p className='register-error-message'>{errors.userName}</p>}
                     <input 
                         type='text'
                         id='userName'
@@ -179,12 +170,12 @@ export default function Register() {
                         required
                     />
                 </div>
-                <div className='password-input-container'>
+                
+                <div className='register-password-container'>
                     <label htmlFor='password'>Password</label>
-                    {/* Error message appears above password input */}
-                    {errors && <p className='error-message'>{errors.password}</p>}
+                    {errors.password && <p className='register-error-message'>{errors.password}</p>}
                     <input 
-                        type='password'
+                        type={showPassword ? "text" : "password"}
                         id='password'
                         name='password'
                         value={formData.password}
@@ -193,18 +184,18 @@ export default function Register() {
                     />
                     <button
                         type='button'
-                        className='password-toggle-btn'
+                        className='register-password-toggle'
                         onClick={() => setShowPassword(!showPassword)}
                     >
                         {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                     </button>
                 </div>
-                <div className='confirmPassword-input-container' style={{position: "relative", width: "70%"}}>
-                    <label htmlFor='password'>Confirm Password</label>
-                    {/* Error message appears above password input */}
-                    {errors && <p className='error-message'>{errors.confirmPassword}</p>}
+                
+                <div className='register-confirm-password-container'>
+                    <label htmlFor='confirmPassword'>Confirm Password</label>
+                    {errors.confirmPassword && <p className='register-error-message'>{errors.confirmPassword}</p>}
                     <input 
-                        type='password'
+                        type={showConfirmPassword ? "text" : "password"}
                         id='confirmPassword'
                         name='confirmPassword'
                         value={formData.confirmPassword}
@@ -213,17 +204,19 @@ export default function Register() {
                     /> 
                     <button
                         type='button'
-                        className='password-toggle-btn'
+                        className='register-password-toggle'
                         onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                     >
                         {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                     </button>
                 </div>
-                <button className='submit-btn' type="submit" disabled={isLoading}>
-                    {isLoading ? 'Signing in...' : 'Sign up'}
+                
+                <button className='register-submit-btn' type="submit" disabled={isLoading}>
+                    {isLoading ? 'Signing up...' : 'Sign up'}
                 </button>
-                <div className='register-link-container'>
-                <p>Already have an account? <a onClick={handleLogin} style={{ cursor: 'pointer' }}>Login</a></p>
+                
+                <div className='register-login-link'>
+                    <p>Already have an account? <a onClick={handleLogin} style={{ cursor: 'pointer' }}>Login</a></p>
                 </div>
             </form>        
         </div>

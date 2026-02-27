@@ -1,5 +1,5 @@
-/* Container - Full page layout */
-.container {
+/* Login Container - Full page layout */
+.login-container {
   display: flex;
   height: 100vh;
   width: 100%;
@@ -8,8 +8,8 @@
   background: #ffffff;
 }
 
-/* Left pane - Logo */
-.pane.left {
+/* Login Pane - Left (Logo) */
+.login-pane {
   flex: 1;
   display: flex;
   justify-content: center;
@@ -18,7 +18,11 @@
   padding: 40px;
 }
 
-.pane.left img {
+.login-pane--left {
+  flex: 1;
+}
+
+.login-pane--left img {
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
@@ -28,15 +32,17 @@
   image-rendering: -webkit-optimize-contrast;
 }
 
-/* Divider line */
-.divider-line {
-  width: 1px;
+/* Login Divider */
+.login-divider {
+  width: 0;
   background-color: transparent;
+  border-left: 1px solid #e0e0e0;
   margin: 0;
+  padding: 0;
 }
 
-/* Right pane - Form */
-.pane.right {
+/* Login Pane - Right (Form) */
+.login-pane--right {
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -46,13 +52,13 @@
   background: #ffffff;
 }
 
-/* Form styling */
-form {
+/* Login Form */
+.login-pane--right {
   width: 100%;
   max-width: 400px;
 }
 
-form h2 {
+.login-pane--right h2 {
   text-align: center;
   font-size: 28px;
   font-weight: 600;
@@ -62,11 +68,11 @@ form h2 {
 }
 
 /* Form groups */
-form > div {
+.login-pane--right > div {
   margin-bottom: 25px;
 }
 
-form label {
+.login-pane--right label {
   display: block;
   margin-bottom: 8px;
   font-size: 14px;
@@ -76,7 +82,7 @@ form label {
 }
 
 /* Input fields */
-form input {
+.login-pane--right input {
   width: 100%;
   padding: 12px 14px;
   border: 1px solid #e0e0e0;
@@ -90,38 +96,38 @@ form input {
   line-height: 1.5;
 }
 
-form input:focus {
+.login-pane--right input:focus {
   outline: none;
   border-color: #4a9d6f;
   box-shadow: 0 0 0 3px rgba(74, 157, 111, 0.1);
 }
 
-form input::placeholder {
+.login-pane--right input::placeholder {
   color: #999999;
 }
 
 /* Autofill override */
-form input:-webkit-autofill,
-form input:-webkit-autofill:hover,
-form input:-webkit-autofill:focus {
+.login-pane--right input:-webkit-autofill,
+.login-pane--right input:-webkit-autofill:hover,
+.login-pane--right input:-webkit-autofill:focus {
   -webkit-box-shadow: 0 0 0 1000px white inset !important;
   box-shadow: 0 0 0 1000px white inset !important;
   -webkit-text-fill-color: #1a1a1a !important;
 }
 
 /* Email input container */
-.email-input-container {
+.login-email-container {
   position: relative;
   width: 100%;
 }
 
 /* Password input container */
-.password-input-container {
+.login-password-container {
   position: relative;
   width: 100%;
 }
 
-.password-input-container input {
+.login-password-container input {
   width: 100%;
   padding: 12px 14px;
   padding-right: 45px;
@@ -134,40 +140,40 @@ form input:-webkit-autofill:focus {
   background: white;
   font-family: inherit;
   line-height: 1.5;
-  height: 44px;  /* ADDED - match button height */
+  height: 44px;
 }
 
 /* Password toggle button */
-.password-toggle-btn {
+.login-password-toggle {
   position: absolute;
   right: 12px;
-  top: 0;  /* CHANGED from top: 50% */
-  bottom: 0;  /* ADDED - fill vertical space */
+  top: 0;
+  bottom: 0;
   background: none !important;
   border: none !important;
   cursor: pointer;
   color: #666666 !important;
-  padding: 0 8px;  /* CHANGED from padding: 8px */
+  padding: 0 8px;
   display: flex;
-  align-items: center;  /* This centers vertically */
+  align-items: center;
   justify-content: center;
   transition: none !important;
-  width: auto;  /* CHANGED from width: 44px */
-  height: auto;  /* CHANGED from height: 44px */
+  width: auto;
+  height: auto;
 }
 
-.password-toggle-btn:hover {
+.login-password-toggle:hover {
   background: none !important;
   color: #666666 !important;
 }
 
-.password-toggle-btn:active {
+.login-password-toggle:active {
   background: none !important;
   color: #666666 !important;
 }
 
 /* Submit button */
-.submit-btn {
+.login-submit-btn {
   width: 100%;
   padding: 14px;
   margin-top: 30px;
@@ -182,29 +188,29 @@ form input:-webkit-autofill:focus {
   letter-spacing: 0.5px;
 }
 
-.submit-btn:hover:not(:disabled) {
+.login-submit-btn:hover:not(:disabled) {
   background-color: #3d7d5a;
   transform: translateY(-2px);
 }
 
-.submit-btn:active:not(:disabled) {
+.login-submit-btn:active:not(:disabled) {
   transform: translateY(0);
 }
 
-.submit-btn:disabled {
+.login-submit-btn:disabled {
   opacity: 0.7;
   cursor: not-allowed;
 }
 
 /* Register link container */
-.register-link-container {
+.login-register-link {
   text-align: center;
   margin-top: 20px;
   font-size: 14px;
   color: #666666;
 }
 
-.register-link-container a {
+.login-register-link a {
   color: #4a9d6f;
   text-decoration: none;
   font-weight: 600;
@@ -212,13 +218,13 @@ form input:-webkit-autofill:focus {
   cursor: pointer;
 }
 
-.register-link-container a:hover {
+.login-register-link a:hover {
   color: #3d7d5a;
   text-decoration: underline;
 }
 
 /* Error message styling */
-.error-message {
+.login-error-message {
   color: #d32f2f;
   font-size: 13px;
   margin-top: 8px;
@@ -227,64 +233,60 @@ form input:-webkit-autofill:focus {
 
 /* Responsive design */
 @media (max-width: 768px) {
-  .container {
+  .login-container {
     flex-direction: column;
     height: auto;
     min-height: 100vh;
   }
 
-  .divider-line {
+  .login-divider {
     display: none;
   }
 
-  .pane.left {
+  .login-pane--left {
     flex: 0;
     min-height: 200px;
   }
 
-  .pane.left img {
+  .login-pane--left img {
     width: 250px;
   }
 
-  .pane.right {
+  .login-pane--right {
     flex: 1;
     min-height: calc(100vh - 200px);
   }
 
-  form {
-    max-width: 100%;
-  }
-
-  form h2 {
+  .login-pane--right h2 {
     font-size: 24px;
   }
 }
 
 @media (max-width: 480px) {
-  .pane.left {
+  .login-pane--left {
     min-height: 150px;
   }
 
-  .pane.left img {
+  .login-pane--left img {
     width: 200px;
   }
 
-  .pane.right {
+  .login-pane--right {
     padding: 20px;
     min-height: calc(100vh - 150px);
   }
 
-  form h2 {
+  .login-pane--right h2 {
     font-size: 20px;
     margin-bottom: 20px;
   }
 
-  form input {
+  .login-pane--right input {
     padding: 10px 12px;
     font-size: 14px;
   }
 
-  .submit-btn {
+  .login-submit-btn {
     padding: 12px;
     font-size: 14px;
   }

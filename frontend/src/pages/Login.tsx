@@ -8,11 +8,8 @@ import logo from '../styles/images/logo.png';
 
 
 export default function Login() {
-    //const [email, setEmail] = useState('');
-    //const [password, setPassword] = useState('');
     const [errors, setErrors] = useState<{ email?: string; password?: string; general?: string }>({});
     const [isLoading, setIsLoading] = useState(false);
-    // State to toggle password visibility (true for 'text', false for 'password')
     const [showPassword, setShowPassword] = useState(false);
     const { login } = useAuth();
     const navigate = useNavigate();
@@ -25,7 +22,6 @@ export default function Login() {
     function handleRegister() {
         navigate('/register');
     }
-
 
     function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
         const { name, value } = e.target;
@@ -51,12 +47,10 @@ export default function Login() {
         }
     }
 
-
-    
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-        e.preventDefault(); //prevent form reloading page
-        setIsLoading(true); //Start loading state
-        setErrors({}); //Clear previous errors
+        e.preventDefault();
+        setIsLoading(true);
+        setErrors({});
 
         // Validation
         const newErrors: { email?: string; password?: string } = {};
@@ -70,55 +64,44 @@ export default function Login() {
             newErrors.password = 'Password must be at least 8 characters.';
         }
 
-        if (Object.keys(newErrors).length > 0) { //Check if there are any errors before post request
+        if (Object.keys(newErrors).length > 0) {
             setErrors(newErrors);
             setIsLoading(false);
             return;
         }
 
         try {
-            //Manipulate data to final state
             let copy = {...formData}
-
-            //ex. of handling array in form data submit
-            //copy.powers = copy.powers.split(',');
-
             console.log(copy);
 
             let res = await axios.post('http://localhost:3000/api/auth/login', copy);
-
-            //handle response
             console.log(res.data);
 
-            // Just call login with the form data - it handles the API call and stores everything
             await login(copy);
-
             navigate('/home');
 
         } catch(err: any) {
             setErrors({ general: err.response?.data.message || 'Login failed. Please try again.'});
             console.error(err);
         } finally {
-            setIsLoading(false); //End loading state
+            setIsLoading(false);
         }
     }
 
     return( 
-        <div className='container'>
-            <div className='pane left'>
+        <div className='login-container'>
+            <div className='login-pane login-pane--left'>
                 <img src={logo} alt='logo'/>
             </div>
-            <div className='divider-line'></div>
-            <form onSubmit={handleSubmit} className='pane right'>
+            <div className='login-divider'></div>
+            <form onSubmit={handleSubmit} className='login-pane login-pane--right'>
                 <h2>Welcome to TradeCircle</h2>
 
-                {/* General form error - appears at top */}
-                {errors.general && <p className='error-message'>{errors.general}<br /></p>}
+                {errors.general && <p className='login-error-message'>{errors.general}<br /></p>}
 
-                <div className='email-input-container'>
+                <div className='login-email-container'>
                     <label htmlFor='email'>Email</label>
-                    {/* Error message appears above password input */}
-                    {errors.email && <p className='error-message'>{errors.email}</p>}
+                    {errors.email && <p className='login-error-message'>{errors.email}</p>}
                     <input 
                         type='email'
                         id='email'
@@ -129,10 +112,9 @@ export default function Login() {
                         required
                     />
                 </div>
-                <div className='password-input-container'>
+                <div className='login-password-container'>
                     <label htmlFor='password'>Password</label>
-                    {/* Error message appears above password input */}
-                    {errors.password && <p className='error-message'>{errors.password}</p>}
+                    {errors.password && <p className='login-error-message'>{errors.password}</p>}
                     <input 
                         type={showPassword ? "text" : "password"}
                         id='password'
@@ -144,17 +126,17 @@ export default function Login() {
                     />
                     <button
                         type='button'
-                        className='password-toggle-btn'
+                        className='login-password-toggle'
                         onClick={() => setShowPassword(!showPassword)}
                     >
                         {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                     </button>
                 </div>
-                <button className="submit-btn" type="submit" disabled={isLoading}>
+                <button className="login-submit-btn" type="submit" disabled={isLoading}>
                     {isLoading ? 'Logging in...' : 'Login'}
                 </button>
-                <div className='register-link-container'>
-                <p>Don't have an account? <a onClick={handleRegister} style={{ cursor: 'pointer' }}>Sign up</a></p>
+                <div className='login-register-link'>
+                    <p>Don't have an account? <a onClick={handleRegister} style={{ cursor: 'pointer' }}>Sign up</a></p>
                 </div>
             </form>        
         </div>
