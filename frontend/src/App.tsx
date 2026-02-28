@@ -10,11 +10,19 @@ import Marketplace from './pages/Marketplace.tsx';
 import './App.css';
 import Navbar from './components/NavBar.tsx';
 import { useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
+//import { disableOffScreenHover } from './utils/hoverFix.ts';
 
 function App() {
   const location = useLocation();
   // Define an array of routes where the navbar should be hidden
   const excludedRoutes = ['/', '/register'];
+
+  /*
+  useEffect(() => {
+          disableOffScreenHover();
+        }, []);
+  */
 
   return (
     <>

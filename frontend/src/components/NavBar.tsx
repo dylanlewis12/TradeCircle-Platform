@@ -6,6 +6,7 @@ import logo from '../styles/images/logo.png';
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/authContext/AuthContext.js';
 import Modal from './Modal.jsx'; // Import the Modal component
+import UserModal from './UserModal.jsx';
 
 
 const Navbar = () => {
@@ -23,17 +24,6 @@ const Navbar = () => {
 
   const handleOpen = () => setIsOpen(true);
   const handleClose = () => setIsOpen(false);
-
-  const userData = {
-    email: user?.email,
-    userName: user?.userName,
-    profilePicture: user?.profilePicture,
-    bio: user?.bio
-  }
-
-  const modalContent = {
-
-  }
 
   /*
   useEffect(() => {
@@ -138,13 +128,7 @@ const Navbar = () => {
             >
             <User size={24} />
             </li>
-            <Modal isOpen={isOpen} onClose={handleClose}>
-                {userData.profilePicture ? (
-                    <img src={userData.profilePicture} alt="User Profile" /> ) : 
-                    (<img src="../styles/images/user-icon.png" alt="User Profile" />)}
-            <h2>Modal Title</h2>
-            <p>This is the modal content.</p>
-            </Modal>
+            <UserModal isOpen={isOpen} onClose={handleClose}></UserModal>
         </ul>
       </div>
     </nav>

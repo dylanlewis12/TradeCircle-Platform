@@ -1,0 +1,25 @@
+/* Prevent hover effects on elements that are off-screen */
+.off-screen {
+  pointer-events: none !important;
+}
+
+.off-screen:hover {
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* Disable all interactive elements during scroll */
+body.is-scrolling .skill-card,
+body.is-scrolling .stat-card,
+body.is-scrolling .btn,
+body.is-scrolling .tab {
+  pointer-events: none;
+}
+
+/* Re-enable after scroll ends */
+body:not(.is-scrolling) .skill-card,
+body:not(.is-scrolling) .stat-card,
+body:not(.is-scrolling) .btn,
+body:not(.is-scrolling) .tab {
+  pointer-events: auto;
+}

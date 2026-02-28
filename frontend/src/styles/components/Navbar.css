@@ -6,11 +6,12 @@
   justify-content: space-between;
   align-items: center;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  position: sticky;
+  top: 0;
   width: 100%;
   box-sizing: border-box;
   gap: 30px;
-  position: sticky; 
-  top: 0;
+  z-index: 999;
 }
 
 /* Logo Section */

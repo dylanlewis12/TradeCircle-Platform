@@ -1,11 +1,11 @@
 /* Dashboard Container */
 .dashboard {
   display: flex;
-  min-height: auto;
   background-color: #f5f5f5;
   gap: 20px;
   padding: 20px;
   width: 100%;
+  min-height: auto;
 }
 
 /* Sidebar */
@@ -104,18 +104,19 @@
   text-align: center;
   box-shadow: 0 2px 8px rgba(22, 153, 40, 0.2);
   transition: all 0.3s ease;
+  position: relative;
+  will-change: auto;
 }
 
 .stat-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 4px 12px rgba(22, 153, 40, 0.3);
+  box-shadow: 0 8px 16px rgba(22, 153, 40, 0.3);
 }
 
 .stat-card__number {
   font-size: 32px;
   font-weight: 700;
   margin-bottom: 10px;
-  line-height: 1;
+  line-height: 1.2;
 }
 
 .stat-card__label {
