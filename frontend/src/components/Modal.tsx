@@ -5,9 +5,11 @@ export default function Modal({ isOpen, onClose, children}: any) {
     return null;
   }
 
+  /*
   function handleChange() {
-    
+
   }
+  */
 
   return(
     <div className='modal-overlay'>

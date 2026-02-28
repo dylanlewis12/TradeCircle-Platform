@@ -5,7 +5,6 @@ import { Search, Bell, User } from 'lucide-react';
 import logo from '../styles/images/logo.png';
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/authContext/AuthContext.js';
-import Modal from './Modal.jsx'; // Import the Modal component
 import UserModal from './UserModal.jsx';
 
 

@@ -1,18 +1,14 @@
-import { createContext, useMemo, useContext, useState } from 'react';
+import { createContext, useMemo, useContext, useState, type ReactNode } from 'react';
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
-import { type ReactNode } from "react";
-
-interface ContextProviderProps {
-  children: ReactNode;
-}
 
 interface User {
   id: string;
   userName: string;
   email: string;
-  bio: string;
-  profilePicture: string;
+  bio?: string;
+  profilePicture?: string;
+  totalTrades?: number;
 }
 
 interface AuthContextType {
@@ -23,27 +19,39 @@ interface AuthContextType {
   signUp: (formData: Object) => Promise<void>;
 }
 
-export const AuthContext = createContext<AuthContextType | null>(null);
+// Create context with undefined default
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export default function AuthProvider({ children }: ContextProviderProps) {
+// Provider component
+export function AuthProvider({ children }: { children: ReactNode }) {
   const [cookies, setCookies, removeCookies] = useCookies();
   const [user, setUser] = useState<User | null>(null);
 
   async function login(formData: Object): Promise<void> {
-    let res = await axios.post("http://localhost:3000/api/auth/login", formData);
-    setCookies("accessToken", res.data.accessToken);
-    setUser(res.data.user);  // Store user data
+    try {
+      const res = await axios.post("http://localhost:3000/api/auth/login", formData);
+      setCookies("accessToken", res.data.accessToken);
+      setUser(res.data.user);
+    } catch (error) {
+      console.error('Login error:', error);
+      throw error;
+    }
   }
 
   async function signUp(formData: Object): Promise<void> {
-    let res = await axios.post("http://localhost:3000/api/auth/register", formData);
-    setCookies("accessToken", res.data.accessToken);
-    setUser(res.data.user);  // Store user data
+    try {
+      const res = await axios.post("http://localhost:3000/api/auth/register", formData);
+      setCookies("accessToken", res.data.accessToken);
+      setUser(res.data.user);
+    } catch (error) {
+      console.error('SignUp error:', error);
+      throw error;
+    }
   }
 
   function logout() {
     removeCookies("accessToken");
-    setUser(null);  // Clear user data
+    setUser(null);
   }
 
   const value = useMemo(
@@ -64,10 +72,16 @@ export default function AuthProvider({ children }: ContextProviderProps) {
   );
 }
 
-export function useAuth() {
+// Custom hook to use auth context
+export function useAuth(): AuthContextType {
   const context = useContext(AuthContext);
-  if (!context) {
+
+  if (context === undefined) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
+
   return context;
 }
+
+// Default export (for ContextProvider)
+export default AuthProvider;
