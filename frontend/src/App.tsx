@@ -18,12 +18,6 @@ function App() {
   // Define an array of routes where the navbar should be hidden
   const excludedRoutes = ['/', '/register'];
 
-  /*
-  useEffect(() => {
-          disableOffScreenHover();
-        }, []);
-  */
-
   return (
     <>
         {/* Conditionally render the Navbar */}

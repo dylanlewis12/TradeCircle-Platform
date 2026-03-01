@@ -81,7 +81,11 @@ export default function Login() {
             navigate('/home');
 
         } catch(err: any) {
-            setErrors({ general: err.response?.data.message || 'Login failed. Please try again.'});
+            if(err.response.status == 500) {
+                setErrors({ general: 'Login failed. Please try again'});
+            } else {
+            setErrors({ general: err.response?.data.message});
+            }
             console.error(err);
         } finally {
             setIsLoading(false);

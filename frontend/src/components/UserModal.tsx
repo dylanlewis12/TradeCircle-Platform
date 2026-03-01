@@ -1,6 +1,7 @@
 import Modal from "./Modal.tsx";
 import { useAuth } from "../context/authContext/AuthContext.tsx";
-import { useState } from "react";
+import UserIcon from '../styles/images/user-icon.png'
+//import { useState } from "react";
 
 export default function UserModal({isOpen, onClose}: any) {
     const { user } = useAuth();
@@ -18,12 +19,17 @@ export default function UserModal({isOpen, onClose}: any) {
         totalTrades: user?.totalTrades,
     }
 
+    console.log(userData);
+
+
     return(
         <>
         <Modal isOpen={isOpen} onClose={onClose}>
+            <div className="user__profile-picture" style={{ width: '100px', height: '75px', alignItems: 'center' }}>
             {userData.profilePicture ? (
                 <img src={userData.profilePicture} alt="User Profile" /> ) : 
-                (<img src="../styles/images/user-icon.png" alt="User Profile" />)}
+                (<img src={UserIcon} alt="User Profile" />)}
+            </div>
                 <h2>{userData.userName}</h2>
                 <p>{userData.bio}</p>
                 <p>{userData.totalTrades}</p>

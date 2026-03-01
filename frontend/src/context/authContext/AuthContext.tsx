@@ -1,6 +1,8 @@
-import { createContext, useMemo, useContext, useState, type ReactNode } from 'react';
+import { createContext, useMemo, useContext, useState, useEffect, type ReactNode } from 'react';
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
+import { jwtDecode } from 'jwt-decode';
+import { useNavigate } from 'react-router-dom';
 
 interface User {
   id: string;
@@ -15,7 +17,7 @@ interface AuthContextType {
   cookies: { [x: string]: any };
   user: User | null;
   login: (formData: Object) => Promise<void>;
-  logout: () => void;
+  logout: () => Promise<void>;
   signUp: (formData: Object) => Promise<void>;
 }
 
@@ -24,12 +26,79 @@ export const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 // Provider component
 export function AuthProvider({ children }: { children: ReactNode }) {
+  const navigate = useNavigate();  // ✅ Add this
   const [cookies, setCookies, removeCookies] = useCookies();
   const [user, setUser] = useState<User | null>(null);
 
+  // Check token expiration on mount and periodically
+  useEffect(() => {
+    const checkTokenExpiration = () => {
+      try {
+        const token = cookies.accessToken;
+        if (!token) {
+          console.log('No token found');
+          return;
+        }
+
+        // Decode the token to get expiration time
+        const decoded: any = jwtDecode(token);
+        const expirationTime = decoded.exp * 1000; // Convert to milliseconds
+        const currentTime = Date.now();
+        const timeUntilExpiry = expirationTime - currentTime;
+
+        console.log('Token expires in:', Math.floor(timeUntilExpiry / 1000), 'seconds');
+
+        // If token is expired or will expire in less than 1 minute
+        if (timeUntilExpiry < 60000) {
+          console.log('Token expired or expiring soon, logging out automatically');
+          handleAutoLogout();
+
+        }
+      } catch (error) {
+        console.error('Error checking token expiration:', error);
+      }
+    };
+
+    // Check immediately on mount
+    checkTokenExpiration();
+
+    // Check every 30 seconds
+    const interval = setInterval(checkTokenExpiration, 30000);
+
+    return () => clearInterval(interval);
+  }, [cookies.accessToken]);
+
+  // Handle automatic logout
+  const handleAutoLogout = async () => {
+    try {
+      // Try to call backend logout
+      await axios.post(
+        "http://localhost:3000/api/auth/logout",
+        {},
+        {
+          withCredentials: true,
+          headers: {
+            'Authorization': `Bearer ${cookies.accessToken}`
+          }
+        }
+      );
+    } catch (error) {
+      console.error('Auto logout API call failed:', error);
+    } finally {
+      // Clear local state regardless of API response
+      removeCookies("accessToken");
+      setUser(null);
+      navigate('/');
+    }
+  };
+
   async function login(formData: Object): Promise<void> {
     try {
-      const res = await axios.post("http://localhost:3000/api/auth/login", formData);
+      const res = await axios.post("http://localhost:3000/api/auth/login", formData, {
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
       setCookies("accessToken", res.data.accessToken);
       setUser(res.data.user);
     } catch (error) {
@@ -49,9 +118,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  function logout() {
-    removeCookies("accessToken");
-    setUser(null);
+  async function logout(): Promise<void> {
+    try {
+      const token = cookies.accessToken;  // Get access token from cookies
+      
+      await axios.post(
+        "http://localhost:3000/api/auth/logout",
+        {},
+        {
+          withCredentials: true,
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        }
+      );
+    } catch(error) {
+      console.error('Logout error:', error);
+      // Still clear local state even if API call fails
+    } finally {
+      removeCookies("accessToken");
+      setUser(null);
+    }
   }
 
   const value = useMemo(
@@ -75,13 +162,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 // Custom hook to use auth context
 export function useAuth(): AuthContextType {
   const context = useContext(AuthContext);
-
   if (context === undefined) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
-
   return context;
 }
 
-// Default export (for ContextProvider)
 export default AuthProvider;

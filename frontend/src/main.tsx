@@ -8,10 +8,10 @@ import ContextProvider from './context/ContextProvider.tsx';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <ContextProvider>
-      <Router>
+    <Router>
+      <ContextProvider>
         <App />
-      </Router>
-    </ContextProvider>
+      </ContextProvider>
+    </Router>
   </React.StrictMode>,
 )

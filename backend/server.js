@@ -8,6 +8,7 @@ import tradeRoutes from './routes/tradeRoutes.js';
 import skillRoutes from './routes/skillRoutes.js';
 import dotenv from "dotenv";
 import cors from "cors";
+import cookieParser from 'cookie-parser';
 
 // Setups
 dotenv.config();
@@ -28,6 +29,7 @@ app.use(cors({
 }));
 
 // Other Middlewares
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(logReq);

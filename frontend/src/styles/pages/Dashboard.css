@@ -159,6 +159,11 @@
   color: white;
 }
 
+.tab--active:hover {
+    background-color: #107d1f;
+    color: white;
+}
+
 /* Tab Content */
 .tab-content {
   display: grid;

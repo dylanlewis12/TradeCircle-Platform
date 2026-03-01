@@ -1,28 +1,68 @@
 import { Link, NavLink } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import '../styles/components/Navbar.css'; 
-import { Search, Bell, User } from 'lucide-react';
+import { LogOut, Bell, User } from 'lucide-react';
 import logo from '../styles/images/logo.png';
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/authContext/AuthContext.js';
 import UserModal from './UserModal.jsx';
+import { useNavigate } from 'react-router-dom';
+import LogoutModal from './LogoutModal.jsx';
 
 
-const Navbar = () => {
+export default function Navbar() {
+  const navigate = useNavigate();
   const location = useLocation();
   const showNavbar = location.pathname !== "/" && location.pathname !== "/register";
-  
-  const { user } = useAuth();
+
+  //const { user } = useAuth();
   
 
+  /*
   const handleAccountUpdate = (event: any) => {
     event.preventDefault();
   };
+  */
 
-  const [isOpen, setIsOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleOpen = () => setIsOpen(true);
-  const handleClose = () => setIsOpen(false);
+  const handleModalOpen = () => setIsModalOpen(true);
+  const handleModalClose = () => setIsModalOpen(false);
+
+  const [isLogout, setIsLogout] = useState(false); //handles logout modal
+
+  const handleOpenLogout = () => setIsLogout(true);
+  const handleCloseLogout = () => setIsLogout(false);
+
+
+  const { logout } = useAuth();
+
+  const handleLogout = async () => {
+    await logout(); //Logout of application, resets token, and sets user to null
+        navigate('/');
+    }
+
+  /*
+  //Logout - revoke refresh token
+``export const userLogout = async (req, res) => {
+    const { refreshToken } = req.cookies;
+
+    try {
+        if(refreshToken) {
+            await RefreshToken.deleteOne({ token: refreshToken });
+        }
+
+        res.clearCookie('refreshToken');
+
+        res.status(200).json({ message: "Logged out successfully" });
+
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}``
+  */
+
+
 
   /*
   useEffect(() => {
@@ -115,23 +155,25 @@ const Navbar = () => {
 
       <div className="navbar__actions">
         <ul className="navbar__icon-list">
-          <li className="navbar__icon-item navbar__icon-item--search">
-            <Search size={24} />
-          </li>
           <li className="navbar__icon-item navbar__icon-item--bell">
             <Bell size={24} />
           </li>
           <li 
             className="navbar__icon-item navbar__icon-item--user" 
-            onClick={(e) => { e.stopPropagation(); handleOpen(); }}
+            onClick={(e) => { e.stopPropagation(); handleModalOpen(); }}
             >
             <User size={24} />
             </li>
-            <UserModal isOpen={isOpen} onClose={handleClose}></UserModal>
+          <li className="navbar__icon-item navbar__icon-item--logout"
+            onClick={(e) => {e.stopPropagation(); handleOpenLogout(); }}
+            >
+            <LogOut size={24} />
+          </li>
         </ul>
+        {<UserModal isOpen={isModalOpen} onClose={handleModalClose}></UserModal>}
+        {<LogoutModal isOpen={isLogout} handleLogout={handleLogout} onClose={handleCloseLogout}>Are you sure you want to logout?</LogoutModal>}
       </div>
     </nav>
   );
 };
 
-export default Navbar;

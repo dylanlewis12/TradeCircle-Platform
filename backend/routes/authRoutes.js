@@ -11,7 +11,7 @@ router.post("/login", userLogin);
 
 //Authentication required use protect
 //User logout route
-router.post("/logout", protect, userLogout);
+router.post("/logout", userLogout);
 //Delete user route
 router.delete("/delete-account", protect, deleteUser);
 

@@ -59,8 +59,6 @@ export const userRegistration = async (req, res) => {
 
 export const userLogin = async (req, res) => {
     try {
-        const { login } = useAuth();
-
         const { email, password } = req.body;
         
         //Validate email format
@@ -89,24 +87,27 @@ export const userLogin = async (req, res) => {
         const { accessToken, refreshToken } = generateTokens(user);
         
         // Store refresh token in database
-        await RefreshToken.create({ 
-            token: refreshToken, 
-            userId: user._id,
+        await RefreshToken.findOneAndUpdate(
+          { userId: user._id },
+          { 
+            token: refreshToken,
             expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
-        });
+          },
+          { upsert: true, new: true }
+        );
         
         // Store refresh token in httpOnly cookie
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: 'strict',
+            sameSite: 'lax',
             maxAge: 7 * 24 * 60 * 60 * 1000
         });
         
         //Success response
         res.status(200).json({
             message: "Login successful",
-            accessToken: accessToken,  // ← CHANGED from 'token' to 'accessToken'
+            accessToken: accessToken,
             user: {
                 id: user._id,
                 userName: user.userName,
@@ -119,21 +120,66 @@ export const userLogin = async (req, res) => {
 }
 
 //Logout - revoke refresh token
+/*
 export const userLogout = async (req, res) => {
-    const { refreshToken } = req.cookies;
+  const { refreshToken } = req.cookies;
+  
+  console.log('Logout called');
+  console.log('Refresh token present:', Boolean(refreshToken));
 
-    try {
-        if(refreshToken) {
-            await RefreshToken.deleteOne({ token: refreshToken });
-        }
-
-        res.clearCookie('refreshToken');
-
-        res.status(200).json({ message: "Logged out successfully" });
-
-    } catch (error) {
-        res.status(500).json({ message: error.message });
+  try {
+    if(refreshToken) {
+      // Delete the refresh token from database
+      await RefreshToken.deleteOne({ token: refreshToken });
     }
+
+    // Clear the refresh token cookie
+    res.clearCookie('refreshToken');
+    
+    res.status(200).json({ message: "Logged out successfully" });
+  } catch (error) {
+    console.error('Logout error:', error);
+    res.status(500).json({ message: error.message });
+  }
+};
+*/
+export const userLogout = async (req, res) => {
+  try {
+    console.log('=== LOGOUT STARTED ===');
+    console.log('Cookies received:', req.cookies);
+    console.log('Headers:', req.headers);
+    
+    const { refreshToken } = req.cookies;
+    
+    console.log('Refresh token present:', !!refreshToken);
+    console.log('Refresh token value:', refreshToken ? 'present' : 'missing');
+
+    if(refreshToken) {
+      console.log('Attempting to delete refresh token from DB...');
+      const deleteResult = await RefreshToken.deleteOne({ token: refreshToken });
+      console.log('Delete result:', deleteResult);
+    } else {
+      console.log('No refresh token in cookies to delete');
+    }
+
+    console.log('Clearing refreshToken cookie...');
+    res.clearCookie('refreshToken');
+
+    console.log('=== LOGOUT SUCCESSFUL ===');
+    res.status(200).json({ message: "Logged out successfully" });
+
+  } catch (error) {
+    console.error('=== LOGOUT ERROR ===');
+    console.error('Error name:', error.name);
+    console.error('Error message:', error.message);
+    console.error('Error stack:', error.stack);
+    console.error('Full error:', error);
+    
+    res.status(500).json({ 
+      message: error.message,
+      errorName: error.name 
+    });
+  }
 }
 
 //Refresh cookie endpoint
@@ -181,4 +227,3 @@ export const deleteUser = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-

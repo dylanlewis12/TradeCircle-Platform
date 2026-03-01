@@ -5,9 +5,10 @@ interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   children: ReactNode;
+  handleLogout: () => void;
 }
 
-export default function Modal({ isOpen, onClose, children }: ModalProps) {
+export default function LogoutModal({ isOpen, handleLogout, onClose, children }: ModalProps) {
   
   if (!isOpen) { //check if button has been clicked
     return null;
@@ -25,7 +26,11 @@ export default function Modal({ isOpen, onClose, children }: ModalProps) {
       <div className="modal__content" onClick={(e) => e.stopPropagation()}>
         {children}
         <div className="modal__actions">
-          <button className="modal__button modal__button--primary">Edit</button>
+          <button 
+            className="modal__button modal__button--primary"
+            onClick={handleLogout}>
+            Confirm
+          </button>
           <button 
             className="modal__button modal__button--secondary" 
             onClick={onClose}
