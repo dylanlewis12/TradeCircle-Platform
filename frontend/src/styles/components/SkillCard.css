@@ -1,0 +1,74 @@
+.skill-card {
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 25px 20px;
+  text-align: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+}
+
+.skill-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+  border-color: #169928;
+}
+
+.skill-card__icon {
+  font-size: 48px;
+  margin-bottom: 15px;
+  line-height: 1;
+}
+
+.skill-card__name {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #1a1a1a;
+  line-height: 1.3;
+}
+
+.skill-card__level {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  letter-spacing: 0.3px;
+}
+
+.skill-card__level--beginner {
+  background-color: #c8e6c9;
+  color: #2e7d32;
+}
+
+.skill-card__level--intermediate {
+  background-color: #81c784;
+  color: #1b5e20;
+}
+
+.skill-card__level--advanced {
+  background-color: #43a047;
+  color: #ffffff;
+}
+
+.skill-card__level--expert {
+  background-color: #169928;
+  color: #ffffff;
+}
+
+.skill-card__info {
+  font-size: 14px;
+  color: #666666;
+  margin-bottom: 15px;
+  flex-grow: 1;
+}
+
+.skill-card__actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}

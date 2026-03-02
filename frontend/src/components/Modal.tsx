@@ -1,15 +1,29 @@
 import type { ReactNode } from "react";
 import '../styles/components/Modal.css';
 
+interface ModalButton {
+  label: string;
+  onClick: () => void;
+  variant: 'primary' | 'secondary';
+}
+
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   children: ReactNode;
+  title?: string;
+  buttons?: ModalButton[];
 }
 
-export default function Modal({ isOpen, onClose, children }: ModalProps) {
+export default function Modal({ 
+  isOpen, 
+  onClose, 
+  children, 
+  title,
+  buttons 
+}: ModalProps) {
   
-  if (!isOpen) { //check if button has been clicked
+  if (!isOpen) {
     return null;
   }
 
@@ -20,18 +34,36 @@ export default function Modal({ isOpen, onClose, children }: ModalProps) {
     }
   };
 
+  // Default buttons if none provided
+  const defaultButtons: ModalButton[] = [
+    {
+      label: 'Close',
+      onClick: onClose,
+      variant: 'secondary'
+    }
+  ];
+
+  const buttonsToRender = buttons || defaultButtons;
+
   return (
     <div className="modal__backdrop" onClick={handleBackdropClick}>
       <div className="modal__content" onClick={(e) => e.stopPropagation()}>
-        {children}
+        {title && <h2 className="modal__title">{title}</h2>}
+        
+        <div className="modal__body">
+          {children}
+        </div>
+
         <div className="modal__actions">
-          <button className="modal__button modal__button--primary">Edit</button>
-          <button 
-            className="modal__button modal__button--secondary" 
-            onClick={onClose}
-          >
-            Close
-          </button>
+          {buttonsToRender.map((button, index) => (
+            <button
+              key={index}
+              className={`modal__button modal__button--${button.variant}`}
+              onClick={button.onClick}
+            >
+              {button.label}
+            </button>
+          ))}
         </div>
       </div>
     </div>

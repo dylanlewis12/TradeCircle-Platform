@@ -1,0 +1,137 @@
+/* Modal Backdrop/Overlay */
+.modal__backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  animation: modalFadeIn 0.3s ease;
+}
+
+/* Modal Content */
+.modal__content {
+  background: white;
+  padding: 30px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  animation: modalSlideUp 0.3s ease;
+  position: relative;
+  z-index: 10000;
+  /* DEBUG: Make sure content is visible */
+  border: 3px solid rgb(219, 219, 219);
+}
+
+/* Modal Actions */
+.modal__actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 25px;
+  padding-top: 20px;
+  border-top: 1px solid #e0e0e0;
+}
+
+/* Modal Button */
+.modal__button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 80px;
+}
+
+.modal__button--primary {
+  background-color: #169928;
+  color: white;
+}
+
+.modal__button--primary:hover {
+  background-color: #0f6b1f;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(22, 153, 40, 0.3);
+}
+
+.modal__button--primary:active {
+  transform: translateY(0);
+}
+
+.modal__button--secondary {
+  background-color: #e0e0e0;
+  color: #1a1a1a;
+}
+
+.modal__button--secondary:hover {
+  background-color: #d0d0d0;
+  transform: translateY(-2px);
+}
+
+.modal__button--secondary:active {
+  transform: translateY(0);
+}
+
+/* Animations */
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modalSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .modal__content {
+    width: 95%;
+    padding: 20px;
+  }
+
+  .modal__actions {
+    flex-direction: column;
+  }
+
+  .modal__button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .modal__content {
+    width: 100%;
+    border-radius: 8px 8px 0 0;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  .modal__actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .modal__button {
+    width: 100%;
+  }
+}

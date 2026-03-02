@@ -1,5 +1,9 @@
 import { useState } from 'react';
 import '../styles/pages/Dashboard.css';
+import { useAuth } from '../context/authContext/AuthContext';
+import { useEffect } from 'react';
+import axios from 'axios';
+import SkillCard from '../components/SkillCard';
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState('skills');
@@ -16,13 +20,11 @@ export default function Dashboard() {
 
   }
 
-  function getTotalSkills() {
-
-  }
-
   function getTotalListings() {
-    
+    return <>
+    </> 
   }
+  
 
   return (
     <div className="dashboard">
@@ -140,61 +142,7 @@ export default function Dashboard() {
         {activeTab === 'skills' && (
           <div className="tab-content">
             <button className="create-btn">+ Create New Skill</button>
-
-            <div className="skill-card">
-              <div className="skill-card__icon">🗣️</div>
-              <div className="skill-card__name">Spanish Tutoring</div>
-              <div className="skill-card__level skill-card__level--expert">Expert</div>
-              <div className="skill-card__info">5 offers received</div>
-              <div className="skill-card__actions">
-                <button className="btn btn--primary">Edit</button>
-                <button className="btn btn--secondary">Delete</button>
-              </div>
-            </div>
-
-            <div className="skill-card">
-              <div className="skill-card__icon">💻</div>
-              <div className="skill-card__name">Web Development</div>
-              <div className="skill-card__level skill-card__level--advanced">Advanced</div>
-              <div className="skill-card__info">12 offers received</div>
-              <div className="skill-card__actions">
-                <button className="btn btn--primary">Edit</button>
-                <button className="btn btn--secondary">Delete</button>
-              </div>
-            </div>
-
-            <div className="skill-card">
-              <div className="skill-card__icon">🎨</div>
-              <div className="skill-card__name">Graphic Design</div>
-              <div className="skill-card__level skill-card__level--advanced">Advanced</div>
-              <div className="skill-card__info">8 offers received</div>
-              <div className="skill-card__actions">
-                <button className="btn btn--primary">Edit</button>
-                <button className="btn btn--secondary">Delete</button>
-              </div>
-            </div>
-
-            <div className="skill-card">
-              <div className="skill-card__icon">📚</div>
-              <div className="skill-card__name">English Writing</div>
-              <div className="skill-card__level skill-card__level--intermediate">Intermediate</div>
-              <div className="skill-card__info">3 offers received</div>
-              <div className="skill-card__actions">
-                <button className="btn btn--primary">Edit</button>
-                <button className="btn btn--secondary">Delete</button>
-              </div>
-            </div>
-
-            <div className="skill-card">
-              <div className="skill-card__icon">🏋️</div>
-              <div className="skill-card__name">Fitness Coaching</div>
-              <div className="skill-card__level skill-card__level--beginner">Beginner</div>
-              <div className="skill-card__info">2 offers received</div>
-              <div className="skill-card__actions">
-                <button className="btn btn--primary">Edit</button>
-                <button className="btn btn--secondary">Delete</button>
-              </div>
-            </div>
+            <SkillCard />
           </div>
         )}
 
