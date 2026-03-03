@@ -1,6 +1,7 @@
-import Modal from "./Modal.tsx";
-import { useAuth } from "../context/authContext/AuthContext.tsx";
-import UserIcon from '../styles/images/user-icon.png'
+import Modal from "../Modal.tsx";
+import { useAuth } from "../../context/authContext/AuthContext.tsx";
+//import UserIcon from '../styles/images/user-icon.png'
+import { User } from 'lucide-react';
 //import { useState } from "react";
 
 export default function UserModal({isOpen, onClose}: any) {
@@ -28,7 +29,7 @@ export default function UserModal({isOpen, onClose}: any) {
             <div className="user__profile-picture" style={{ width: '100px', height: '75px', alignItems: 'center' }}>
             {userData.profilePicture ? (
                 <img src={userData.profilePicture} alt="User Profile" /> ) : 
-                (<img src={UserIcon} alt="User Profile" />)}
+                (<User size={24}/>)}
             </div>
                 <h2>{userData.userName}</h2>
                 <p>{userData.bio}</p>

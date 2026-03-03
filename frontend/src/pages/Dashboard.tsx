@@ -1,17 +1,41 @@
 import { useState } from 'react';
 import '../styles/pages/Dashboard.css';
-import { useAuth } from '../context/authContext/AuthContext';
-import { useEffect } from 'react';
-import axios from 'axios';
+//import { useAuth } from '../context/authContext/AuthContext';
+//import axios from 'axios';
 import SkillCard from '../components/SkillCard';
+import AddSkillModal from '../components/modals/AddSkill.tsx';
+
+
+interface Skill {
+  _id: string;
+  name: string;
+  category: string;
+  proficiencyLevel: string;
+  description: string;
+  userId: string;
+}
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState('skills');
+
+  const[isAddSkillOpen, setIsAddSkillOpen] = useState(false); //Add skill modal state
+
+  const handleAddSkillOpen = () => setIsAddSkillOpen(true);
+  const handleAddSkillClose = () => setIsAddSkillOpen(false);
+  const [skills, setSkills] = useState<Skill[]>([]);
+
+  function handleSkillAdded(newSkill: Skill) {
+    // Add new skill to the list
+    setSkills([...skills, newSkill]);
+    handleAddSkillClose();
+  };
+
 
   const handleTabSwitch = (tabName: string) => {
     setActiveTab(tabName);
   };
 
+  /*
   function getUserRating() {
 
   }
@@ -24,6 +48,7 @@ export default function Dashboard() {
     return <>
     </> 
   }
+  */
   
 
   return (
@@ -141,10 +166,16 @@ export default function Dashboard() {
         {/* Skills Tab */}
         {activeTab === 'skills' && (
           <div className="tab-content">
-            <button className="create-btn">+ Create New Skill</button>
+            <button className="create-btn" onClick={handleAddSkillOpen}>+ Create New Skill</button>
             <SkillCard />
           </div>
         )}
+        <AddSkillModal 
+          isOpen={isAddSkillOpen}
+          onClose={handleAddSkillClose}
+          onSkillAdded={handleSkillAdded}
+        />
+
 
         {/* Listings Tab */}
         {activeTab === 'listings' && (

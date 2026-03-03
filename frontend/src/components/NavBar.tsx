@@ -3,11 +3,11 @@ import { useLocation } from 'react-router-dom';
 import '../styles/components/Navbar.css'; 
 import { LogOut, Bell, User } from 'lucide-react';
 import logo from '../styles/images/logo.png';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useAuth } from '../context/authContext/AuthContext.js';
-import UserModal from './UserModal.jsx';
+import UserModal from './modals/UserModal.tsx';
 import { useNavigate } from 'react-router-dom';
-import LogoutModal from './LogoutModal.jsx';
+import LogoutModal from './modals/LogoutModal.tsx';
 
 
 export default function Navbar() {
@@ -24,44 +24,24 @@ export default function Navbar() {
   };
   */
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const handleModalOpen = () => setIsModalOpen(true);
-  const handleModalClose = () => setIsModalOpen(false);
-
-  const [isLogout, setIsLogout] = useState(false); //handles logout modal
-
-  const handleOpenLogout = () => setIsLogout(true);
-  const handleCloseLogout = () => setIsLogout(false);
 
 
-  const { logout } = useAuth();
+  // State for modals
+
+  const [isUserModalOpen, setIsUserModalOpen] = useState(false);
+  const handleUserModalOpen = () => setIsUserModalOpen(true);
+  const handleUserModalClose = () => setIsUserModalOpen(false);
+
+
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+  const handleLogoutModalOpen = () => setIsLogoutModalOpen(true);  
 
   const handleLogout = async () => {
-    await logout(); //Logout of application, resets token, and sets user to null
-        navigate('/');
-    }
-
-  /*
-  //Logout - revoke refresh token
-``export const userLogout = async (req, res) => {
-    const { refreshToken } = req.cookies;
-
-    try {
-        if(refreshToken) {
-            await RefreshToken.deleteOne({ token: refreshToken });
-        }
-
-        res.clearCookie('refreshToken');
-
-        res.status(200).json({ message: "Logged out successfully" });
-
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-}``
-  */
-
+    await logout();
+    setIsLogoutModalOpen(false);
+    navigate('/');
+  };
+  const { logout } = useAuth();
 
 
   /*
@@ -160,18 +140,22 @@ export default function Navbar() {
           </li>
           <li 
             className="navbar__icon-item navbar__icon-item--user" 
-            onClick={(e) => { e.stopPropagation(); handleModalOpen(); }}
+            onClick={(e) => { e.stopPropagation(); handleUserModalOpen(); }}
             >
             <User size={24} />
             </li>
           <li className="navbar__icon-item navbar__icon-item--logout"
-            onClick={(e) => {e.stopPropagation(); handleOpenLogout(); }}
+            onClick={(e) => {e.stopPropagation(); handleLogoutModalOpen(); }}
             >
             <LogOut size={24} />
           </li>
         </ul>
-        {<UserModal isOpen={isModalOpen} onClose={handleModalClose}></UserModal>}
-        {<LogoutModal isOpen={isLogout} handleLogout={handleLogout} onClose={handleCloseLogout}>Are you sure you want to logout?</LogoutModal>}
+        {<UserModal isOpen={isUserModalOpen} onClose={handleUserModalClose}></UserModal>}
+        <LogoutModal 
+          isOpen={isLogoutModalOpen}
+          onClose={() => setIsLogoutModalOpen(false)}
+          onConfirm={handleLogout}
+        />
       </div>
     </nav>
   );
