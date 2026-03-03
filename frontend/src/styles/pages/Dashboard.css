@@ -165,15 +165,25 @@
 }
 
 /* Tab Content */
+/*
 .tab-content {
   display: grid;
-  /*
+  
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  */
+  
   grid-template-columns: repeat(3, 1fr);
   gap: 20px;
   animation: fadeIn 0.3s ease;
   width: 100%;
+}
+*/
+
+.skill-card-container-grid {
+  display: flex;
+  flex-wrap: wrap; /* 2. Allows items to wrap onto a new line */
+  gap: 20px; /* 3. Provides consistent spacing between cards (modern approach) */
+  justify-content: space-around; /* 4. Distributes space around items for alignment */
+  flex-direction: row;
 }
 
 @keyframes fadeIn {

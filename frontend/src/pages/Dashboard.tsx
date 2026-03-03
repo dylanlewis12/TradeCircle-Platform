@@ -167,9 +167,7 @@ export default function Dashboard() {
         {activeTab === 'skills' && (
           <div className="tab-content">
             <button className="create-btn" onClick={handleAddSkillOpen}>+ Create New Skill</button>
-            <div className='skills-card-container-grid'>
               <SkillCard />
-            </div>
           </div>
         )}
         <AddSkillModal 

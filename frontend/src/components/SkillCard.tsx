@@ -98,6 +98,7 @@ export default function SkillCard() {
     return <div><h2 style={{textAlign: 'center', marginLeft: '50px', padding: '60px 40px', backgroundColor: 'white', border: '3px #E0E0E0 solid', borderRadius: '5px'}}>No skills found. Create your first skill!</h2></div>;
   }
 
+  //Add functionality to control card sizes and manage description/name length
   return (
     <>
       <div className="skill-card__grid">
