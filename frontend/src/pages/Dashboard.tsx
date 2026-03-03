@@ -3,7 +3,7 @@ import '../styles/pages/Dashboard.css';
 //import { useAuth } from '../context/authContext/AuthContext';
 //import axios from 'axios';
 import SkillCard from '../components/SkillCard';
-import AddSkillModal from '../components/modals/AddSkill.tsx';
+import AddSkillModal from '../components/modals/skills/AddSkill.tsx';
 
 
 interface Skill {
@@ -167,7 +167,9 @@ export default function Dashboard() {
         {activeTab === 'skills' && (
           <div className="tab-content">
             <button className="create-btn" onClick={handleAddSkillOpen}>+ Create New Skill</button>
-            <SkillCard />
+            <div className='skills-card-container-grid'>
+              <SkillCard />
+            </div>
           </div>
         )}
         <AddSkillModal 

@@ -1,7 +1,7 @@
-import { useAuth } from "../../context/authContext/AuthContext";
+import { useAuth } from "../../../context/authContext/AuthContext.tsx";
 import { useState } from "react";
 import axios from 'axios';
-import Modal from '../Modal.tsx';
+import Modal from '../../Modal.tsx';
 
 export function EditUserExample() {
   const [isEditOpen, setIsEditOpen] = useState(false);

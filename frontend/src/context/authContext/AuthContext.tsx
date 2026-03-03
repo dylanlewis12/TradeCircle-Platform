@@ -30,6 +30,45 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [cookies, setCookies, removeCookies] = useCookies();
   const [user, setUser] = useState<User | null>(null);
 
+  // Restore user from token on app mount
+  useEffect(() => {
+    const restoreUserFromToken = () => {
+      try {
+        const token = cookies.accessToken;
+        if (!token) {
+          console.log('No token found on mount');
+          return;
+        }
+
+        const decoded: any = jwtDecode(token);
+        
+        // Check if token is expired
+        const expirationTime = decoded.exp * 1000;
+        const currentTime = Date.now();
+        if (expirationTime < currentTime) {
+          console.log('Token expired on mount');
+          removeCookies("accessToken");
+          return;
+        }
+
+        // Restore user from token
+        setUser({
+          id: decoded.id,
+          userName: decoded.userName || 'User',
+          email: decoded.email,
+        });
+
+        console.log('User restored from token');
+      } catch (error) {
+        console.error('Error restoring user from token:', error);
+        removeCookies("accessToken");
+      }
+    };
+
+    restoreUserFromToken();
+  }, []); // Only run once on mount
+
+
   // Check token expiration on mount and periodically
   useEffect(() => {
     const checkTokenExpiration = () => {

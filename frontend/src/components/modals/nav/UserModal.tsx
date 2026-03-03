@@ -1,5 +1,5 @@
-import Modal from "../Modal.tsx";
-import { useAuth } from "../../context/authContext/AuthContext.tsx";
+import Modal from "../../Modal.tsx";
+import { useAuth } from "../../../context/authContext/AuthContext.tsx";
 //import UserIcon from '../styles/images/user-icon.png'
 import { User } from 'lucide-react';
 //import { useState } from "react";

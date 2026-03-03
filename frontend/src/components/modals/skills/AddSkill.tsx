@@ -1,8 +1,8 @@
-import { useAuth } from "../../context/authContext/AuthContext";
+import { useAuth } from "../../../context/authContext/AuthContext.tsx";
 import { useState } from "react";
 import axios from 'axios';
-import Modal from "../Modal.tsx";
-import '../../styles/components/modals/AddSkill.css';
+import Modal from "../../Modal.tsx";
+import '../../../styles/components/modals/AddSkill.css';
 
 interface AddSkillProps {
   isOpen: boolean;
@@ -49,6 +49,8 @@ export default function AddSkill({ isOpen, onClose, onSkillAdded }: AddSkillProp
       if (onSkillAdded) {
         onSkillAdded(response.data.skill);
       }
+
+      console.log(response.data)
 
       onClose();
       setFormData({ name: '', category: '', proficiencyLevel: '', description: '', listingType: 'offering'});

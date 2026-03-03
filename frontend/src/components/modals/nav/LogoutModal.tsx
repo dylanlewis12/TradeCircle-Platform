@@ -1,4 +1,4 @@
-import Modal from '../Modal.tsx';
+import Modal from '../../Modal.tsx';
 
 interface LogoutModalProps {
   isOpen: boolean;
