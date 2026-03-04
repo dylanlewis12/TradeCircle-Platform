@@ -167,3 +167,24 @@
   border-color: #169928;
 }
 
+/* Empty State */
+.marketplace__empty {
+  text-align: center;
+  padding: 60px 40px;
+  background-color: white;
+  border-radius: 8px;
+  color: #666666;
+}
+
+.marketplace__empty p {
+  font-size: 16px;
+  margin: 0 0 10px 0;
+}
+
+.marketplace__loading {
+  text-align: center;
+  padding: 60px 40px;
+  font-size: 16px;
+  color: #666666;
+}
+

@@ -180,9 +180,9 @@
 
 .skill-card-container-grid {
   display: flex;
-  flex-wrap: wrap; /* 2. Allows items to wrap onto a new line */
-  gap: 20px; /* 3. Provides consistent spacing between cards (modern approach) */
-  justify-content: space-around; /* 4. Distributes space around items for alignment */
+  flex-wrap: wrap; 
+  gap: 20px; 
+  justify-content: space-around; 
   flex-direction: row;
 }
 

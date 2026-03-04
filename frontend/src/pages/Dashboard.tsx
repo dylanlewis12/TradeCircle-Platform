@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import '../styles/pages/Dashboard.css';
 //import { useAuth } from '../context/authContext/AuthContext';
 //import axios from 'axios';
-import SkillCard from '../components/SkillCard';
+import SkillCard from '../components/DashboardSkillCard.tsx';
 import AddSkillModal from '../components/modals/skills/AddSkill.tsx';
 
 
@@ -74,7 +74,7 @@ export default function Dashboard() {
       {/* Sidebar */}
       <aside className="dashboard__sidebar">
         <div className="sidebar__section">
-          <div className="sidebar__title">📁 Filter by Category</div>
+          <div className="sidebar__title"> Filter by Category</div>
           <div className="filter-group">
             <label className="filter-label">
               <input type="checkbox" defaultChecked /> Language
@@ -95,7 +95,7 @@ export default function Dashboard() {
         </div>
 
         <div className="sidebar__section">
-          <div className="sidebar__title">📊 Filter by Level</div>
+          <div className="sidebar__title"> Filter by Level</div>
           <div className="filter-group">
             <label className="filter-label">
               <input type="checkbox" /> Beginner
@@ -113,7 +113,7 @@ export default function Dashboard() {
         </div>
 
         <div className="sidebar__section">
-          <div className="sidebar__title">✓ Filter by Status</div>
+          <div className="sidebar__title"> Filter by Status</div>
           <div className="filter-group">
             <label className="filter-label">
               <input type="checkbox" defaultChecked /> Active
@@ -128,9 +128,7 @@ export default function Dashboard() {
         </div>
       </aside>
 
-      {/* Main Content */}
       <div className="dashboard__content">
-        {/* Header Section */}
         <div className="dashboard__header">
           <h1 className="dashboard__title">My Dashboard</h1>
           <div className="dashboard__stats">
@@ -153,7 +151,6 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Tabs */}
         <div className="tabs">
           <button 
             className={`tab ${activeTab === 'skills' ? 'tab--active' : ''}`}
@@ -181,11 +178,10 @@ export default function Dashboard() {
           </button>
         </div>
 
-        {/* Skills Tab */}
         {activeTab === 'skills' && (
           <div className="tab-content">
             <button className="create-btn" onClick={handleAddSkillOpen}>+ Create New Skill</button>
-              <SkillCard />
+            <SkillCard />
           </div>
         )}
         <AddSkillModal 
@@ -195,7 +191,6 @@ export default function Dashboard() {
         />
 
 
-        {/* Listings Tab */}
         {activeTab === 'listings' && (
           <div className="tab-content">
             <div className="empty-state">
@@ -207,7 +202,6 @@ export default function Dashboard() {
           </div>
         )}
 
-        {/* History Tab */}
         {activeTab === 'history' && (
           <div className="tab-content">
             <div className="empty-state">
@@ -218,7 +212,6 @@ export default function Dashboard() {
           </div>
         )}
 
-        {/* Analytics Tab */}
         {activeTab === 'analytics' && (
           <div className="tab-content">
             <div className="empty-state">

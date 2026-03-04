@@ -1,4 +1,3 @@
-/* Navbar Container */
 .navbar {
   background-color: #ffffff;
   padding: 15px 40px;
@@ -14,7 +13,6 @@
   z-index: 999;
 }
 
-/* Logo Section */
 .navbar__logo {
   display: flex;
   align-items: center;
@@ -39,7 +37,6 @@
   display: block;
 }
 
-/* Menu/Navigation Section */
 .navbar__menu {
   flex: 1;
   display: flex;
@@ -82,7 +79,6 @@
   color: white;
 }
 
-/* Actions Section (Icons) */
 .navbar__actions {
   display: flex;
   align-items: center;
@@ -120,7 +116,6 @@
   height: 100%;
 }
 
-/* Responsive Design */
 @media (max-width: 1024px) {
   .navbar {
     padding: 12px 20px;

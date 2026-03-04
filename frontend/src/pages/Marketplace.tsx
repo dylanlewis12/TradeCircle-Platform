@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import { Search, Filter, MapPin, Star } from 'lucide-react';
+import { Search, Filter } from 'lucide-react';
 import '../styles/pages/Marketplace.css';
 import axios from 'axios';
-import { useAuth } from '../context/authContext/AuthContext';
+import { useAuth } from '../context/authContext/AuthContext.tsx';
+import MarketSkillCard from './MarketSkillCard.tsx';
 
 interface Skill {
   _id: string;
@@ -22,10 +23,89 @@ interface Skill {
 export default function Marketplace() {
     const [selectedCategory, setSelectedCategory] = useState('all');
     const [selectedProficiency, setSelectedProficiency] = useState('all');
+    const [searchQuery, setSearchQuery] = useState('');
     const [sortBy, setSortBy] = useState('');
-    const [skills, setSkills] = useState({
-        length: 0
-    });
+    const { cookies } = useAuth();
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const [skills, setSkills] = useState<Skill[]>([]);
+
+    useEffect(() => {
+
+        async function fetchSkills() {
+            try {
+                setLoading(true);
+                setError(null);
+
+                const params = new URLSearchParams();
+                
+                if(selectedCategory !== 'all') {    
+                    params.append('category', selectedCategory)
+                }
+
+                if(selectedProficiency !== 'all') {
+                    params.append('proficiency', selectedProficiency);
+                }
+
+                const response = await axios.get(
+                `http://localhost:3000/api/skills?${params.toString()}`,
+                {
+                    headers: {
+                    'Authorization': `Bearer ${cookies.accessToken}`
+                    }
+                }
+                );
+
+                let fetchedSkills = response.data.skills;
+
+                if (searchQuery) { //filter by name or description
+                    fetchedSkills = fetchedSkills.filter((skill: Skill) =>
+                        skill.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                        skill.description.toLowerCase().includes(searchQuery.toLowerCase())
+                    );
+                }
+
+                if(sortBy === 'newest') {   //sort by newest
+                    fetchedSkills.sort((skill1: Skill, skill2: Skill) => {
+                        new Date(skill2.createdAt).getTime() - new Date(skill1.createdAt).getTime()
+                    });
+                } else if(sortBy === 'rating') {    //sort by rating
+                    fetchedSkills.sort((skill1: Skill, skill2: Skill) => {
+                        (skill2.userId.rating || 0) - (skill1.userId.rating || 0)
+                    });
+                }
+
+                setSkills(fetchedSkills);
+            } catch(err: any) {
+                console.error('Error fetching skills:', err);
+                setError('Failed to fetch skills');
+            } finally {
+                setLoading(false);
+            }
+            }
+
+            fetchSkills();
+        }, [selectedCategory, selectedProficiency, searchQuery, sortBy, cookies.accessToken]); //rerender if the following change in the dependency array
+
+        function handleContact() {
+            console.log('Open contact');
+        }
+
+        function handleView() {
+            console.log('View profile');
+        }
+
+        const cards = skills.map((skill: Skill) => {
+            return (
+                <MarketSkillCard 
+                    skill={skill} 
+                    handleContact={handleContact} 
+                    handleView={handleView} 
+                />
+            );
+        });
+
+
 
     return( 
         <div className="marketplace">
@@ -40,6 +120,8 @@ export default function Marketplace() {
                         type='text'
                         placeholder='Discover and trade skills with our community'
                         className='marketplace__search-input'
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
                     />
                 </div>
             </div>
@@ -48,7 +130,7 @@ export default function Marketplace() {
                 <aside className='marketplace__sidebar'>
                     <div className='filter-section'>
                         <h3 className='filter-section__title'>
-                            <Filter size={18} />      Filters
+                            <Filter size={18} /> Filters
                         </h3>
                     </div>
                    
@@ -174,6 +256,7 @@ export default function Marketplace() {
                         </div>
                     </div>
                 </aside>
+
                 {/*Main Content*/}
                 <main className="marketplace__main">
                     {/* Sort Section */}
@@ -194,11 +277,20 @@ export default function Marketplace() {
                         </div>
                     </div>
 
-                    <div className="marketplace__empty">
-                        <p>No skills matching your criteria.</p>
-                        <p>Try adjusting your filters or search terms. </p>
-                    </div>
+                    {/*Skills grid*/}
+                    {loading ? (
+                        <div className='marketplace__loading'>Loading skills...</div>
+                    ): skills.length > 0 ? 
+                    (<div className='skills-grid__container'>
+                        {cards}
+                    </div>) : 
+                        (<div className="marketplace__empty">
+                            <p>No skills matching your criteria.</p>
+                            <p>Try adjusting your filters or search terms. </p>
+                        </div>)
+                    }
                 </main>
+
         </div>
     </div>
     );

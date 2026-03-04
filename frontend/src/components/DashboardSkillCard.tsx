@@ -95,7 +95,11 @@ export default function SkillCard() {
 
   if (skills.length === 0) {
     console.log(skills);
-    return <div><h2 style={{textAlign: 'center', marginLeft: '50px', padding: '60px 40px', backgroundColor: 'white', border: '3px #E0E0E0 solid', borderRadius: '5px'}}>No skills found. Create your first skill!</h2></div>;
+    return (
+      <div className='skills__empty' >
+        <p>No skills found. Create your first skill!</p>
+      </div>
+      );
   }
 
   //Add functionality to control card sizes and manage description/name length
