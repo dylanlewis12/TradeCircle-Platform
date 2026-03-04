@@ -1,40 +1,138 @@
 import Modal from "../../Modal.tsx";
 import { useAuth } from "../../../context/authContext/AuthContext.tsx";
-//import UserIcon from '../styles/images/user-icon.png'
 import { User } from 'lucide-react';
-//import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
+import '../../../styles/components/modals/UserModal.css';
 
-export default function UserModal({isOpen, onClose}: any) {
-    const { user } = useAuth();
+interface UserModalProps {
+    isOpen: boolean;
+    onClose: () => void;
+}
 
-    //const [isOpen, setIsOpen] = useState(false);
-    
-    //const handleOpen = () => setIsOpen(true);
-    //const handleClose = () => setIsOpen(false);
-    
-    const userData = {
-        email: user?.email,
-        userName: user?.userName,
-        profilePicture: user?.profilePicture,
-        bio: user?.bio,
-        totalTrades: user?.totalTrades,
+export default function UserModal({ isOpen, onClose }: UserModalProps) {
+    const { user, cookies } = useAuth();
+    const [formData, setFormData] = useState({ userName: '', email: '', bio: '', location: '', profilePicture: '' });
+    const [error, setError] = useState<string | null>(null);
+    const [loading, setLoading] = useState(false);
+
+    // Initialize form data when user is loaded
+    useEffect(() => {
+        if (user) {
+            setFormData({
+                userName: user.userName || '',
+                email: user.email || '',
+                bio: user.bio || '',
+                location: user.location || '',
+                profilePicture: user.profilePicture || ''
+            });
+        }
+        console.log('Current User: ' + user);
+    }, [user, isOpen]);
+
+    async function handleEditUser() {
+        try {
+            setLoading(true);
+            setError(null);
+
+            await axios.put(
+                `http://localhost:3000/api/users/${user?.id}`,
+                formData,
+                {
+                headers: {
+                    'Authorization': `Bearer ${cookies.accessToken}`
+                }
+                }
+            );
+
+            onClose();
+
+        } catch(error: any) {
+            console.error('Error editing user:', error);
+            setError(error.response?.data?.message || 'Failed to update user');
+        } finally {
+            setLoading(false);
+        }
     }
-
-    console.log(userData);
-
-
+        
     return(
         <>
-        <Modal isOpen={isOpen} onClose={onClose}>
-            <div className="user__profile-picture" style={{ width: '100px', height: '75px', alignItems: 'center' }}>
-            {userData.profilePicture ? (
-                <img src={userData.profilePicture} alt="User Profile" /> ) : 
-                (<User size={24}/>)}
-            </div>
-                <h2>{userData.userName}</h2>
-                <p>{userData.bio}</p>
-                <p>{userData.totalTrades}</p>
-        </Modal>
+            <Modal
+                isOpen={isOpen}
+                onClose={onClose}
+                title="Edit Account"
+                buttons={[
+                    {
+                    label: loading ? 'Saving...' : 'Save',
+                    onClick: handleEditUser,
+                    variant: 'primary' as const
+                    },
+                    {
+                    label: 'Cancel',
+                    onClick: onClose,
+                    variant: 'secondary' as const
+                    }
+                ]}
+                >
+                <form onSubmit={(e) => { e.preventDefault(); handleEditUser(); }}>
+                        {error && <p style={{ color: 'red' }}>{error}</p>}
+
+                        <div className='user-profile__parent' style={{ marginBottom: '15px' }}>
+                            {formData.profilePicture ? 
+                                (<img src={formData.profilePicture} alt='User Profile Picture' />) : 
+                                (<User size={40} className="user-profile__picture"/>)
+                            }
+                        </div>
+
+                        <div className='user-modal-input__container'>
+                        <label htmlFor="username">Username:</label>
+                        <input
+                            id="username"
+                            type="text"
+                            value={formData.userName}
+                            onChange={(e) => setFormData({ ...formData, userName: e.target.value })}
+                            placeholder="Username"
+                            required
+                        />
+                        </div>
+
+                        <div className='user-modal-input__container' style={{marginBottom: '12px'}}>
+                        <label htmlFor="email">Email:</label>
+                        <input
+                            id="email"
+                            type="email"
+                            value={formData.email}
+                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                            placeholder="Email"
+                            required
+                        />
+                        </div>
+
+                        <div className='user-modal-text__container'>
+                        <label htmlFor="bio">Bio:</label>
+                        <textarea
+                            id="bio"
+                            value={formData.bio}
+                            onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
+                            placeholder="Tell us about yourself..."
+                            rows={4}
+                        />
+                        </div>
+
+                        <div className='user-modal-input__container'>
+                        <label htmlFor="location">Location:</label>
+                        <input
+                            id="location"
+                            type="text"
+                            value={formData.location}
+                            onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                            placeholder="Enter your location"
+                            required
+                        />
+                        </div>
+                </form>
+            </Modal>
         </>
-    )
+    );
 }
+

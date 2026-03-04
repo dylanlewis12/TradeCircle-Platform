@@ -11,6 +11,7 @@ interface User {
   bio?: string;
   profilePicture?: string;
   totalTrades?: number;
+  location?: string;
 }
 
 interface AuthContextType {

@@ -3,7 +3,7 @@ import { useState } from "react";
 import axios from 'axios';
 import Modal from '../../Modal.tsx';
 
-export function EditUserExample() {
+export function EditUser() {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [formData, setFormData] = useState({ userName: '', email: '' });
   const { user, cookies } = useAuth();
