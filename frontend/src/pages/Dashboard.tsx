@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import '../styles/pages/Dashboard.css';
 //import { useAuth } from '../context/authContext/AuthContext';
 //import axios from 'axios';
@@ -24,12 +24,26 @@ export default function Dashboard() {
   const handleAddSkillClose = () => setIsAddSkillOpen(false);
   const [skills, setSkills] = useState<Skill[]>([]);
 
+  
   function handleSkillAdded(newSkill: Skill) {
     // Add new skill to the list
     setSkills([...skills, newSkill]);
     handleAddSkillClose();
   };
 
+  /*
+  function handleDeleted(skillId: string) {
+    setSkills(skills.filter(skill => skill._id !== skillId))
+  };
+  */
+
+  /*
+  function handleSkillEdited(updatedSkill: Skill) {
+      setSkills(skills.map(skill => 
+        skill._id === updatedSkill._id ? updatedSkill : skill
+      ));
+  }
+  */
 
   const handleTabSwitch = (tabName: string) => {
     setActiveTab(tabName);
@@ -49,6 +63,10 @@ export default function Dashboard() {
     </> 
   }
   */
+
+  useEffect(() => {
+    console.log("rerendered");
+  }, [skills]);
   
 
   return (

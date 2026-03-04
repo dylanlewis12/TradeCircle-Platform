@@ -1,0 +1,58 @@
+.marketplace {
+  width: 100%;
+  background-color: #f5f5f5;
+  padding-bottom: 60px;
+}
+
+.marketplace__hero {
+    text-align: center;
+    background: linear-gradient(135deg, #169928 0%, #0f6b1f 100%);
+    padding: 60px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.marketplace__title {
+    color: white;
+    font-weight: bold;
+    font-size: 42px;
+    margin-bottom: 10px;
+}
+
+.marketplace__subtitle {
+    color: white;
+    font-size: 18px;
+    margin-bottom: 30px;
+}
+
+.marketplace__search {
+  display: flex;
+  align-items: center;
+  background-color: white;
+  border-radius: 8px;
+  padding: 12px 20px;
+  width: 600px;
+  max-width: 600px;
+  margin: 0 auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.marketplace__search-icon {
+  color: #666666;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+
+.marketplace__search-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 16px;
+  color: #1a1a1a;
+}
+
+.marketplace__search-input::placeholder {
+  color: #999999;
+}
