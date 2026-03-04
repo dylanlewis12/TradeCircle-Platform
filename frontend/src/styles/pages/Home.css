@@ -74,7 +74,7 @@ html {
   width: fit-content;
   padding: 14px 28px;
   background-color: #169928;
-  color: rgb(10, 6, 6);
+  color: white;
   border: none;
   border-radius: 6px;
   font-size: 16px;
@@ -83,6 +83,7 @@ html {
   transition: all 0.3s ease;
   letter-spacing: 0.5px;
   display: flex;
+  font-weight: bold;
 }
 
 .home-section__button:hover:not(:disabled) {

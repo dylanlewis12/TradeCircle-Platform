@@ -1,5 +1,5 @@
 import '../styles/components/MarketSkillCard.css'
-import { User, Star } from 'lucide-react'
+import { User, Star } from 'lucide-react';
 
 interface MarketSkill {
   skill: any;

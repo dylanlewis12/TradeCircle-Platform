@@ -57,6 +57,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           id: decoded.id,
           userName: decoded.userName || 'User',
           email: decoded.email,
+          bio: decoded.bio || '',
+          profilePicture: decoded.profilePicture || '',
+          location: decoded.location || '',
+          totalTrades: decoded.totalTrades || 0,
         });
 
         console.log('User restored from token');
@@ -70,7 +74,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []); // Only run once on mount
 
 
-  /*
   // Check token expiration on mount and periodically
   useEffect(() => {
     const checkTokenExpiration = () => {
@@ -133,7 +136,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       navigate('/');
     }
   };
-  */
 
   async function login(formData: Object): Promise<void> {
     try {

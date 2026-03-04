@@ -3,7 +3,7 @@ import { Search, Filter } from 'lucide-react';
 import '../styles/pages/Marketplace.css';
 import axios from 'axios';
 import { useAuth } from '../context/authContext/AuthContext.tsx';
-import MarketSkillCard from './MarketSkillCard.tsx';
+import MarketSkillCard from '../components/MarketSkillCard.tsx';
 
 interface Skill {
   _id: string;

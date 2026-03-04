@@ -16,9 +16,10 @@ export default function UserModal({ isOpen, onClose }: UserModalProps) {
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
 
-    // Initialize form data when user is loaded
+    // Initialize form data when modal opens AND user is loaded
     useEffect(() => {
-        if (user) {
+        if (isOpen && user) {
+            console.log('User loaded:', user);
             setFormData({
                 userName: user.userName || '',
                 email: user.email || '',
@@ -27,7 +28,6 @@ export default function UserModal({ isOpen, onClose }: UserModalProps) {
                 profilePicture: user.profilePicture || ''
             });
         }
-        console.log('Current User: ' + user);
     }, [user, isOpen]);
 
     async function handleEditUser() {
@@ -74,8 +74,10 @@ export default function UserModal({ isOpen, onClose }: UserModalProps) {
                     }
                 ]}
                 >
-                <form onSubmit={(e) => { e.preventDefault(); handleEditUser(); }}>
-                        {error && <p style={{ color: 'red' }}>{error}</p>}
+                {!user ? 
+                (<p>Loading user data...</p>):
+                (<form onSubmit={(e) => { e.preventDefault(); handleEditUser(); }}>
+                        {error && <p style={{ color: 'red', textAlign: 'right' }}>{error}</p>}
 
                         <div className='user-profile__parent' style={{ marginBottom: '15px' }}>
                             {formData.profilePicture ? 
@@ -131,6 +133,7 @@ export default function UserModal({ isOpen, onClose }: UserModalProps) {
                         />
                         </div>
                 </form>
+                )}
             </Modal>
         </>
     );

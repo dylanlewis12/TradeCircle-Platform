@@ -1,28 +1,62 @@
 import { useEffect, useState } from 'react';
 import '../styles/pages/Dashboard.css';
-//import { useAuth } from '../context/authContext/AuthContext';
-//import axios from 'axios';
 import SkillCard from '../components/DashboardSkillCard.tsx';
 import AddSkillModal from '../components/modals/skills/AddSkill.tsx';
-
+import { useAuth } from '../context/authContext/AuthContext.tsx';
+import axios from 'axios';
 
 interface Skill {
   _id: string;
   name: string;
-  category: string;
+  category: 'technology' | 'linguistic' | 'crafts' | 'services' | 'academic' | 'creative' | 'medical' | 'leadership' | 'business' | 'communication' | 'trades' | 'other';
   proficiencyLevel: string;
   description: string;
   userId: string;
 }
 
-export default function Dashboard() {
-  const [activeTab, setActiveTab] = useState('skills');
 
+export default function Dashboard() {
+  const { user ,cookies } = useAuth();
+  const [activeTab, setActiveTab] = useState('skills');
+  const [loading, setLoading] = useState(false);
   const[isAddSkillOpen, setIsAddSkillOpen] = useState(false); //Add skill modal state
+  const [error, setError] = useState<string | null>(null);
 
   const handleAddSkillOpen = () => setIsAddSkillOpen(true);
   const handleAddSkillClose = () => setIsAddSkillOpen(false);
   const [skills, setSkills] = useState<Skill[]>([]);
+
+  useEffect(() => {
+    // Only fetch if user exists
+    if (!user?.id) {
+      return;
+    }
+
+    async function fetchUserSkills() {
+      try {
+        setLoading(true);
+        setError(null);
+
+        const response = await axios.get(
+          `http://localhost:3000/api/skills/user/${user!.id}`,
+          {
+            headers: {
+              'Authorization': `Bearer ${cookies.accessToken}`
+            }
+          }
+        );
+
+        setSkills(response.data.skills);
+      } catch(err: any) {
+        console.error('Error fetching skills:', err);
+        setError('Failed to fetch skills');
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchUserSkills();
+  }, [user?.id, cookies.accessToken]);
 
   
   function handleSkillAdded(newSkill: Skill) {
@@ -31,19 +65,15 @@ export default function Dashboard() {
     handleAddSkillClose();
   };
 
-  /*
-  function handleDeleted(skillId: string) {
+  function handleSkillDeleted(skillId: string) {
     setSkills(skills.filter(skill => skill._id !== skillId))
   };
-  */
 
-  /*
   function handleSkillEdited(updatedSkill: Skill) {
       setSkills(skills.map(skill => 
         skill._id === updatedSkill._id ? updatedSkill : skill
       ));
   }
-  */
 
   const handleTabSwitch = (tabName: string) => {
     setActiveTab(tabName);
@@ -63,10 +93,6 @@ export default function Dashboard() {
     </> 
   }
   */
-
-  useEffect(() => {
-    console.log("rerendered");
-  }, [skills]);
   
 
   return (
@@ -181,7 +207,13 @@ export default function Dashboard() {
         {activeTab === 'skills' && (
           <div className="tab-content">
             <button className="create-btn" onClick={handleAddSkillOpen}>+ Create New Skill</button>
-            <SkillCard />
+            {loading && <p>Loading skills...</p>}
+            {error && <p style={{ color: 'red' }}>Error: {error}</p>}
+            <SkillCard 
+              skills={skills}
+              onSkillDeleted={handleSkillDeleted}
+              onSkillEdited={handleSkillEdited}
+            />
           </div>
         )}
         <AddSkillModal 
