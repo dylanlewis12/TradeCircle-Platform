@@ -1,5 +1,5 @@
 import { Routes, Route } from 'react-router-dom';
-import About from './pages/About.tsx';
+import AboutUs from './pages/AboutUs.tsx';
 import Chat from './pages/Chat.tsx';
 import Community from './pages/Community.tsx';
 import Dashboard from './pages/Dashboard.tsx';
@@ -10,8 +10,6 @@ import Marketplace from './pages/Marketplace.tsx';
 import './App.css';
 import Navbar from './components/NavBar.tsx';
 import { useLocation } from 'react-router-dom';
-import { useEffect } from 'react';
-//import { disableOffScreenHover } from './utils/hoverFix.ts';
 
 function App() {
   const location = useLocation();
@@ -31,7 +29,7 @@ function App() {
           <Route path="/market-place" element={<Marketplace />} />
           <Route path="/chat" element={<Chat />} />
           <Route path="/home" element={<Home />} />
-          <Route path="/about" element={<About />} />
+          <Route path="/about" element={<AboutUs />} />
           <Route path="/dashboard" element={<Dashboard />} />
         </Routes>
     </>

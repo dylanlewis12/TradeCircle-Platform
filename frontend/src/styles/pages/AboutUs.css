@@ -1,0 +1,97 @@
+.about-us {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 60px 20px;
+  line-height: 1.8;
+  color: #333;
+}
+
+.about-us h1 {
+  font-size: 48px;
+  font-weight: 700;
+  margin-bottom: 40px;
+  color: #169928;
+  text-align: center;
+}
+
+.about-us section {
+  margin-bottom: 40px;
+}
+
+.about-us h2 {
+  font-size: 24px;
+  font-weight: 600;
+  color: #169928;
+  margin-bottom: 15px;
+}
+
+.about-us p {
+  font-size: 16px;
+  margin-bottom: 15px;
+  color: #555;
+}
+
+.cta-section {
+  background: #f5f5f5;
+  padding: 40px;
+  border-radius: 8px;
+  text-align: center;
+  margin-top: 60px;
+}
+
+.cta-section h2 {
+  margin-bottom: 15px;
+}
+
+.about-button {
+  display: inline-block;
+  background: #169928;
+  text-decoration: none;
+  margin-top: 15px;
+  width: fit-content;
+  padding: 14px 28px;
+  background-color: #169928;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  letter-spacing: 0.5px;
+}
+
+.about-button .about-button-text {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.about-button svg {
+  width: 20px;
+  height: 20px;
+}
+
+.about-button:hover {
+  background-color: #3d7d5a;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(22, 153, 40, 0.3);
+}
+
+@media (max-width: 768px) {
+  .about-us h1 {
+    font-size: 32px;
+  }
+
+  .about-us h2 {
+    font-size: 20px;
+  }
+
+  .about-us p {
+    font-size: 15px;
+  }
+
+  .cta-section {
+    padding: 30px 20px;
+  }
+}
