@@ -281,7 +281,7 @@ export default function Marketplace() {
                     {loading ? (
                         <div className='marketplace__loading'>Loading skills...</div>
                     ): skills.length > 0 ? 
-                    (<div className='skills-grid__container'>
+                    (<div className='marketplace__skills-grid'>
                         {cards}
                     </div>) : 
                         (<div className="marketplace__empty">

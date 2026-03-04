@@ -188,3 +188,9 @@
   color: #666666;
 }
 
+.marketplace__skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 25px;
+    width: 100%;
+}

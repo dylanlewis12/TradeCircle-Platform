@@ -16,7 +16,7 @@ import {
   type LucideIcon
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import '../styles/components/SkillCard.css';
+import '../styles/components/DashboardSkillCard.css';
 
 interface Skill {
   _id: string;
