@@ -69,6 +69,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []); // Only run once on mount
 
 
+  /*
   // Check token expiration on mount and periodically
   useEffect(() => {
     const checkTokenExpiration = () => {
@@ -107,6 +108,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => clearInterval(interval);
   }, [cookies.accessToken]);
 
+  
   // Handle automatic logout
   const handleAutoLogout = async () => {
     try {
@@ -130,6 +132,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       navigate('/');
     }
   };
+  */
 
   async function login(formData: Object): Promise<void> {
     try {

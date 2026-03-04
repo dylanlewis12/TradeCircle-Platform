@@ -20,6 +20,9 @@ interface Skill {
 }
 
 export default function Marketplace() {
+    const [selectedCategory, setSelectedCategory] = useState('all');
+    const [selectedProficiency, setSelectedProficiency] = useState('all');
+
     return( 
         <div className="marketplace">
             {/**/}
@@ -36,8 +39,142 @@ export default function Marketplace() {
                     />
                 </div>
             </div>
+            
+            <div className='marketplace__container'>
+                <aside className='marketplace__sidebar'>
+                    <div className='filter-section'>
+                        <h3 className='filter-section__title'>
+                            <Filter size={18} />      Filters
+                        </h3>
+                    </div>
+                   
+                    <div className='filter-section'>
+                        <h4 className='filter-section__group-title'>Category</h4>
+                        <div className='filter-options'>
+                            <label className='filter-option'>
+                                <input 
+                                    type='radio'
+                                    name='category'
+                                    value='all'
+                                    checked={selectedCategory === 'all'}
+                                    onChange={(e) => setSelectedCategory(e.target.value)}
+                                />
+                                <span>All Categories</span>
+                            </label>
+                            <label className='filter-option'>
+                                <input 
+                                    type='radio'
+                                    name='category'
+                                    value='technology'
+                                    checked={selectedCategory === 'technology'}
+                                    onChange={(e) => setSelectedCategory(e.target.value)}
+                                />
+                                <span>Technology</span>
+                            </label>
+                            <label className='filter-option'>
+                                <input 
+                                    type='radio'
+                                    name='category'
+                                    value='linguistic'
+                                    checked={selectedCategory === 'linguistic'}
+                                    onChange={(e) => setSelectedCategory(e.target.value)}
+                                />
+                                <span>Linguistic</span>
+                            </label>
+                            <label className='filter-option'>
+                                <input 
+                                    type='radio'
+                                    name='category'
+                                    value='creative'
+                                    checked={selectedCategory === 'creative'}
+                                    onChange={(e) => setSelectedCategory(e.target.value)}
+                                />
+                                <span>Creative</span>
+                            </label>
+                            <label className='filter-option'>
+                                <input 
+                                    type='radio'
+                                    name='category'
+                                    value='business'
+                                    checked={selectedCategory === 'business'}
+                                    onChange={(e) => setSelectedCategory(e.target.value)}
+                                />
+                                <span>Business</span>
+                            </label>
+                            <label className='filter-option'>
+                                <input 
+                                    type='radio'
+                                    name='category'
+                                    value='academic'
+                                    checked={selectedCategory === 'academic'}
+                                    onChange={(e) => setSelectedCategory(e.target.value)}
+                                />
+                                <span>Academic</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div className='filter-section'>
+                        <h4 className='filter-section__group-title'>Proficiency</h4>
+                        <div className='filter-options'>
+                            <label className='filter-option'>
+                                <input 
+                                    type='radio'
+                                    name='proficiency'
+                                    value='all'
+                                    checked={selectedProficiency === 'all'}
+                                    onChange={(e) => setSelectedProficiency(e.target.value)}
+                                />
+                                <span>All Categories</span>
+                            </label>
+                            <label className='filter-option'>
+                                <input 
+                                    type='radio'
+                                    name='proficiency'
+                                    value='beginner'
+                                    checked={selectedProficiency === 'beginner'}
+                                    onChange={(e) => setSelectedProficiency(e.target.value)}
+                                />
+                                <span>Beginner</span>
+                            </label>
+                            <label className='filter-option'>
+                                <input 
+                                    type='radio'
+                                    name='proficiency'
+                                    value='intermediate'
+                                    checked={selectedProficiency === 'intermediate'}
+                                    onChange={(e) => setSelectedProficiency(e.target.value)}
+                                />
+                                <span>Intermediate</span>
+                            </label>
+                            <label className='filter-option'>
+                                <input 
+                                    type='radio'
+                                    name='proficiency'
+                                    value='advanced'
+                                    checked={selectedProficiency === 'advanced'}
+                                    onChange={(e) => setSelectedProficiency(e.target.value)}
+                                />
+                                <span>Advanced</span>
+                            </label>
+                            <label className='filter-option'>
+                                <input 
+                                    type='radio'
+                                    name='proficiency'
+                                    value='expert'
+                                    checked={selectedProficiency === 'expert'}
+                                    onChange={(e) => setSelectedProficiency(e.target.value)}
+                                />
+                                <span>Expert</span>
+                            </label>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+
             {/*Main Content*/}
             <main className="marketplace__main">
+                
                 <div className="marketplace__empty">
                     <p>No skills matching your criteria.</p>
                     <p>Try adjusting your filters or search terms. </p>

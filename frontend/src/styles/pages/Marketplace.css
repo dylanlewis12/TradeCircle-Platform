@@ -56,3 +56,70 @@
 .marketplace__search-input::placeholder {
   color: #999999;
 }
+
+.marketplace__container {
+    display: flex;
+    margin: 0 auto;
+    gap: 30px;
+    max-width: 1400px;
+    padding: 40px 20px;
+}
+
+.marketplace__sidebar {
+    width: 250px;
+    flex-shrink: 0;
+}
+
+.filter-section {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
+}
+
+.filter-section__title {
+    font-size: 18px;
+    color: #1a1a1a;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+}
+
+.filter-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.filter-section__group-title {
+    text-transform: uppercase;
+    margin-bottom: 15px;
+    letter-spacing: 0.5px;
+    color: #666666;
+    font-size: 14px;
+}
+
+.filter-option {
+    gap: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #1a1a1a;
+    transition: color 0.3s ease;
+
+}
+
+.filter-option:hover {
+    color: #169928;
+}
+
+.filter-option input {
+    cursor: pointer;
+    width: 16px;
+    height: 16px;
+    accent-color: #169928;;
+}
