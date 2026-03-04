@@ -123,3 +123,47 @@
     height: 16px;
     accent-color: #169928;;
 }
+
+.marketplace__main {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Toolbar */
+.marketplace__toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.marketplace__results {
+    font-size: 14px;
+    color: #666666;
+}
+
+.marketplace__sort {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+}
+
+.marketplace__selected-sort {
+  padding: 8px 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  background-color: white;
+  color: #1a1a1a;
+}
+
+.marketplace__selected-sort:hover {
+  border-color: #169928;
+}
+

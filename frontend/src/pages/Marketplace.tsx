@@ -22,6 +22,10 @@ interface Skill {
 export default function Marketplace() {
     const [selectedCategory, setSelectedCategory] = useState('all');
     const [selectedProficiency, setSelectedProficiency] = useState('all');
+    const [sortBy, setSortBy] = useState('');
+    const [skills, setSkills] = useState({
+        length: 0
+    });
 
     return( 
         <div className="marketplace">
@@ -170,16 +174,32 @@ export default function Marketplace() {
                         </div>
                     </div>
                 </aside>
-            </div>
+                {/*Main Content*/}
+                <main className="marketplace__main">
+                    {/* Sort Section */}
+                    <div className="marketplace__toolbar">
+                        <div className="marketplace__results">
+                        <p>{skills.length} skills found</p>
+                        </div>
+                        <div className="marketplace__sort">
+                        <label>Sort by:</label>
+                        <select 
+                            value={sortBy}
+                            onChange={(e) => setSortBy(e.target.value)}
+                            className="marketplace__selected-sort"
+                        >
+                            <option value="newest">Newest</option>
+                            <option value="rating">Highest Rated</option>
+                        </select>
+                        </div>
+                    </div>
 
-            {/*Main Content*/}
-            <main className="marketplace__main">
-                
-                <div className="marketplace__empty">
-                    <p>No skills matching your criteria.</p>
-                    <p>Try adjusting your filters or search terms. </p>
-                </div>
-            </main>
+                    <div className="marketplace__empty">
+                        <p>No skills matching your criteria.</p>
+                        <p>Try adjusting your filters or search terms. </p>
+                    </div>
+                </main>
         </div>
+    </div>
     );
 }
