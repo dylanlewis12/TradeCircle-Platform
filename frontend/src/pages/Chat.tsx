@@ -1,4 +1,9 @@
 import '../styles/pages/Chat.css';
+import { useChat } from '../components/chat/useChat.tsx';
+import Sidebar from '../components/chat/Sidebar.js';
+import NoChatSelected from '../components/chat/NoChatSelected.js';
+import ChatContainer from "../components/chat/ChatContainer.js";
+
 
 export default function Chat() {
 
@@ -9,18 +14,37 @@ export default function Chat() {
     // Creates Trade Request linked to this conversation
     //Add notification feature to notify users of trade requests and messages
     //}
+    
+    const { selectedUser } = useChat();
 
+    return (
+        <div className='h-screen bg-base-200'>
+            <div className='flex items-center justify-center pt-20 px-4'>
+                <div className='bg-base-100 rounded-lg shadow-cl w-full max-w-6xl h-[calc(100vh-8rem)]'>
+                    <div className='flex h-full rounded-lg overflow-hidden'>
+                        <Sidebar />
 
+                        {!selectedUser ? <NoChatSelected /> : <ChatContainer />}
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+
+    /*
     return(
         <div className="chat-page">
             <aside className="chat-sidebar">
-                <h2 className='chat-header'>Your Conversations</h2>
-                    <ul className='chat-messages__sidebar'></ul>
+                <div className='chat-header'>
+                    <h2 className='chat-header__title'>Your Conversations</h2>
+                </div>
+                <ul className='conversations__list'>
                         <li>Joe Johnson</li>
                         <li>Michael Jordan</li>
                         <li>LeBron James</li>
                         <li>Larry Bird</li>
                         <li>Anthony Edwards</li>
+                </ul>
             </aside>
             <main className="chat-main">
                 <div className='chat-room__header'>
@@ -42,6 +66,7 @@ export default function Chat() {
             </main>
         </div>
     );
+    */
 }
 
 /*

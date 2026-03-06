@@ -6,6 +6,7 @@ import userRoutes from './routes/userRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import tradeRoutes from './routes/tradeRoutes.js';
 import skillRoutes from './routes/skillRoutes.js';
+import messageRoutes from './routes/messageRoutes.js';
 import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from 'cookie-parser';
@@ -39,6 +40,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/skills", skillRoutes);
 app.use("/api/trades", tradeRoutes);
+app.use("/api/messages/", messageRoutes);
 
 // Global Err Middlewares
 app.use(globalErr);

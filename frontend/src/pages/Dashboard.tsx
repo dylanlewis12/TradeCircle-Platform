@@ -74,7 +74,7 @@ export default function Dashboard() {
 
         const params = new URLSearchParams();
 
-        // ✅ Only add if selections exist
+        // Only add if selections exist
         if (selectedCategories.length > 0) {
           selectedCategories.forEach(category => {
             params.append('category', category);
@@ -93,7 +93,7 @@ export default function Dashboard() {
           });
         }
 
-        // ✅ Log to verify URL
+        // Log to verify URL
         console.log(`http://localhost:3000/api/skills/user/${user!.id}?${params.toString()}`);
 
         const response = await axios.get(
