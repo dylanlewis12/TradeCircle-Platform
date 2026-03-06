@@ -27,14 +27,15 @@
     flex-direction: column;
     height: 100vh;
     border: 1px solid #e0e0e0;
-    border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     flex: 1;
 }
 
 .chat-room__header {
     padding: 20px;
-    border-bottom: 2px solid #9ed3aa
+    border-bottom: 2px solid #9ed3aa;
+    justify-content: space-between;
+    display: flex;
 }
 
 .chat-room__title {
@@ -44,8 +45,70 @@
     margin: 0;
 }
 
+.chat-room__trade-btn {
+    background-color: #169928;
+    color: white;
+    font-weight: bold;
+    border-radius: 8px;
+    padding: 10px 16px;
+    border: none;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.chat-room__trade-btn:hover {
+  background-color: #0f6b1f;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(22, 153, 40, 0.2);
+}
+
+.chat-room__trade-btn:active {
+  transform: translateY(0);
+}
+
 .chat-messages {
+    margin-top: auto;
+    display: flex;
+    justify-content: space-between;
     background-color: white;
-    padding: 40px;
-    
+    padding: 20px;
+    gap: 30px;
+}
+
+.chat-message__input {
+    display: flex;
+    align-items: center;
+    background-color: white;
+    border-radius: 20px;
+    padding: 12px 20px;
+    width: 100%;
+    margin: 0 auto;
+    border: 1px solid lightgrey;
+}
+
+.chat-message__send-btn {
+    background-color: #169928;
+    color: white;
+    font-weight: bold;
+    border-radius: 18px;
+    padding: 10px 16px;
+    border: none;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.message-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 16px;
+  color: #1a1a1a;
+}
+
+.message-input::placeholder {
+  color: #999999;
 }

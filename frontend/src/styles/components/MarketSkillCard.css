@@ -160,7 +160,6 @@
   transform: translateY(0);
 }
 
-/* Meta Information (Experience & Hours) */
 .skill-card__meta {
   display: flex;
   gap: 8px;

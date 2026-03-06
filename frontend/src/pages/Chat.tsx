@@ -27,9 +27,17 @@ export default function Chat() {
                     <div className='chat-room__title'>
                         <h2>Chat Room</h2>
                     </div>
+                    <button className='chat-room__trade-btn'>Create Trade</button>
                 </div>
                 <div className='chat-messages'>
-
+                    <div className='chat-message__input'>
+                        <input
+                            type='text'
+                            placeholder='Type a message...'
+                            className='message-input'
+                        />
+                    </div>
+                    <button className='chat-message__send-btn'>Send</button>
                 </div>
             </main>
         </div>
