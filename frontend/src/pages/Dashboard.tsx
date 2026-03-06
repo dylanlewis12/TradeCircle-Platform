@@ -3,6 +3,7 @@ import '../styles/pages/Dashboard.css';
 import SkillCard from '../components/DashboardSkillCard.tsx';
 import AddSkillModal from '../components/modals/skills/AddSkill.tsx';
 import { useAuth } from '../context/authContext/AuthContext.tsx';
+//import { Filter } from 'lucide-react'
 import axios from 'axios';
 
 interface Skill {
@@ -10,24 +11,58 @@ interface Skill {
   name: string;
   category: 'technology' | 'linguistic' | 'crafts' | 'services' | 'academic' | 'creative' | 'medical' | 'leadership' | 'business' | 'communication' | 'trades' | 'other';
   proficiencyLevel: string;
+  yearsOfExperience: number;
+  status: string;
+  hoursAvailable: number;
   description: string;
   userId: string;
 }
 
-
 export default function Dashboard() {
-  const { user ,cookies } = useAuth();
+  let activeListingsCount = 0;
+  const { user, cookies } = useAuth();
   const [activeTab, setActiveTab] = useState('skills');
   const [loading, setLoading] = useState(false);
-  const[isAddSkillOpen, setIsAddSkillOpen] = useState(false); //Add skill modal state
+  const [isAddSkillOpen, setIsAddSkillOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedLevels, setSelectedLevels] = useState<string[]>([]);
+  const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
+  
+  const [skills, setSkills] = useState<Skill[]>([]);
 
   const handleAddSkillOpen = () => setIsAddSkillOpen(true);
   const handleAddSkillClose = () => setIsAddSkillOpen(false);
-  const [skills, setSkills] = useState<Skill[]>([]);
+
+  //Handler for category checkboxes
+  function handleCategoryChange(category: string) {
+    setSelectedCategories(prev =>
+      prev.includes(category)
+        ? prev.filter(c => c !== category)
+        : [...prev, category]
+    );
+  };
+
+  //Handler for level checkboxes
+  function handleLevelChange(level: string) {
+    setSelectedLevels(prev =>
+      prev.includes(level)
+        ? prev.filter(l => l !== level)
+        : [...prev, level]
+    );
+  };
+
+  //Handler for status checkboxes
+  function handleStatusChange(status: string) {
+    setSelectedStatuses(prev =>
+      prev.includes(status)
+        ? prev.filter(s => s !== status)
+        : [...prev, status]
+    );
+  };
 
   useEffect(() => {
-    // Only fetch if user exists
     if (!user?.id) {
       return;
     }
@@ -37,8 +72,32 @@ export default function Dashboard() {
         setLoading(true);
         setError(null);
 
+        const params = new URLSearchParams();
+
+        // ✅ Only add if selections exist
+        if (selectedCategories.length > 0) {
+          selectedCategories.forEach(category => {
+            params.append('category', category);
+          });
+        }
+
+        if (selectedLevels.length > 0) {
+          selectedLevels.forEach(level => {
+            params.append('proficiencyLevel', level);
+          });
+        }
+
+        if (selectedStatuses.length > 0) {
+          selectedStatuses.forEach(status => {
+            params.append('status', status);
+          });
+        }
+
+        // ✅ Log to verify URL
+        console.log(`http://localhost:3000/api/skills/user/${user!.id}?${params.toString()}`);
+
         const response = await axios.get(
-          `http://localhost:3000/api/skills/user/${user!.id}`,
+          `http://localhost:3000/api/skills/user/${user!.id}?${params.toString()}`,
           {
             headers: {
               'Authorization': `Bearer ${cookies.accessToken}`
@@ -47,7 +106,7 @@ export default function Dashboard() {
         );
 
         setSkills(response.data.skills);
-      } catch(err: any) {
+      } catch (err: any) {
         console.error('Error fetching skills:', err);
         setError('Failed to fetch skills');
       } finally {
@@ -56,99 +115,251 @@ export default function Dashboard() {
     }
 
     fetchUserSkills();
-  }, [user?.id, cookies.accessToken]);
+  }, [selectedCategories, selectedLevels, selectedStatuses, user?.id, cookies.accessToken]);
 
-  
+  //get active skill count for dashboard
+  skills.forEach((skill) => {
+      if(skill.status === 'active') {
+        activeListingsCount += 1
+      }
+    })
+  activeListingsCount;
+
   function handleSkillAdded(newSkill: Skill) {
-    // Add new skill to the list
     setSkills([...skills, newSkill]);
     handleAddSkillClose();
-  };
+  }
 
   function handleSkillDeleted(skillId: string) {
-    setSkills(skills.filter(skill => skill._id !== skillId))
-  };
+    setSkills(skills.filter(skill => skill._id !== skillId));
+  }
 
   function handleSkillEdited(updatedSkill: Skill) {
-      setSkills(skills.map(skill => 
-        skill._id === updatedSkill._id ? updatedSkill : skill
-      ));
+    setSkills(skills.map(skill => 
+      skill._id === updatedSkill._id ? updatedSkill : skill
+    ));
   }
 
   const handleTabSwitch = (tabName: string) => {
     setActiveTab(tabName);
   };
 
-  /*
-  function getUserRating() {
-
-  }
-
-  function getUserTrades() {
-
-  }
-
-  function getTotalListings() {
-    return <>
-    </> 
-  }
-  */
-  
-
   return (
     <div className="dashboard">
       {/* Sidebar */}
       <aside className="dashboard__sidebar">
+        {/* Category Filter - Checkboxes */}
         <div className="sidebar__section">
-          <div className="sidebar__title"> Filter by Category</div>
+          <div className="sidebar__title">Category</div>
           <div className="filter-group">
             <label className="filter-label">
-              <input type="checkbox" defaultChecked /> Language
+              <input 
+                type="checkbox"
+                checked={selectedCategories.length === 0}
+                onChange={() => setSelectedCategories([])}
+              /> 
+              All
             </label>
+
             <label className="filter-label">
-              <input type="checkbox" /> Technology
+              <input 
+                type="checkbox"
+                checked={selectedCategories.includes('linguistic')}
+                onChange={() => handleCategoryChange('linguistic')}
+              /> 
+              Language
             </label>
+
             <label className="filter-label">
-              <input type="checkbox" /> Arts & Design
+              <input 
+                type="checkbox"
+                checked={selectedCategories.includes('technology')}
+                onChange={() => handleCategoryChange('technology')}
+              /> 
+              Technology
             </label>
+
             <label className="filter-label">
-              <input type="checkbox" /> Business
+              <input 
+                type="checkbox"
+                checked={selectedCategories.includes('creative')}
+                onChange={() => handleCategoryChange('creative')}
+              /> 
+              Arts & Design
             </label>
+
             <label className="filter-label">
-              <input type="checkbox" /> Health & Wellness
+              <input 
+                type="checkbox"
+                checked={selectedCategories.includes('business')}
+                onChange={() => handleCategoryChange('business')}
+              /> 
+              Business
+            </label>
+
+            <label className="filter-label">
+              <input 
+                type="checkbox"
+                checked={selectedCategories.includes('medical')}
+                onChange={() => handleCategoryChange('medical')}
+              /> 
+              Health & Wellness
+            </label>
+
+            <label className="filter-label">
+              <input 
+                type="checkbox"
+                checked={selectedCategories.includes('crafts')}
+                onChange={() => handleCategoryChange('crafts')}
+              /> 
+              Crafts
+            </label>
+
+            <label className="filter-label">
+              <input 
+                type="checkbox"
+                checked={selectedCategories.includes('services')}
+                onChange={() => handleCategoryChange('services')}
+              /> 
+              Services
+            </label>
+
+            <label className="filter-label">
+              <input 
+                type="checkbox"
+                checked={selectedCategories.includes('academic')}
+                onChange={() => handleCategoryChange('academic')}
+              /> 
+              Academic
+            </label>
+
+            <label className="filter-label">
+              <input 
+                type="checkbox"
+                checked={selectedCategories.includes('leadership')}
+                onChange={() => handleCategoryChange('leadership')}
+              /> 
+              Leadership
+            </label>
+
+            <label className="filter-label">
+              <input 
+                type="checkbox"
+                checked={selectedCategories.includes('communication')}
+                onChange={() => handleCategoryChange('communication')}
+              /> 
+              Communication
+            </label>
+
+            <label className="filter-label">
+              <input 
+                type="checkbox"
+                checked={selectedCategories.includes('trades')}
+                onChange={() => handleCategoryChange('trades')}
+              /> 
+              Trades
+            </label>
+
+            <label className="filter-label">
+              <input 
+                type="checkbox"
+                checked={selectedCategories.includes('other')}
+                onChange={() => handleCategoryChange('other')}
+              /> 
+              Other
             </label>
           </div>
         </div>
 
+        {/* Level Filter - Checkboxes */}
         <div className="sidebar__section">
-          <div className="sidebar__title"> Filter by Level</div>
+          <div className="sidebar__title">Proficiency Level</div>
           <div className="filter-group">
             <label className="filter-label">
-              <input type="checkbox" /> Beginner
+              <input 
+                type="checkbox"
+                checked={selectedLevels.length === 0}
+                onChange={() => setSelectedLevels([])}
+              /> 
+              All
             </label>
+
             <label className="filter-label">
-              <input type="checkbox" /> Intermediate
+              <input 
+                type="checkbox"
+                checked={selectedLevels.includes('Beginner')}
+                onChange={() => handleLevelChange('Beginner')}
+              /> 
+              Beginner
             </label>
+
             <label className="filter-label">
-              <input type="checkbox" defaultChecked /> Advanced
+              <input 
+                type="checkbox"
+                checked={selectedLevels.includes('Intermediate')}
+                onChange={() => handleLevelChange('Intermediate')}
+              /> 
+              Intermediate
             </label>
+
             <label className="filter-label">
-              <input type="checkbox" /> Expert
+              <input 
+                type="checkbox"
+                checked={selectedLevels.includes('Advanced')}
+                onChange={() => handleLevelChange('Advanced')}
+              /> 
+              Advanced
+            </label>
+
+            <label className="filter-label">
+              <input 
+                type="checkbox"
+                checked={selectedLevels.includes('Expert')}
+                onChange={() => handleLevelChange('Expert')}
+              /> 
+              Expert
             </label>
           </div>
         </div>
 
+        {/* Status Filter - Checkboxes */}
         <div className="sidebar__section">
-          <div className="sidebar__title"> Filter by Status</div>
+          <div className="sidebar__title">Status</div>
           <div className="filter-group">
             <label className="filter-label">
-              <input type="checkbox" defaultChecked /> Active
+              <input 
+                type="checkbox"
+                checked={selectedStatuses.length === 0}
+                onChange={() => setSelectedStatuses([])}
+              /> 
+              All
             </label>
+
             <label className="filter-label">
-              <input type="checkbox" /> Inactive
+              <input 
+                type="checkbox"
+                checked={selectedStatuses.includes('active')}
+                onChange={() => handleStatusChange('active')}
+              /> 
+              Active
             </label>
+
             <label className="filter-label">
-              <input type="checkbox" /> Archived
+              <input 
+                type="checkbox"
+                checked={selectedStatuses.includes('inactive')}
+                onChange={() => handleStatusChange('inactive')}
+              /> 
+              Inactive
+            </label>
+
+            <label className="filter-label">
+              <input 
+                type="checkbox"
+                checked={selectedStatuses.includes('archived')}
+                onChange={() => handleStatusChange('archived')}
+              /> 
+              Archived
             </label>
           </div>
         </div>
@@ -159,15 +370,15 @@ export default function Dashboard() {
           <h1 className="dashboard__title">My Dashboard</h1>
           <div className="dashboard__stats">
             <div className="stat-card">
-              <div className="stat-card__number">5</div>
-              <div className="stat-card__label">Active Skills</div>
+              <div className="stat-card__number">{skills.length}</div>
+              <div className="stat-card__label">Skills</div>
             </div>
             <div className="stat-card">
               <div className="stat-card__number">12</div>
               <div className="stat-card__label">Completed Trades</div>
             </div>
             <div className="stat-card">
-              <div className="stat-card__number">8</div>
+              <div className="stat-card__number">{activeListingsCount}</div>
               <div className="stat-card__label">Active Listings</div>
             </div>
             <div className="stat-card">
@@ -185,12 +396,6 @@ export default function Dashboard() {
             Skills Management
           </button>
           <button 
-            className={`tab ${activeTab === 'listings' ? 'tab--active' : ''}`}
-            onClick={() => handleTabSwitch('listings')}
-          >
-            Listings & Seeking
-          </button>
-          <button 
             className={`tab ${activeTab === 'history' ? 'tab--active' : ''}`}
             onClick={() => handleTabSwitch('history')}
           >
@@ -206,7 +411,9 @@ export default function Dashboard() {
 
         {activeTab === 'skills' && (
           <div className="tab-content">
-            <button className="create-btn" onClick={handleAddSkillOpen}>+ Create New Skill</button>
+            <button className="create-btn" onClick={handleAddSkillOpen}>
+              + Create New Skill
+            </button>
             {loading && <p>Loading skills...</p>}
             {error && <p style={{ color: 'red' }}>Error: {error}</p>}
             <SkillCard 
@@ -216,28 +423,16 @@ export default function Dashboard() {
             />
           </div>
         )}
+
         <AddSkillModal 
           isOpen={isAddSkillOpen}
           onClose={handleAddSkillClose}
           onSkillAdded={handleSkillAdded}
         />
 
-
-        {activeTab === 'listings' && (
-          <div className="tab-content">
-            <div className="empty-state">
-              <div className="empty-state__icon">📋</div>
-              <div className="empty-state__title">View Your Listings Here</div>
-              <div className="empty-state__text">Create a skill to start offering or seeking trades</div>
-              <button className="create-btn">+ Create New Listing</button>
-            </div>
-          </div>
-        )}
-
         {activeTab === 'history' && (
           <div className="tab-content">
             <div className="empty-state">
-              <div className="empty-state__icon">📜</div>
               <div className="empty-state__title">No Trade History Yet</div>
               <div className="empty-state__text">Complete your first trade to see your history here</div>
             </div>
@@ -247,8 +442,7 @@ export default function Dashboard() {
         {activeTab === 'analytics' && (
           <div className="tab-content">
             <div className="empty-state">
-              <div className="empty-state__icon">📊</div>
-              <div className="empty-state__title">Analytics Coming Soon</div>
+              <div className="empty-state__title">No User Analytics Yet</div>
               <div className="empty-state__text">Track your trading performance and insights here</div>
             </div>
           </div>

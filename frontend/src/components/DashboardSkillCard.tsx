@@ -24,6 +24,9 @@ interface Skill {
   name: string;
   category: 'technology' | 'linguistic' | 'crafts' | 'services' | 'academic' | 'creative' | 'medical' | 'leadership' | 'business' | 'communication' | 'trades' | 'other';
   proficiencyLevel: string;
+  yearsOfExperience: number;
+  status: string;
+  hoursAvailable: number;
   description: string;
   userId: string;
 }
@@ -55,6 +58,9 @@ type EditFormData = {
   name: string;
   category: SkillCategory;
   proficiencyLevel: string;
+  yearsOfExperience: number;
+  status: string;
+  hoursAvailable: number;
   description: string;
 };
 
@@ -65,7 +71,11 @@ export default function SkillCard({ skills, onSkillEdited, onSkillDeleted }: Ski
   name: '',
   category: 'other', // valid default in the SkillCategory union
   proficiencyLevel: '',
+  yearsOfExperience: 0,
+  status: 'active',
+  hoursAvailable: 0,
   description: ''
+
 });
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -81,6 +91,9 @@ export default function SkillCard({ skills, onSkillEdited, onSkillDeleted }: Ski
       name: skill.name,
       category: skill.category,
       proficiencyLevel: skill.proficiencyLevel,
+      yearsOfExperience: skill.yearsOfExperience,
+      status: skill.status,
+      hoursAvailable: skill.hoursAvailable,
       description: skill.description
     });
     setIsEditModalOpen(true);
@@ -132,7 +145,7 @@ export default function SkillCard({ skills, onSkillEdited, onSkillDeleted }: Ski
       });
       setIsEditModalOpen(false);
       setSkillToEdit(null);
-      setEditFormData({ name: '', category: 'other', proficiencyLevel: '', description: '' });
+      setEditFormData({ name: '', category: 'other', proficiencyLevel: '', yearsOfExperience: 0, status: 'active', hoursAvailable: 0, description: '' });
     } catch(error: any) {
       console.error('Error editing skill:', error);
       setError(error.response?.data?.message || 'Failed to update skill');
@@ -145,7 +158,10 @@ export default function SkillCard({ skills, onSkillEdited, onSkillDeleted }: Ski
     console.log(skills);
     return (
       <div className='skills__empty' >
-        <p>No skills found. Create your first skill!</p>
+        <p>No Skills Yet</p>
+        <p>
+          Get started by creating your first skill start offering or seeking trades!
+        </p>
       </div>
       );
   }
@@ -163,24 +179,43 @@ export default function SkillCard({ skills, onSkillEdited, onSkillDeleted }: Ski
                 {IconComponent ? <IconComponent size={48} /> : <MoreHorizontal size={48} />}
               </div>
               <div className="skill-card__name">{skill.name}</div>
+
               <div className="skill-card__level skill-card__level--expert">
                 {skill.proficiencyLevel}
+              </div>
+              <div className="skill-card__meta">
+                <span className="skill-card__experience">
+                  {skill.yearsOfExperience === 0 ? 'Less than 1 year' : 
+                   skill.yearsOfExperience === 1 ? '1-2 years' :
+                   skill.yearsOfExperience === 2 ? '2-5 years' :
+                   skill.yearsOfExperience === 5 ? '5-10 years' :
+                   '10+ years'}
+                </span>
+                <span className="skill-card__hours">
+                  {skill.hoursAvailable} hrs/week
+                </span>
+              </div>
+              <div className="skill-card__status">
+                <span className={`skill-card__status-badge skill-card__status--${skill.status}`}>
+                  {skill.status.charAt(0).toUpperCase() + skill.status.slice(1)}
+                </span>
               </div>
               <div className="skill-card__info">{skill.description}</div>
               <div className="skill-card__actions">
                 <button
-                  onClick={() => {
-                    handleOpenEditModal(skill);
-                  }}
+                  onClick={() => handleOpenEditModal(skill)}
                   className="btn btn--primary"
-                  >Edit</button>
+                >
+                  Edit
+                </button>
                 <button 
                   onClick={() => {
                     setSkillToDelete(skill._id);
                     setIsDeleteModalOpen(true);
                   }}
                   className="btn btn--secondary"
-                >Delete
+                >
+                  Delete
                 </button>
               </div>
             </div>
@@ -211,7 +246,7 @@ export default function SkillCard({ skills, onSkillEdited, onSkillDeleted }: Ski
       </Modal>
 
       {/* Edit Skill Modal */}
-      <Modal 
+      <Modal
         isOpen={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
         title='Edit Skill'
@@ -280,6 +315,56 @@ export default function SkillCard({ skills, onSkillEdited, onSkillDeleted }: Ski
             </select>
           </div>
 
+          {/*yearsOfExperience: skill.yearsOfExperience,
+      status: skill.status,
+      hoursAvailable: skill.hoursAvailable,*/}
+          <div className='skill-proficiency-container' style={{ marginBottom: '15px' }}>
+            <label>Years of Experience:</label>
+            <select
+              value={editFormData.yearsOfExperience}
+              onChange={(e) => setEditFormData({ ...editFormData, yearsOfExperience: parseInt(e.target.value) })}
+              required
+            >
+              <option value="">Select experience level</option>
+              <option value="0">Less than 1 year</option>
+              <option value="1">1-2 years</option>
+              <option value="2">2-5 years</option>
+              <option value="5">5-10 years</option>
+              <option value="10">10+ years</option>
+            </select>
+          </div>
+          
+          <div className='skill-proficiency-container' style={{ marginBottom: '15px' }}>
+            <label>Status:</label>
+            <select
+              value={editFormData.status}
+              onChange={(e) => setEditFormData({ ...editFormData, status: e.target.value })}
+              required
+            >
+              <option value="">Select skill status</option>
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+              <option value="archived">Archived</option>
+            </select>
+          </div>
+
+          <div className='skill-proficiency-container' style={{ marginBottom: '15px' }}>
+            <label>Hours Available:</label>
+            <select
+              value={editFormData.hoursAvailable}
+              onChange={(e) => setEditFormData({ ...editFormData, hoursAvailable: parseInt(e.target.value) })}
+              required
+            >
+              <option value="">Select availability</option>
+              <option value="1">1 hour per week</option>
+              <option value="2">2 hours per week</option>
+              <option value="5">5 hours per week</option>
+              <option value="10">10 hours per week</option>
+              <option value="20">20 hours per week</option>
+              <option value="40">40+ hours per week (Full-time)</option>
+            </select>
+          </div>
+
           <div className='skill-description-container' style={{ marginBottom: '15px' }}>
             <label>Description:</label>
             <textarea
@@ -293,4 +378,3 @@ export default function SkillCard({ skills, onSkillEdited, onSkillDeleted }: Ski
     </>
   );
 }
-

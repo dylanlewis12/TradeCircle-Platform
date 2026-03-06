@@ -40,11 +40,6 @@ const SkillSchema = new mongoose.Schema({
         default: "other",
         index: true,
     },
-    listingType: {
-        type: String,
-        enum: ["seeking", "offering"],
-        required: true,
-    },
     hoursAvailable: {
         type: Number,
         default: 0,

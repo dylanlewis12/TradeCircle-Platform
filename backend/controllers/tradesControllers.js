@@ -91,6 +91,7 @@ export const getTrades = async (req, res) => {
       filter.status = status;
     }
 
+    
     const trades = await Trade.find(filter)
       .populate('initiator', 'userName profilePicture rating')
       .populate('receiver', 'userName profilePicture rating')

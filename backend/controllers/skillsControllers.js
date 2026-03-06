@@ -54,70 +54,148 @@ export const addSkill = async(req, res) => {
 }
 
 export const getAllSkills = async(req, res) => {
-        try {
-        const {page  = 1, limit = 10, category, listingType, status} = req.query //enforce pagination
-        const skip = (page - 1) * limit;
+  try {
+    const { page = 1, limit = 10, category, proficiencyLevel, listingType, status } = req.query;
+    const skip = (page - 1) * limit;
 
-        //Build filter object
-        let filter = { status: "active" }; //filter for only active skills
+    // Build filter object
+    let filter = {};
 
-        if(category) {
-            filter.category = category;
-        }
-
-        if(listingType) {
-            filter.listingType = listingType;
-        }
-
-        if(status) {
-            filter.status = status;
-        }
-
-        const skills = await Skill.find(filter)
-            .populate("userId", "userName profilePicture rating") //User Info
-            .skip(skip)
-            .limit(parseInt(limit))
-            .sort({ createdAt: -1 }); //sort by created date
-
-        // Get total count for pagination
-        const totalSkills = await Skill.countDocuments(filter);
-        const totalPages = Math.ceil(totalSkills / limit);
-
-        res.status(200).json({
-        message: "Skills retrieved successfully",
-        skills,
-        pagination: {
-            currentPage: parseInt(page),
-            totalPages,
-            totalSkills,
-            limit: parseInt(limit)
-        }
-        });
-        } catch (error) {
-            res.status(500).json({ message: error.message });
-        }
-
-} 
-
-export const getUserSkill = async(req, res) => {
-    try {
-        const userId = req.params.id;
-
-        if(!userId) {
-            return res.status(404).json({ message: "Insuffient data. Missing required data fields" });
-        }
-
-        const skills = await Skill.find({userId}).populate("userId", "userName profilePicture rating")
-
-        res.status(200).json({
-            message: "All Skills retrieved successfully",
-            skills
-            });
-    } catch(error) {
-        res.status(500).json({ message: error.message });
+    // Handle multiple categories
+    if (category) {
+      const categories = Array.isArray(category) ? category : [category];
+      filter.category = { $in: categories };
     }
 
-}
+    // Handle multiple proficiency levels
+    if (proficiencyLevel) {
+      const levels = Array.isArray(proficiencyLevel) ? proficiencyLevel : [proficiencyLevel];
+      filter.proficiencyLevel = { $in: levels };
+    }
+
+    // Handle multiple statuses
+    if (status) {
+      const statuses = Array.isArray(status) ? status : [status];
+      filter.status = { $in: statuses };
+    } else {
+      // Default to active if no status filter specified
+      filter.status = 'active';
+    }
+
+    // Handle listing type
+    if (listingType) {
+      filter.listingType = listingType;
+    }
+
+    const skills = await Skill.find(filter)
+      .populate("userId", "userName profilePicture rating") // User Info
+      .skip(skip)
+      .limit(parseInt(limit))
+      .sort({ createdAt: -1 }); // Sort by created date
+
+    // Get total count for pagination
+    const totalSkills = await Skill.countDocuments(filter);
+    const totalPages = Math.ceil(totalSkills / limit);
+
+    res.status(200).json({
+      message: "Skills retrieved successfully",
+      skills,
+      pagination: {
+        currentPage: parseInt(page),
+        totalPages,
+        totalSkills,
+        limit: parseInt(limit)
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const getUserSkills = async(req, res) => {
+    try {
+        const { userId } = req.params;
+        const { category, proficiencyLevel, status } = req.query;
+        
+        console.log('getUserSkills called with userId:', userId); // Debug
+        
+        let filter = { userId };
+
+        if (category) {
+        const categories = Array.isArray(category) ? category : [category];
+        filter.category = { $in: categories };
+        }
+
+        if (proficiencyLevel) {
+        const levels = Array.isArray(proficiencyLevel) ? proficiencyLevel : [proficiencyLevel];
+        filter.proficiencyLevel = { $in: levels };
+        }
+
+        if (status) {
+        const statuses = Array.isArray(status) ? status : [status];
+        filter.status = { $in: statuses };
+        }
+
+        console.log('Filter object:', filter); // Debug
+        
+        const skills = await Skill.find(filter).sort({ createdAt: -1 });
+        
+        console.log('Skills found:', skills.length); // Debug
+        console.log('Skills:', skills); // Debug
+
+        res.status(200).json({
+        message: "User skills retrieved successfully",
+        skills
+        });
+    } catch (error) {
+        console.error('Error in getUserSkills:', error);
+        res.status(500).json({ message: error.message });
+    }
+};
+
+export const getNonUserSkills = async(req, res) => {
+    try {
+        const { userId } = req.params;
+        const { category, proficiencyLevel, status } = req.query;
+        
+        console.log('getUserSkills called with userId:', userId); // Debug
+        
+        let filter = { 
+            userId: {$ne : userId},
+            status: 'active'
+        };
+
+        if (category) {
+        const categories = Array.isArray(category) ? category : [category];
+        filter.category = { $in: categories };
+        }
+
+        if (proficiencyLevel) {
+        const levels = Array.isArray(proficiencyLevel) ? proficiencyLevel : [proficiencyLevel];
+        filter.proficiencyLevel = { $in: levels };
+        }
+
+        if (status) {
+        const statuses = Array.isArray(status) ? status : [status];
+        filter.status = { $in: statuses };
+        }
+
+        console.log('Filter object:', filter); // Debug
+        
+        const skills = await Skill.find(filter).sort({ createdAt: -1 });
+        
+        console.log('Skills found:', skills.length); // Debug
+        console.log('Skills:', skills); // Debug
+
+        res.status(200).json({
+        message: "User skills retrieved successfully",
+        skills
+        });
+    } catch (error) {
+        console.error('Error in getUserSkills:', error);
+        res.status(500).json({ message: error.message });
+    }
+};
 
 export const deleteUserSkill = async(req,res) => {
     try {
