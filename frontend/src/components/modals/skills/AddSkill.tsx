@@ -12,11 +12,13 @@ interface AddSkillProps {
 
 export default function AddSkill({ isOpen, onClose, onSkillAdded }: AddSkillProps) {
   const [formData, setFormData] = useState({ 
-    name: '', 
-    category: '',
+    name: '',
+    category: 'other', // valid default in the SkillCategory union
     proficiencyLevel: '',
-    description: '',
-    listingType: 'offering' //make listing type offering automatically for user's added skills
+    yearsOfExperience: 0,
+    status: 'active',
+    hoursAvailable: 0,
+    description: ''
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -53,7 +55,7 @@ export default function AddSkill({ isOpen, onClose, onSkillAdded }: AddSkillProp
       console.log(response.data)
 
       onClose();
-      setFormData({ name: '', category: '', proficiencyLevel: '', description: '', listingType: 'offering'});
+      setFormData({ name: '', category: 'other', proficiencyLevel: '', yearsOfExperience: 0, status: 'active', hoursAvailable: 0, description: '' });
     } catch (err: any) {
       console.error('Error adding skill:', err);
       setError(err.response?.data?.message || 'Failed to add skill');
@@ -129,6 +131,53 @@ export default function AddSkill({ isOpen, onClose, onSkillAdded }: AddSkillProp
             <option value="advanced">Advanced</option>
             <option value="expert">Expert</option>
           </select>
+        </div>
+
+        <div className='skill-experience-container' style={{ marginBottom: '15px' }}>
+            <label>Years of Experience:</label>
+            <select
+              value={formData.yearsOfExperience}
+              onChange={(e) => setFormData({ ...formData, yearsOfExperience: parseInt(e.target.value) })}
+              required
+            >
+              <option value="">Select experience level</option>
+              <option value="0">Less than 1 year</option>
+              <option value="1">1-2 years</option>
+              <option value="2">2-5 years</option>
+              <option value="5">5-10 years</option>
+              <option value="10">10+ years</option>
+            </select>
+        </div>
+
+        <div className='skill-status-container' style={{ marginBottom: '15px' }}>
+            <label>Status:</label>
+            <select
+              value={formData.status}
+              onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+              required
+            >
+              <option value="">Select skill status</option>
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+              <option value="archived">Archived</option>
+            </select>
+        </div>
+
+        <div className='skill-available-container' style={{ marginBottom: '15px' }}>
+            <label>Hours Available:</label>
+            <select
+              value={formData.hoursAvailable}
+              onChange={(e) => setFormData({ ...formData, hoursAvailable: parseInt(e.target.value) })}
+              required
+            >
+              <option value="">Select availability</option>
+              <option value="1">1 hour per week</option>
+              <option value="2">2 hours per week</option>
+              <option value="5">5 hours per week</option>
+              <option value="10">10 hours per week</option>
+              <option value="20">20 hours per week</option>
+              <option value="40">40+ hours per week (Full-time)</option>
+            </select>
         </div>
 
         <div className='skill-description-container' style={{ marginBottom: '15px' }}>

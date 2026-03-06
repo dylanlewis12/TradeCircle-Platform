@@ -23,13 +23,29 @@ export default function MarketSkillCard({ skill, handleContact, handleView }: Ma
 
       <div className='skill-card__body'>
         <h3 className='skill-card__name'>{skill.name}</h3>
+        
         <div className='skill-card__proficiency'>
           {skill.proficiencyLevel.charAt(0).toUpperCase() + skill.proficiencyLevel.slice(1)}
         </div>
+
+        <div className='skill-card__meta'>
+          <span className='skill-card__experience'>
+            {skill.yearsOfExperience === 0 ? 'Less than 1 year' : 
+             skill.yearsOfExperience === 1 ? '1-2 years' :
+             skill.yearsOfExperience === 2 ? '2-5 years' :
+             skill.yearsOfExperience === 5 ? '5-10 years' :
+             '10+ years'}
+          </span>
+          <span className='skill-card__hours'>
+            {skill.hoursAvailable} hrs/week
+          </span>
+        </div>
+
         <p className='skill-card__description'>{skill.description}</p>
+
         <div className='skill-card__category'>
           <span className="skill-card__category-badge">
-            {skill.category}
+            {skill.category.charAt(0).toUpperCase() + skill.category.slice(1)}
           </span>
         </div>
       </div>

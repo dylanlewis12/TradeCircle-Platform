@@ -206,6 +206,75 @@
   height: 44px;
 }
 
+.skill-experience-container {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.skill-experience-container select {
+  width: 100%;
+  padding: 12px 14px;
+  padding-right: 45px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 15px;
+  color: #1a1a1a;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+  background: white;
+  font-family: inherit;
+  line-height: 1.5;
+  height: 44px;
+}
+
+.skill-status-container {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.skill-status-container select {
+  width: 100%;
+  padding: 12px 14px;
+  padding-right: 45px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 15px;
+  color: #1a1a1a;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+  background: white;
+  font-family: inherit;
+  line-height: 1.5;
+  height: 44px;
+}
+
+.skill-available-container {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.skill-available-container select {
+  width: 100%;
+  padding: 12px 14px;
+  padding-right: 45px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 15px;
+  color: #1a1a1a;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+  background: white;
+  font-family: inherit;
+  line-height: 1.5;
+  height: 44px;
+}
+
 .skill-description-container {
   position: relative;
   width: 100%;

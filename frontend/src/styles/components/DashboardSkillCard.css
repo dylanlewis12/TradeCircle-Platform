@@ -221,3 +221,166 @@
   margin: 0;
   line-height: 1.5;
 }
+
+/*************************************/
+.dash-skill-name-container {
+  margin-top: 15px;
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.dash-skill-name-container input {
+  width: 100%;
+  padding: 12px 14px;
+  padding-right: 45px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 15px;
+  color: #1a1a1a;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+  background: white;
+  font-family: inherit;
+  line-height: 1.5;
+  height: 44px;
+}
+
+.dash-skill-category-container {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.dash-skill-category-container select {
+  width: 100%;
+  padding: 12px 14px;
+  padding-right: 45px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 15px;
+  color: #1a1a1a;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+  background: white;
+  font-family: inherit;
+  line-height: 1.5;
+  height: 44px;
+}
+
+.dash-skill-proficiency-container {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.dash-skill-proficiency-container select {
+  width: 100%;
+  padding: 12px 14px;
+  padding-right: 45px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 15px;
+  color: #1a1a1a;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+  background: white;
+  font-family: inherit;
+  line-height: 1.5;
+  height: 44px;
+}
+
+.dash-skill-experience-container {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.dash-skill-experience-container select {
+  width: 100%;
+  padding: 12px 14px;
+  padding-right: 45px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 15px;
+  color: #1a1a1a;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+  background: white;
+  font-family: inherit;
+  line-height: 1.5;
+  height: 44px;
+}
+
+.dash-skill-status-container {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.dash-skill-status-container select {
+  width: 100%;
+  padding: 12px 14px;
+  padding-right: 45px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 15px;
+  color: #1a1a1a;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+  background: white;
+  font-family: inherit;
+  line-height: 1.5;
+  height: 44px;
+}
+
+.dash-skill-available-container {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.dash-skill-available-container select {
+  width: 100%;
+  padding: 12px 14px;
+  padding-right: 45px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 15px;
+  color: #1a1a1a;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+  background: white;
+  font-family: inherit;
+  line-height: 1.5;
+  height: 44px;
+}
+
+.dash-skill-description-container {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.dash-skill-description-container textarea {
+  width: 100%;
+  padding: 12px 14px;
+  padding-right: 45px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 15px;
+  color: #1a1a1a;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+  background: white;
+  font-family: inherit;
+  line-height: 1.5;
+  height: 60px;
+}

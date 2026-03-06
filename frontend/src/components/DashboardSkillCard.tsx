@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 import '../styles/components/DashboardSkillCard.css';
+import '../styles/components/modals/AddSkill.css'
 import Modal from '../components/Modal.tsx';
 
 interface Skill {
@@ -267,7 +268,7 @@ export default function SkillCard({ skills, onSkillEdited, onSkillDeleted }: Ski
         <form onSubmit={(e) => { e.preventDefault(); handleEditSkill(); }}>
           {error && <p style={{ color: 'red' }}>{error}</p>}
           
-          <div className='skill-name-container' style={{ marginBottom: '15px' }}>
+          <div className='dash-skill-name-container' style={{ marginBottom: '15px' }}>
             <label>Skill Name:</label>
             <input
               type="text"
@@ -278,7 +279,7 @@ export default function SkillCard({ skills, onSkillEdited, onSkillDeleted }: Ski
             />
           </div>
 
-          <div className='skill-category-container' style={{ marginBottom: '15px' }}>
+          <div className='dash-skill-category-container' style={{ marginBottom: '15px' }}>
             <label>Category:</label>
             <select
               value={editFormData.category}
@@ -300,7 +301,7 @@ export default function SkillCard({ skills, onSkillEdited, onSkillDeleted }: Ski
             </select>
           </div>
 
-          <div className='skill-proficiency-container' style={{ marginBottom: '15px' }}>
+          <div className='dash-skill-proficiency-container' style={{ marginBottom: '15px' }}>
             <label>Proficiency Level:</label>
             <select
               value={editFormData.proficiencyLevel}
@@ -315,10 +316,7 @@ export default function SkillCard({ skills, onSkillEdited, onSkillDeleted }: Ski
             </select>
           </div>
 
-          {/*yearsOfExperience: skill.yearsOfExperience,
-      status: skill.status,
-      hoursAvailable: skill.hoursAvailable,*/}
-          <div className='skill-proficiency-container' style={{ marginBottom: '15px' }}>
+          <div className='dash-skill-proficiency-container' style={{ marginBottom: '15px' }}>
             <label>Years of Experience:</label>
             <select
               value={editFormData.yearsOfExperience}
@@ -334,7 +332,7 @@ export default function SkillCard({ skills, onSkillEdited, onSkillDeleted }: Ski
             </select>
           </div>
           
-          <div className='skill-proficiency-container' style={{ marginBottom: '15px' }}>
+          <div className='dash-skill-proficiency-container' style={{ marginBottom: '15px' }}>
             <label>Status:</label>
             <select
               value={editFormData.status}
@@ -348,7 +346,7 @@ export default function SkillCard({ skills, onSkillEdited, onSkillDeleted }: Ski
             </select>
           </div>
 
-          <div className='skill-proficiency-container' style={{ marginBottom: '15px' }}>
+          <div className='dash-skill-proficiency-container' style={{ marginBottom: '15px' }}>
             <label>Hours Available:</label>
             <select
               value={editFormData.hoursAvailable}
@@ -365,7 +363,7 @@ export default function SkillCard({ skills, onSkillEdited, onSkillDeleted }: Ski
             </select>
           </div>
 
-          <div className='skill-description-container' style={{ marginBottom: '15px' }}>
+          <div className='dash-skill-description-container' style={{ marginBottom: '15px' }}>
             <label>Description:</label>
             <textarea
               value={editFormData.description}

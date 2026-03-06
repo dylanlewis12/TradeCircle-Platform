@@ -159,3 +159,34 @@
 .view-button:active {
   transform: translateY(0);
 }
+
+/* Meta Information (Experience & Hours) */
+.skill-card__meta {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 10px 0;
+  padding: 10px 0;
+  border-top: 1px solid #f0f0f0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.skill-card__experience,
+.skill-card__hours {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.skill-card__experience {
+  background-color: #e8f5e9;
+  color: #1b5e20;
+}
+
+.skill-card__hours {
+  background-color: #e3f2fd;
+  color: #0d47a1;
+}
