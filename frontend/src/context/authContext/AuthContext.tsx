@@ -3,6 +3,8 @@ import axios from 'axios';
 import { useCookies } from 'react-cookie';
 import { jwtDecode } from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
+import { io, Socket } from 'socket.io-client';
+import toast from "react-hot-toast";
 
 interface User {
   id: string;
@@ -17,19 +19,62 @@ interface User {
 interface AuthContextType {
   cookies: { [x: string]: any };
   user: User | null;
+  onlineUsers: string[];
+  socket: Socket | null;
+  isLoggingIn: boolean;
+  isLoggingOut: boolean;
   login: (formData: Object) => Promise<void>;
   logout: () => Promise<void>;
   signUp: (formData: Object) => Promise<void>;
 }
 
-// Create context with undefined default
+const BASE_URL = import.meta.env.MODE === "development" ? "http://localhost:3000" : "/";
+
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Provider component
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const navigate = useNavigate();  // ✅ Add this
+  const navigate = useNavigate();
   const [cookies, setCookies, removeCookies] = useCookies();
   const [user, setUser] = useState<User | null>(null);
+  const [socket, setSocket] = useState<Socket | null>(null);
+  const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  // Connect Socket
+  const connectSocket = (userId: string) => {
+    if (socket?.connected) return;
+    
+    const newSocket = io(BASE_URL, {
+      query: {
+        userId: userId,
+      },
+      withCredentials: true
+    });
+    
+    newSocket.on("connect", () => {
+      console.log("Socket connected");
+      setSocket(newSocket);
+    });
+
+    newSocket.on("getOnlineUsers", (userIds: string[]) => {
+      console.log("Online users:", userIds);
+      setOnlineUsers(userIds);
+    });
+
+    newSocket.on("disconnect", () => {
+      console.log("Socket disconnected");
+      setSocket(null);
+    });
+  };
+
+  // Disconnect Socket
+  const disconnectSocket = () => {
+    if (socket?.connected) {
+      socket.disconnect();
+      setSocket(null);
+    }
+  };
 
   // Restore user from token on app mount
   useEffect(() => {
@@ -53,7 +98,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
 
         // Restore user from token
-        setUser({
+        const restoredUser: User = {
           id: decoded.id,
           userName: decoded.userName || 'User',
           email: decoded.email,
@@ -61,9 +106,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           profilePicture: decoded.profilePicture || '',
           location: decoded.location || '',
           totalTrades: decoded.totalTrades || 0,
-        });
-
+        };
+        
+        setUser(restoredUser);
         console.log('User restored from token');
+
+        // Connect socket when user is restored
+        connectSocket(restoredUser.id);
       } catch (error) {
         console.error('Error restoring user from token:', error);
         removeCookies("accessToken");
@@ -71,8 +120,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
 
     restoreUserFromToken();
-  }, []); // Only run once on mount
-
+  }, []);
 
   // Check token expiration on mount and periodically
   useEffect(() => {
@@ -84,41 +132,35 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           return;
         }
 
-        // Decode the token to get expiration time
         const decoded: any = jwtDecode(token);
-        const expirationTime = decoded.exp * 1000; // Convert to milliseconds
+        const expirationTime = decoded.exp * 1000;
         const currentTime = Date.now();
         const timeUntilExpiry = expirationTime - currentTime;
 
         console.log('Token expires in:', Math.floor(timeUntilExpiry / 1000), 'seconds');
 
-        // If token is expired or will expire in less than 1 minute
+        /*
         if (timeUntilExpiry < 60000) {
           console.log('Token expired or expiring soon, logging out automatically');
           handleAutoLogout();
-
         }
+        */
       } catch (error) {
         console.error('Error checking token expiration:', error);
       }
     };
 
-    // Check immediately on mount
     checkTokenExpiration();
-
-    // Check every 30 seconds
     const interval = setInterval(checkTokenExpiration, 30000);
-
     return () => clearInterval(interval);
   }, [cookies.accessToken]);
 
-  
   // Handle automatic logout
+  /*
   const handleAutoLogout = async () => {
     try {
-      // Try to call backend logout
       await axios.post(
-        "http://localhost:3000/api/auth/logout",
+        `${BASE_URL}/api/auth/logout`,
         {},
         {
           withCredentials: true,
@@ -130,45 +172,61 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } catch (error) {
       console.error('Auto logout API call failed:', error);
     } finally {
-      // Clear local state regardless of API response
       removeCookies("accessToken");
       setUser(null);
+      disconnectSocket();
       navigate('/');
     }
   };
+  */
 
   async function login(formData: Object): Promise<void> {
+    setIsLoggingIn(true);
     try {
-      const res = await axios.post("http://localhost:3000/api/auth/login", formData, {
+      const res = await axios.post(`${BASE_URL}/api/auth/login`, formData, {
         headers: {
           'Content-Type': 'application/json',
         }
       });
+      
       setCookies("accessToken", res.data.accessToken);
       setUser(res.data.user);
-    } catch (error) {
+      toast.success("Logged in successfully");
+      
+      // Connect socket after login
+      connectSocket(res.data.user.id);
+    } catch (error: any) {
       console.error('Login error:', error);
+      toast.error(error.response?.data?.message || 'Login failed');
       throw error;
+    } finally {
+      setIsLoggingIn(false);
     }
   }
 
   async function signUp(formData: Object): Promise<void> {
     try {
-      const res = await axios.post("http://localhost:3000/api/auth/register", formData);
+      const res = await axios.post(`${BASE_URL}/api/auth/register`, formData);
       setCookies("accessToken", res.data.accessToken);
       setUser(res.data.user);
-    } catch (error) {
+      toast.success("Account created successfully");
+      
+      // Connect socket after signup
+      connectSocket(res.data.user.id);
+    } catch (error: any) {
       console.error('SignUp error:', error);
+      toast.error(error.response?.data?.message || 'Sign up failed');
       throw error;
     }
   }
 
   async function logout(): Promise<void> {
+    setIsLoggingOut(true);
     try {
-      const token = cookies.accessToken;  // Get access token from cookies
+      const token = cookies.accessToken;
       
       await axios.post(
-        "http://localhost:3000/api/auth/logout",
+        `${BASE_URL}/api/auth/logout`,
         {},
         {
           withCredentials: true,
@@ -177,12 +235,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           }
         }
       );
-    } catch(error) {
+      
+      toast.success("Logged out successfully");
+    } catch (error: any) {
       console.error('Logout error:', error);
-      // Still clear local state even if API call fails
+      toast.error(error.response?.data?.message || 'Logout failed');
     } finally {
       removeCookies("accessToken");
       setUser(null);
+      disconnectSocket();
+      setIsLoggingOut(false);
     }
   }
 
@@ -190,11 +252,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     () => ({
       cookies,
       user,
+      socket,
+      onlineUsers,
+      isLoggingIn,
+      isLoggingOut,
       login,
       logout,
       signUp,
     }),
-    [cookies, user],
+    [cookies, user, socket, onlineUsers, isLoggingIn, isLoggingOut],
   );
 
   return (
@@ -204,7 +270,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   );
 }
 
-// Custom hook to use auth context
 export function useAuth(): AuthContextType {
   const context = useContext(AuthContext);
   if (context === undefined) {

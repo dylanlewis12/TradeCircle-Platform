@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import toast from 'react-hot-toast';
 import axios from 'axios';
+import { useAuth } from '../../context/authContext/AuthContext.tsx';  
 
 interface User {
   _id: string;
@@ -27,7 +28,7 @@ interface ChatStore {
   setSelectedUser: (user: User | null) => void;
 }
 
-export const useChat = create<ChatStore>((set) => ({
+export const useChat = create<ChatStore>((set, get) => ({  // ✅ Add get parameter
   messages: [],
   users: [],
   selectedUser: null,
@@ -37,8 +38,16 @@ export const useChat = create<ChatStore>((set) => ({
   getUsers: async () => {
     set({ isUsersLoading: true });
     try {
+      //Use cookies from auth
+      const { cookies } = useAuth(); 
+      
       const response = await axios.get(
-        `http://localhost:3000/api/messages/users`
+        `http://localhost:3000/api/messages/users`,
+        {
+          headers: {
+            'Authorization': `Bearer ${cookies.accessToken}`
+          }
+        }
       );
       set({ users: response.data.users });
     } catch (error: any) {
@@ -51,8 +60,15 @@ export const useChat = create<ChatStore>((set) => ({
   getMessages: async (userId: string) => {
     set({ isMessageLoading: true });
     try {
+      const { cookies } = useAuth();  
+      
       const res = await axios.get(
-        `http://localhost:3000/api/messages/${userId}`
+        `http://localhost:3000/api/messages/${userId}`,
+        {
+          headers: {
+            'Authorization': `Bearer ${cookies.accessToken}`
+          }
+        }
       );
       set({ messages: res.data.messages });
     } catch (error: any) {
