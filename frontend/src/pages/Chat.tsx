@@ -17,6 +17,7 @@ export default function Chat() {
     
     const { selectedUser } = useChat();
 
+    /*
     return (
         <div className='h-screen bg-base-200'>
             <div className='flex items-center justify-center pt-20 px-4'>
@@ -30,8 +31,8 @@ export default function Chat() {
             </div>
         </div>
     );
+    */
 
-    /*
     return(
         <div className="chat-page">
             <aside className="chat-sidebar">
@@ -66,7 +67,6 @@ export default function Chat() {
             </main>
         </div>
     );
-    */
 }
 
 /*

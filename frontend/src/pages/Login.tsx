@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '../context/authContext/AuthContext';
 import logo from '../styles/images/logo.png';
+import toast from "react-hot-toast";
 
 
 export default function Login() {
@@ -78,15 +79,23 @@ export default function Login() {
             console.log(res.data);
 
             await login(copy);
-            navigate('/home');
+            
+            toast.success("Logged in successfully!");
+
+            setTimeout(() => {
+                navigate('/home');
+            }, 1000);            
 
         } catch(err: any) {
+            /*
             if(err.response.status == 500) {
                 setErrors({ general: 'Login failed. Please try again'});
             } else {
             setErrors({ general: err.response?.data.message});
             }
-            console.error(err);
+            */
+            toast.error('Login failed. Please try again')
+            console.log(err.message);
         } finally {
             setIsLoading(false);
         }

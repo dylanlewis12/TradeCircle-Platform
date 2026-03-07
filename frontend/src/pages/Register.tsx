@@ -4,6 +4,7 @@ import  '../styles/pages/Register.css';
 import { useNavigate } from 'react-router-dom';
 import { Eye, EyeOff } from 'lucide-react';
 import logo from '../styles/images/logo.png';
+import toast from "react-hot-toast";
 
 
 export default function Register() {
@@ -125,11 +126,15 @@ export default function Register() {
             }
 
             console.log(res.data);
+
+            toast.success('Account created successfully!');
+
             navigate('/home');
 
         } catch(err: any) {
-            setErrors({ general: err.response?.data.message || 'Registration failed. Please try again.'});
-            console.error(err);
+            toast.error('Registration failed. Please try again.');
+            //setErrors({ general: err.response?.data.message || 'Registration failed. Please try again.'});
+            console.log(err.message);
         } finally {
             setIsLoading(false);
         }
