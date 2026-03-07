@@ -1,5 +1,5 @@
 import '../styles/pages/Chat.css';
-import { useChat } from '../components/chat/useChat.tsx';
+import { useChat } from '../components/chat/store/useChat.tsx';
 import Sidebar from '../components/chat/Sidebar.js';
 import NoChatSelected from '../components/chat/NoChatSelected.js';
 import ChatContainer from "../components/chat/ChatContainer.js";

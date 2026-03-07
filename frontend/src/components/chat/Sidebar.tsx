@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useChat } from "./useChat.tsx";
+import { useChat } from "./store/useChat.tsx";
 import { useAuth } from "../../context/authContext/AuthContext.tsx";
 import SidebarSkeleton from "./SidebarSkeleton.tsx";
 import { Users } from "lucide-react";

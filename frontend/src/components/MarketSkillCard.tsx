@@ -1,13 +1,60 @@
 import '../styles/components/MarketSkillCard.css'
 import { User, Star } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/authContext/AuthContext';
+import { useChat } from './chat/store/useChat';
+import toast from 'react-hot-toast';
 
 interface MarketSkill {
   skill: any;
-  handleContact: () => void;
+  //handleContact: () => void;
   handleView: () => void;
 }
 
-export default function MarketSkillCard({ skill, handleContact, handleView }: MarketSkill) {
+export default function MarketSkillCard({ skill, handleView }: MarketSkill) {
+  const navigate = useNavigate();
+  const { setSelectedUser, createOrGetConversation, getMessages } = useChat();
+  const { user } = useAuth();
+
+  //Handle contact seller - initiates trade conversation
+  async function handleContactSeller() {
+    try {
+      //Don't allow user to message themselves
+      if(user?.id === skill.userId._id) {
+        toast.error("You can't message yourself");
+        return;
+      }
+
+      //Create or get conversation with skill owner
+      const conversationId = await createOrGetConversation(skill.userId._id);
+
+      // Set the seller as selected user
+      setSelectedUser({
+        _id: skill.userId._id,
+        userName: skill.userId.userName,
+        profilePicture: skill.userId.profilePicture,
+        email: skill.userId.email
+      });
+
+      // Load messages for this user
+      await getMessages(skill.userId._id);
+
+      // Navigate to chat
+      navigate(`/messages/${skill.userId._id}`, { 
+        state: { 
+          conversationId, 
+          skillId: skill._id,
+          skillName: skill.name
+        }
+      });
+
+      toast.success('Chat opened');
+    } catch(error: any) {
+      console.error('Error starting conversation:', error);
+      toast.error('Failed to open chat');
+    }
+  }
+
   return (
     <div className='marketplace__skill-card'>
       <div className='skill-card__header'>
@@ -51,7 +98,7 @@ export default function MarketSkillCard({ skill, handleContact, handleView }: Ma
       </div>
 
       <div className='skill-card__buttons'>
-        <button className='contact-button' onClick={handleContact}>
+        <button className='contact-button' onClick={handleContactSeller}>
           Contact Seller
         </button>
         <button className='view-button' onClick={handleView}>
