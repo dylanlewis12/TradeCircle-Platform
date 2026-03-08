@@ -428,6 +428,7 @@ export default function Dashboard() {
           isOpen={isAddSkillOpen}
           onClose={handleAddSkillClose}
           onSkillAdded={handleSkillAdded}
+          skills={skills}
         />
 
         {activeTab === 'history' && (

@@ -5,9 +5,15 @@ import { useAuth } from '../context/authContext/AuthContext';
 import { useChat } from './chat/store/useChat';
 import toast from 'react-hot-toast';
 
+interface User {
+  id: string;
+  userName: string;
+  profilePicture?: string;
+  email?: string;
+}
+
 interface MarketSkill {
   skill: any;
-  //handleContact: () => void;
   handleView: () => void;
 }
 
@@ -16,18 +22,18 @@ export default function MarketSkillCard({ skill, handleView }: MarketSkill) {
   const { setSelectedUser, createOrGetConversation, getMessages } = useChat();
   const { user } = useAuth();
 
-  //Handle contact seller - initiates trade conversation
+  // Handle contact seller - initiates trade conversation
   async function handleContactSeller() {
     try {
-      //Don't allow user to message themselves
-      if(user?.id === skill.userId._id) {
+      // Don't allow user to message themselves
+      if (user?.id === skill.userId._id) {
         toast.error("You can't message yourself");
         return;
       }
 
-      //Create or get conversation with skill owner
+      // Create or get conversation with skill owner
       const conversationId = await createOrGetConversation(skill.userId._id);
-
+      
       // Set the seller as selected user
       setSelectedUser({
         _id: skill.userId._id,
@@ -49,7 +55,7 @@ export default function MarketSkillCard({ skill, handleView }: MarketSkill) {
       });
 
       toast.success('Chat opened');
-    } catch(error: any) {
+    } catch (error: any) {
       console.error('Error starting conversation:', error);
       toast.error('Failed to open chat');
     }
@@ -60,6 +66,7 @@ export default function MarketSkillCard({ skill, handleView }: MarketSkill) {
       <div className='skill-card__header'>
         <User size={40} className='skill-card__avatar' />
         <div className='skill-card__user'>
+          {/* ✅ FIXED: Show skill owner's name, not current user's name */}
           <p className='skill-card__userName'>{skill.userId.userName}</p>
           <div className='skill-card__rating'>
             <Star size={14} fill="#fbbf24" color="#fbbf24" />
@@ -98,10 +105,16 @@ export default function MarketSkillCard({ skill, handleView }: MarketSkill) {
       </div>
 
       <div className='skill-card__buttons'>
-        <button className='contact-button' onClick={handleContactSeller}>
+        <button 
+          className='contact-button' 
+          onClick={handleContactSeller}
+        >
           Contact Seller
         </button>
-        <button className='view-button' onClick={handleView}>
+        <button 
+          className='view-button' 
+          onClick={handleView}
+        >
           View Profile
         </button>
       </div>

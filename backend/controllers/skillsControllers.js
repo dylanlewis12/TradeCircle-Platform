@@ -10,16 +10,12 @@ GET    /api/skills/:id                 - Get skill details
 export const addSkill = async(req, res) => {
     try {
         const userId = req.user.id;
-        const { name, description, icon, category, listingType, hoursAvailable, status, proficiencyLevel, yearsOfExperience,  } = req.body;
+        const { name, description, icon, category, hoursAvailable, status, proficiencyLevel, yearsOfExperience,  } = req.body;
 
-        if(!listingType || !userId || !name ) {
+        if(!userId || !name || !category || !hoursAvailable || !status || !proficiencyLevel || !yearsOfExperience) {
             return res.status(404).json({ message: "Insuffient data. Missing required data fields" });
         }
 
-        //listingType validation
-        if(!["seeking", "offering"].includes(listingType)) {
-             return res.status(400).json({ message: "Invalid listingType. Must be 'offering' or 'seeking'" });
-        }
 
         //category validation
         const validCategories = ["technology", "linguistic", "crafts", "services", "academic", "creative", "medical", "leadership", "business", "communication", "trades", "other"];
@@ -34,7 +30,6 @@ export const addSkill = async(req, res) => {
             description,
             icon,
             category: category || "other",
-            listingType,
             hoursAvailable: hoursAvailable || 0,
             status: status || "active",
             proficiencyLevel: proficiencyLevel || "beginner",
@@ -182,8 +177,10 @@ export const getNonUserSkills = async(req, res) => {
 
         console.log('Filter object:', filter); // Debug
         
-        const skills = await Skill.find(filter).sort({ createdAt: -1 });
-        
+      const skills = await Skill.find(filter)
+        .populate('userId', 'id userName profilePicture rating email')  // Populate user details
+        .sort({ createdAt: -1 });
+          
         console.log('Skills found:', skills.length); // Debug
         console.log('Skills:', skills); // Debug
 

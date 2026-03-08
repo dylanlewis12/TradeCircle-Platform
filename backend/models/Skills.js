@@ -17,15 +17,11 @@ const SkillSchema = new mongoose.Schema({
         type: String,
         default: "",
     },
-    icon: {
-        type: String,
-        default: null,
-    },
     category: {
         type: String,
         enum: [
             "technology",
-            "languistic",
+            "linguistic",
             "crafts",
             "services",
             "academic",

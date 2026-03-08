@@ -25,7 +25,7 @@ export default function Marketplace() {
   const [selectedProficiencies, setSelectedProficiencies] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('newest');
-  const { cookies } = useAuth();
+  const { user, cookies } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [skills, setSkills] = useState<Skill[]>([]);
@@ -49,6 +49,7 @@ export default function Marketplace() {
 
 
   useEffect(() => {
+
     async function fetchSkills() {
       try {
         setLoading(true);
@@ -71,7 +72,7 @@ export default function Marketplace() {
         }
 
         const response = await axios.get(
-          `http://localhost:3000/api/skills?${params.toString()}`,
+          `http://localhost:3000/api/skills/marketplace/${user!.id}?${params.toString()}`,
           {
             headers: {
               'Authorization': `Bearer ${cookies.accessToken}`
@@ -110,7 +111,7 @@ export default function Marketplace() {
     }
 
     fetchSkills();
-  }, [selectedCategories, selectedProficiencies, searchQuery, sortBy, cookies.accessToken]);
+  }, [selectedCategories, selectedProficiencies, searchQuery, sortBy, user?.id, cookies.accessToken]);
 
   function handleContact() {
     console.log('Open contact');
@@ -125,7 +126,6 @@ export default function Marketplace() {
       <MarketSkillCard 
         key={skill._id}
         skill={skill} 
-        handleContact={handleContact} 
         handleView={handleView} 
       />
     );

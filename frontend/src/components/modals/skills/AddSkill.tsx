@@ -3,14 +3,28 @@ import { useState } from "react";
 import axios from 'axios';
 import Modal from "../../Modal.tsx";
 import '../../../styles/components/modals/AddSkill.css';
+import toast from "react-hot-toast";
+
+interface Skill {
+  _id: string;
+  name: string;
+  category: 'technology' | 'linguistic' | 'crafts' | 'services' | 'academic' | 'creative' | 'medical' | 'leadership' | 'business' | 'communication' | 'trades' | 'other';
+  proficiencyLevel: string;
+  yearsOfExperience: number;
+  status: string;
+  hoursAvailable: number;
+  description: string;
+  userId: string;
+}
 
 interface AddSkillProps {
   isOpen: boolean;
   onClose: () => void;
   onSkillAdded?: (skill: any) => void;
+  skills: Skill[]; 
 }
 
-export default function AddSkill({ isOpen, onClose, onSkillAdded }: AddSkillProps) {
+export default function AddSkill({ isOpen, onClose, onSkillAdded, skills }: AddSkillProps) {
   const [formData, setFormData] = useState({ 
     name: '',
     category: 'other', // valid default in the SkillCategory union
@@ -25,6 +39,12 @@ export default function AddSkill({ isOpen, onClose, onSkillAdded }: AddSkillProp
   const { cookies } = useAuth();
 
 
+  /*
+  function validateExistingSkill() {  //Check if skill name already exists for current user
+    const isValuePresent = skills.some(skill => skill['name'] === formData.name);
+    return isValuePresent;
+  }
+  */
 
   const handleAddSkill = async () => {
     // Validate form
@@ -32,6 +52,14 @@ export default function AddSkill({ isOpen, onClose, onSkillAdded }: AddSkillProp
       setError('Please fill in all required fields');
       return;
     }
+
+    /*
+    if (validateExistingSkill()) {
+      setError('You already have this skill. Enter another skill');
+      toast.error('You already have this skill. Enter another skill');
+      return;
+    }
+    */
 
     try {
       setLoading(true);
@@ -55,6 +83,7 @@ export default function AddSkill({ isOpen, onClose, onSkillAdded }: AddSkillProp
       console.log(response.data)
 
       onClose();
+      toast.success('Skill added successfully');
       setFormData({ name: '', category: 'other', proficiencyLevel: '', yearsOfExperience: 0, status: 'active', hoursAvailable: 0, description: '' });
     } catch (err: any) {
       console.error('Error adding skill:', err);
