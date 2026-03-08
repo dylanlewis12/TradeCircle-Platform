@@ -25,6 +25,7 @@ export default function LogoutModal({ isOpen, onClose, onConfirm }: LogoutModalP
         }
       ]}
     >
+      <br />
       <p>Are you sure you want to logout?</p>
     </Modal>
   );

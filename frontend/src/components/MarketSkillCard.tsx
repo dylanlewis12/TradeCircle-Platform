@@ -15,17 +15,25 @@ interface User {
 interface MarketSkill {
   skill: any;
   handleView: () => void;
-  //handleContact: () => void;
 }
 
 export default function MarketSkillCard({ skill, handleView}: MarketSkill) {
   const navigate = useNavigate();
-  const { setSelectedUser, createOrGetConversation, getMessages } = useChat();
-  const { user } = useAuth();
+  const { setSelectedUser, createOrGetConversation, getMessages, setAccessToken } = useChat();  // ✅ Add setAccessToken
+  const { user, cookies } = useAuth();  // ✅ Add cookies
 
   // Handle contact seller - initiates trade conversation
   async function handleContactSeller() {
     try {
+      //Set access token first
+      if (cookies.accessToken) {
+        setAccessToken(cookies.accessToken);
+        console.log('Access token set in MarketSkillCard');
+      } else {
+        toast.error('Not authenticated. Please log in.');
+        return;
+      }
+
       // Don't allow user to message themselves
       if (user?.id === skill.userId._id) {
         toast.error("You can't message yourself");
@@ -34,7 +42,7 @@ export default function MarketSkillCard({ skill, handleView}: MarketSkill) {
 
       // Create or get conversation with skill owner
       const conversationId = await createOrGetConversation(skill.userId._id);
-      
+
       // Set the seller as selected user
       setSelectedUser({
         _id: skill.userId._id,
@@ -67,7 +75,6 @@ export default function MarketSkillCard({ skill, handleView}: MarketSkill) {
       <div className='skill-card__header'>
         <User size={40} className='skill-card__avatar' />
         <div className='skill-card__user'>
-          {/* Show skill owner's name, not current user's name */}
           <p className='skill-card__userName'>{skill.userId.userName}</p>
           <div className='skill-card__rating'>
             <Star size={14} fill="#fbbf24" color="#fbbf24" />
@@ -78,9 +85,9 @@ export default function MarketSkillCard({ skill, handleView}: MarketSkill) {
 
       <div className='skill-card__body'>
         <h3 className='skill-card__name'>{skill.name}</h3>
-        
+
         <div className='skill-card__proficiency'>
-          {skill.proficiencyLevel.charAt(0).toUpperCase() + skill.proficiencyLevel.slice(1)}
+          {skill.proficiencyLevel?.charAt(0).toUpperCase() + skill.proficiencyLevel?.slice(1)}
         </div>
 
         <div className='skill-card__meta'>
@@ -100,7 +107,7 @@ export default function MarketSkillCard({ skill, handleView}: MarketSkill) {
 
         <div className='skill-card__category'>
           <span className="skill-card__category-badge">
-            {skill.category.charAt(0).toUpperCase() + skill.category.slice(1)}
+            {skill.category?.charAt(0).toUpperCase() + skill.category?.slice(1)}
           </span>
         </div>
       </div>

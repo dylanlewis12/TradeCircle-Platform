@@ -105,6 +105,9 @@ export const useChat = create<ChatStore>((set, get) => ({
     try {
       const { accessToken } = get();
       
+      console.log('Creating conversation with userId:', userId);  
+      console.log('Access token:', accessToken?.substring(0, 20));  
+      
       const response = await axios.post(
         `${BASE_URL}/create-or-get`,
         { participantId: userId },
@@ -114,11 +117,13 @@ export const useChat = create<ChatStore>((set, get) => ({
           }
         }
       );
-
+      
+      console.log('Conversation response:', response.data);
       return response.data.conversationId;
     } catch (error: any) {
       console.error('Error creating conversation:', error);
-      toast.error(error.response?.data?.error || 'Failed to create conversation');
+      console.error('Backend error:', error.response?.data); 
+      toast.error(error.response?.data?.message || 'Failed to create conversation');
       throw error;
     }
   },
