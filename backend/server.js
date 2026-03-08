@@ -11,9 +11,12 @@ import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from 'cookie-parser';
 
+// Import socket setup
+import { server, io, app } from './lib/socket.js';
+
 // Setups
 dotenv.config();
-const app = express();
+//const app = server.app || express();
 const PORT = process.env.PORT || 3001;
 const ACCESS_SECRET = process.env.ACCESS_SECRET;
 const REFRESH_SECRET = process.env.REFRESH_SECRET;
@@ -45,7 +48,19 @@ app.use("/api/messages/", messageRoutes);
 // Global Err Middlewares
 app.use(globalErr);
 
-// Listener
-app.listen(PORT, () => {
-  console.log(`Server listening on PORT: ${PORT}`);
+//Listener
+server.listen(PORT, () => {
+  console.log(`✅ Server listening on PORT: ${PORT}`);
+  console.log(`✅ Socket.io is ready`);
 });
+
+server.on('error', (error) => {
+  console.error('❌ Server error:', error);
+});
+
+/*
+app.listen(PORT, () => {
+  console.log(`✅ Server listening on PORT: ${PORT}`);
+  console.log(`✅ Socket.io is ready`);
+});
+*/

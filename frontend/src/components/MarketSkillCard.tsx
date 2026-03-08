@@ -15,9 +15,10 @@ interface User {
 interface MarketSkill {
   skill: any;
   handleView: () => void;
+  //handleContact: () => void;
 }
 
-export default function MarketSkillCard({ skill, handleView }: MarketSkill) {
+export default function MarketSkillCard({ skill, handleView}: MarketSkill) {
   const navigate = useNavigate();
   const { setSelectedUser, createOrGetConversation, getMessages } = useChat();
   const { user } = useAuth();
@@ -66,7 +67,7 @@ export default function MarketSkillCard({ skill, handleView }: MarketSkill) {
       <div className='skill-card__header'>
         <User size={40} className='skill-card__avatar' />
         <div className='skill-card__user'>
-          {/* ✅ FIXED: Show skill owner's name, not current user's name */}
+          {/* Show skill owner's name, not current user's name */}
           <p className='skill-card__userName'>{skill.userId.userName}</p>
           <div className='skill-card__rating'>
             <Star size={14} fill="#fbbf24" color="#fbbf24" />

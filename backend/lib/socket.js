@@ -8,23 +8,25 @@ const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     origin: ["http://localhost:5173"],
+    credentials: true,
+    methods: ["GET", "POST"]
   },
 });
 
-export function getReceiverSocketId(userId) {
-  return userSocketMap[userId];
-}
+// Store online users
+const userSocketMap = {};
 
-// used to store online users
-const userSocketMap = {}; // {userId: socketId}
-
+// Socket.io connection
 io.on("connection", (socket) => {
   console.log("A user connected", socket.id);
-
   const userId = socket.handshake.query.userId;
-  if (userId) userSocketMap[userId] = socket.id;
+  
+  if (userId) {
+    userSocketMap[userId] = socket.id;
+    console.log("User mapped:", userId, "->", socket.id);
+  }
 
-  // io.emit() is used to send events to all the connected clients
+  // Broadcast online users to all clients
   io.emit("getOnlineUsers", Object.keys(userSocketMap));
 
   socket.on("disconnect", () => {
@@ -33,5 +35,9 @@ io.on("connection", (socket) => {
     io.emit("getOnlineUsers", Object.keys(userSocketMap));
   });
 });
+
+export function getReceiverSocketId(userId) {
+  return userSocketMap[userId];
+}
 
 export { io, app, server };

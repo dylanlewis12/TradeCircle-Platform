@@ -39,12 +39,10 @@ export default function AddSkill({ isOpen, onClose, onSkillAdded, skills }: AddS
   const { cookies } = useAuth();
 
 
-  /*
   function validateExistingSkill() {  //Check if skill name already exists for current user
     const isValuePresent = skills.some(skill => skill['name'] === formData.name);
     return isValuePresent;
   }
-  */
 
   const handleAddSkill = async () => {
     // Validate form
@@ -53,13 +51,12 @@ export default function AddSkill({ isOpen, onClose, onSkillAdded, skills }: AddS
       return;
     }
 
-    /*
+  
     if (validateExistingSkill()) {
       setError('You already have this skill. Enter another skill');
       toast.error('You already have this skill. Enter another skill');
       return;
     }
-    */
 
     try {
       setLoading(true);

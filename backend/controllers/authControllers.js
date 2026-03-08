@@ -4,24 +4,25 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import generateTokens from '../utils/tokenUtils.js';
 import dotenv from 'dotenv';
+
 dotenv.config();
 
-// Registration
+// User Registration
 export const userRegistration = async (req, res) => {
     try {
         const { userName, email, password } = req.body;
 
-        //Check all fields are field
+        // Check all fields are filled
         if(!userName || !email || !password) {
             return res.status(401).json({ message: "All fields are required" });
         }
 
-        //Validate email format
+        // Validate email format
         if(!email || !email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
             return res.status(400).json({ message: "Invalid email format" });
         }
 
-        //Check email isn't already in use
+        // Check email isn't already in use
         const existingEmail = await User.findOne({ email });
         if(existingEmail) {
             return res.status(404).json({ message: "Email already taken" });
@@ -32,16 +33,16 @@ export const userRegistration = async (req, res) => {
             return res.status(404).json({ message: "Username already taken" });
         }
 
-        //Validate password format
-         const pattern = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+        // Validate password format
+        const pattern = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
         if (password.length < 8 || !pattern.test(password)) {
             return res.status(401).json({ message: "Invalid password format" });
         }
 
-        //Hash Password
+        // Hash Password
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        //Create new user
+        // Create new user
         const newUser = new User({
             userName,
             email,
@@ -52,16 +53,19 @@ export const userRegistration = async (req, res) => {
 
         res.status(201).json({ message: "User created successfully" });
     } catch (error) {
+        console.error('Registration error:', error);
         res.status(500).json({ message: error.message });
     }
-}
+};
 
-
+// User Login
 export const userLogin = async (req, res) => {
     try {
         const { email, password } = req.body;
         
-        //Validate email format
+        console.log('Login attempt with email:', email);
+        
+        // Validate email format
         if(!email || !email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
             return res.status(400).json({ message: "Invalid email format" });
         }
@@ -71,7 +75,7 @@ export const userLogin = async (req, res) => {
             return res.status(400).json({ message: "Password is required" });
         }
         
-        //Find user by email
+        // Find user by email
         const user = await User.findOne({ email });
         if(!user) {
             return res.status(401).json({ message: "Invalid email or password" });
@@ -83,7 +87,7 @@ export const userLogin = async (req, res) => {
             return res.status(401).json({ message: "Invalid email or password" });
         }
         
-        //Generate JWT token
+        // Generate JWT token
         const { accessToken, refreshToken } = generateTokens(user);
         
         // Store refresh token in database
@@ -104,7 +108,7 @@ export const userLogin = async (req, res) => {
             maxAge: 7 * 24 * 60 * 60 * 1000
         });
         
-        //Success response
+        // Success response
         res.status(200).json({
             message: "Login successful",
             accessToken: accessToken,
@@ -115,11 +119,12 @@ export const userLogin = async (req, res) => {
             },
         });
     } catch (error) {
+        console.error('Login error:', error);
         res.status(500).json({ message: error.message });
     }
-}
+};
 
-//Logout - revoke refresh token
+// User Logout
 export const userLogout = async (req, res) => {
   const { refreshToken } = req.cookies;
   
@@ -142,8 +147,7 @@ export const userLogout = async (req, res) => {
   }
 };
 
-
-//Refresh cookie endpoint
+// Token Refresh
 export const tokenRefresh = async (req, res) => {
     const { refreshToken } = req.cookies;
 
@@ -152,20 +156,20 @@ export const tokenRefresh = async (req, res) => {
     }
 
     try {
-    // Verify token is still in DB (not revoked)
+        // Verify token is still in DB (not revoked)
         const tokenRecord = await RefreshToken.findOne({ token: refreshToken });
         if (!tokenRecord) return res.status(403).json({ message: 'Token revoked' });
 
         const decoded = jwt.verify(refreshToken, process.env.REFRESH_SECRET);
         const { accessToken } = generateTokens(decoded);
         res.json({ accessToken });
-  } catch (err) {
+    } catch (err) {
+        console.error('Token refresh error:', err);
         res.status(403).json({ message: 'Invalid token' });
-  }
+    }
+};
 
-}
-
-//Delete a user
+// Delete User
 export const deleteUser = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -182,9 +186,12 @@ export const deleteUser = async (req, res) => {
     }
 
     await User.findByIdAndDelete(userId);
-    await Skill.deleteMany({ userId });
+    // Also delete user's skills if you have a Skill model
+    // await Skill.deleteMany({ userId });
+    
     res.status(200).json({ message: "User deleted successfully" });
   } catch (error) {
+    console.error('Delete user error:', error);
     res.status(500).json({ message: error.message });
   }
 };

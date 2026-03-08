@@ -113,9 +113,15 @@ export default function Marketplace() {
     fetchSkills();
   }, [selectedCategories, selectedProficiencies, searchQuery, sortBy, user?.id, cookies.accessToken]);
 
+  /*
   function handleContact() {
+    try {
+
+    } catch(error) {
+
+    }
     console.log('Open contact');
-  }
+  }*/
 
   function handleView() {
     console.log('View profile');

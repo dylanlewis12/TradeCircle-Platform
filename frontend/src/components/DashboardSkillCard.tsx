@@ -106,7 +106,7 @@ export default function SkillCard({ skills, onSkillEdited, onSkillDeleted }: Ski
       }
     try {
       await axios.delete(
-          `http://localhost:3000/api/skills/${skillToDelete}`,
+          `http://localhost:3001/api/skills/${skillToDelete}`,
           {
             headers: {
               'Authorization': `Bearer ${cookies.accessToken}`
@@ -131,7 +131,7 @@ export default function SkillCard({ skills, onSkillEdited, onSkillDeleted }: Ski
     try {
       await axios.put(
         `http://localhost:3000/api/skills/${skillToEdit._id}`,
-        editFormData,  // ✅ Include form data
+        editFormData,  // Include form data
         {
           headers: {
             'Authorization': `Bearer ${cookies.accessToken}`

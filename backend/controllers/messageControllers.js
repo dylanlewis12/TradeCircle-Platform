@@ -109,31 +109,52 @@ export const sendMessage = async (req, res) => {
   }
 };
 
-// Create or get conversation
+// backend/controllers/messageController.js
 export const createOrGetConversation = async (req, res) => {
   try {
     const { participantId } = req.body;
-    const userId = req.user._id;
+    const userId = req.user.id;  // From JWT token
 
-    // Check if conversation already exists
+    console.log('Creating conversation between:', userId, participantId);
+
+    // Validate both IDs exist
+    if (!userId || !participantId) {
+      return res.status(400).json({ 
+        message: 'User ID and participant ID are required' 
+      });
+    }
+
+    // Can't create conversation with yourself
+    if (userId === participantId) {
+      return res.status(400).json({ 
+        message: "You can't create a conversation with yourself" 
+      });
+    }
+
+    // Find or create conversation
     let conversation = await Conversation.findOne({
       participants: { $all: [userId, participantId] }
     });
 
-    // If not, create new conversation
     if (!conversation) {
       conversation = new Conversation({
         participants: [userId, participantId]
       });
       await conversation.save();
+      console.log('New conversation created:', conversation._id);
+    } else {
+      console.log('Existing conversation found:', conversation._id);
     }
 
     res.status(200).json({
-      message: "Conversation retrieved/created",
+      message: 'Conversation retrieved/created successfully',
       conversationId: conversation._id
     });
   } catch (error) {
-    console.log("Error in createOrGetConversation: ", error.message);
-    res.status(500).json({ error: "Internal server error" });
+    console.error('Error in createOrGetConversation:', error);
+    res.status(500).json({ 
+      message: 'Failed to create/get conversation',
+      error: error.message 
+    });
   }
 };

@@ -1,8 +1,18 @@
 import { useAuth } from '../context/authContext/AuthContext.tsx';
-import { Outlet } from 'react-router-dom';
+import { Outlet, Navigate } from 'react-router-dom';
 
 export default function ProtectedRoutes() {
-    const { cookies } = useAuth();
+  const { user, isLoggingIn } = useAuth();
 
-    return cookies.token ? <Outlet /> : <h1>You are not authorized</h1>;
+  // Show loading while checking auth
+  if (isLoggingIn) {
+    return <div>Loading...</div>;
+  }
+
+  // Redirect to login if not authenticated
+  if (!user) {
+    return <Navigate to="/" replace />;
+  }
+
+  return <Outlet />;
 }

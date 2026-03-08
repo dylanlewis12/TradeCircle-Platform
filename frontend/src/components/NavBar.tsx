@@ -123,7 +123,7 @@ export default function Navbar() {
             </li>
             <li className="navbar__item">
               <NavLink 
-                to="/chat" 
+                to="/messages" 
                 className={({ isActive }) => isActive ? "navbar__link navbar__link--active" : "navbar__link"}
               >
                 Messages

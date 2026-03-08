@@ -7,6 +7,7 @@ import Home from './pages/Home.tsx';
 import Login from './pages/Login.tsx';
 import Register from './pages/Register.tsx';
 import Marketplace from './pages/Marketplace.tsx';
+import ProtectRoute from './components/ProtectedRoutes.tsx';
 import './App.css';
 import Navbar from './components/NavBar.tsx';
 import { useLocation } from 'react-router-dom';
@@ -25,12 +26,17 @@ function App() {
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/community" element={<Community />} />
-          <Route path="/market-place" element={<Marketplace />} />
-          <Route path="/chat" element={<Chat />} />
-          <Route path="/home" element={<Home />} />
-          <Route path="/about" element={<AboutUs />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+
+          {/* Proctected Routes */}
+          <Route element={<ProtectRoute />}>
+            <Route path="/community" element={<Community />} />
+            <Route path="/market-place" element={<Marketplace />} />
+            <Route path="/messages" element={<Chat />} />
+            <Route path="/messages/:userId" element={<Chat />} />
+            <Route path="/home" element={<Home />} />
+            <Route path="/about" element={<AboutUs />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+          </Route>
         </Routes>
     </>
   );
