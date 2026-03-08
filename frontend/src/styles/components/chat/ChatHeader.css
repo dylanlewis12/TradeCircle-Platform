@@ -30,3 +30,28 @@
 .chat-header__back-btn:hover {
   background: #f0f0f0;
 }
+
+/*******************************/
+.chat-header__trade-btn {
+  align-items: center;
+  width: fit-content;
+  padding: 14px 28px;
+  background-color: #169928;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  letter-spacing: 0.5px;
+  display: flex;
+  font-weight: bold;
+}
+
+.chat-header__trade-btn:hover:not(:disabled) {
+  background-color: #3d7d5a;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(22, 153, 40, 0.3);
+}
+

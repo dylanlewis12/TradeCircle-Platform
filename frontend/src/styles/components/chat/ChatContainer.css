@@ -1,12 +1,11 @@
-.chat-container {
+.chat__container {
   flex: 1;
   display: flex;
   flex-direction: column;
-  background: #ffffff;
   overflow: hidden;
 }
 
-.chat-container-empty {
+.chat__container-empty {
   flex: 1;
   display: flex;
   align-items: center;
@@ -16,81 +15,48 @@
   background: #f5f5f5;
 }
 
-/* ✅ Messages display area */
-.chat-messages-area {
+/* Messages display area */
+.messages__area {
   flex: 1;
   overflow-y: auto;
   padding: 20px;
   display: flex;
   flex-direction: column;
   gap: 12px;
-  background: #ffffff;
+  background-color: #f0f8f4;;
 }
 
-.chat-messages-area::-webkit-scrollbar {
+.messages__area::-webkit-scrollbar {
   width: 8px;
 }
 
-.chat-messages-area::-webkit-scrollbar-track {
+.messages__area::-webkit-scrollbar-track {
   background: transparent;
 }
 
-.chat-messages-area::-webkit-scrollbar-thumb {
+.messages__area::-webkit-scrollbar-thumb {
   background: #d0d0d0;
   border-radius: 4px;
 }
 
-.chat-messages-area::-webkit-scrollbar-thumb:hover {
+.messages__area::-webkit-scrollbar-thumb:hover {
   background: #999;
 }
 
-/* ✅ Empty messages state */
-.messages-empty {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  color: #999;
-}
 
-.messages-empty p {
-  font-size: 16px;
-  margin: 0;
-  line-height: 1.6;
-}
 
-/* ✅ Individual message styling */
-.chat-message {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  animation: slideIn 0.3s ease-out;
-}
-
-@keyframes slideIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.chat-message--sent {
+.message__sent {
   align-self: flex-end;
   max-width: 70%;
 }
 
-.chat-message--received {
+.message__received {
   align-self: flex-start;
   max-width: 70%;
 }
 
-/* ✅ Message bubble styling */
-.message-text {
+/* Message bubble styling */
+.message__text {
   padding: 10px 12px;
   margin: 0;
   word-break: break-word;
@@ -101,7 +67,7 @@
   max-width: 100%;
 }
 
-.chat-message--sent .message-text {
+.message__sent .message__text {
   background: #169928;
   color: white;
   border-radius: 18px 0 18px 18px;
@@ -109,11 +75,11 @@
   box-shadow: 0 1px 2px rgba(22, 153, 40, 0.1);
 }
 
-.chat-message--sent .message-text:last-child {
+.message__sent .message__text:last-child {
   margin-bottom: 0;
 }
 
-.chat-message--received .message-text {
+.message__received .message__text {
   background: #e8e8e8;
   color: #1a1a1a;
   border-radius: 0 18px 18px 18px;
@@ -121,12 +87,12 @@
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
-.chat-message--received .message-text:last-child {
+.message__received .message__text:last-child {
   margin-bottom: 0;
 }
 
-/* ✅ Message image styling */
-.message-image {
+/* Message image styling */
+.message__image {
   max-width: 300px;
   border-radius: 8px;
   margin-bottom: 8px;
@@ -134,55 +100,54 @@
   transition: transform 0.2s ease;
 }
 
-.message-image:hover {
+.message__image:hover {
   transform: scale(1.02);
 }
 
-/* ✅ Message time styling */
-.message-time {
+/* Message time styling */
+.message__time {
   font-size: 12px;
   color: #999;
   padding: 0 12px;
   align-self: flex-end;
 }
 
-.chat-message--sent .message-time {
+.message--sent .message-time {
   align-self: flex-end;
   margin-right: 0;
 }
 
-.chat-message--received .message-time {
+.message--received .message__time {
   align-self: flex-start;
   margin-left: 0;
 }
 
-/* ✅ Multiple messages in a row */
-.chat-message + .chat-message--sent {
+/* Multiple messages in a row */
+.message + .message__sent {
   margin-top: 8px;
 }
 
-.chat-message + .chat-message--received {
+.message + .message__received {
   margin-top: 8px;
 }
 
-/* ✅ Same sender consecutive messages - reduce gap */
-.chat-message--sent + .chat-message--sent {
+.message__sent + .message__sent {
   margin-top: 4px;
 }
 
-.chat-message--received + .chat-message--received {
+.message__received + .message__received {
   margin-top: 4px;
 }
 
-.chat-message--sent + .chat-message--received {
+.message__sent + .message__received {
   margin-top: 12px;
 }
 
-.chat-message--received + .chat-message--sent {
+.message__received + .message__sent {
   margin-top: 12px;
 }
 
-/* ✅ Trade proposal message styling */
+/* Trade proposal message styling */
 .trade-proposal-message {
   align-self: center;
   background: #f0f5f0;

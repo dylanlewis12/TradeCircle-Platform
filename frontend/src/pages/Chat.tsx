@@ -12,34 +12,30 @@ export default function Chat() {
   const { getUsers, getMessages, setSelectedUser, users, selectedUser, setAccessToken } = useChat();
   const { cookies } = useAuth();
 
-  console.log('Chat page - userId from URL:', userId);  // ✅ Debug
-  console.log('Chat page - users from store:', users);  // ✅ Debug
-  console.log('Chat page - selectedUser:', selectedUser);  // ✅ Debug
-
   // Set access token from auth
   useEffect(() => {
-    console.log('Setting access token:', cookies.accessToken?.substring(0, 20));  // ✅ Debug
+    console.log('Setting access token:', cookies.accessToken?.substring(0, 20)); 
     setAccessToken(cookies.accessToken);
   }, [cookies.accessToken, setAccessToken]);
 
   // Load conversations on mount
   useEffect(() => {
-    console.log('Loading users...');  // ✅ Debug
+    console.log('Loading users...');  
     getUsers();
   }, [getUsers]);
 
   // Load messages when user changes
   useEffect(() => {
-    console.log('Checking userId:', userId, 'users array:', users);  // ✅ Debug
+    console.log('Checking userId:', userId, 'users array:', users); 
     if (userId) {
       const selectedUserData = users.find(u => u._id === userId);
-      console.log('Found user data:', selectedUserData);  // ✅ Debug
+      console.log('Found user data:', selectedUserData); 
       
       if (selectedUserData) {
         setSelectedUser(selectedUserData);
         getMessages(userId);
       } else {
-        console.log('User not found in users array');  // ✅ Debug
+        console.log('User not found in users array');  
       }
     }
   }, [userId, users, setSelectedUser, getMessages]);

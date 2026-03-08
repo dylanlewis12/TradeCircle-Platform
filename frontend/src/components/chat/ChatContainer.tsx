@@ -1,4 +1,3 @@
-// src/components/ChatContainer.tsx
 import { useRef, useEffect } from 'react';
 import { useChat } from './store/useChat.tsx';
 import { useAuth } from '../../context/authContext/AuthContext.tsx';
@@ -39,17 +38,17 @@ export default function ChatContainer({ skillName }: ChatContainerProps) {
   }
 
   return (
-    <div className="chat__container">
+    <div className="chat__container" style={{backgroundColor: "#f0f8f4"}}>
       <ChatHeader skillName={skillName} />
 
       {isMessageLoading ? (
         <MessageSkeleton />
       ) : (
-        <div className="messages__area">
+        <div className="messages__area" >
           {messages.map(message => (
             <div
               key={message._id}
-              className={`message ${message.senderId === user?.id ? 'message--sent' : 'message--received'}`}
+              className={`message ${message.senderId === user?.id ? 'message__sent' : 'message__received'}`}
               ref={messageEndRef}
             >
               <div className="message__content">
@@ -69,8 +68,9 @@ export default function ChatContainer({ skillName }: ChatContainerProps) {
           ))}
         </div>
       )}
-
-      <MessageInput />
+        <div className='message-input__container'>
+          <MessageInput />
+        </div>
     </div>
   );
 }

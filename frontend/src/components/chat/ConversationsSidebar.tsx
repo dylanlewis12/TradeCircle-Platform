@@ -1,4 +1,3 @@
-// src/components/chat/ConversationsSidebar.tsx
 import { useNavigate } from 'react-router-dom';
 import { useChat } from './store/useChat.tsx';
 import '../../styles/components/chat/ConversationsSidebar.css';

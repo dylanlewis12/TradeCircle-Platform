@@ -1,4 +1,4 @@
-.chat-message-input {
+.message-input {
   display: flex;
   gap: 10px;
   padding: 15px 20px;
@@ -6,22 +6,22 @@
   background: white;
 }
 
-.message-input-field {
+.message-input__field {
   flex: 1;
   padding: 12px 15px;
   border: 1px solid #d0d0d0;
-  border-radius: 6px;
   font-size: 14px;
   outline: none;
   transition: all 0.3s;
+  border-radius: 15px;
 }
 
-.message-input-field:focus {
+.message-input__field:focus {
   border-color: #169928;
   box-shadow: 0 0 0 3px rgba(22, 153, 40, 0.1);
 }
 
-.message-send-btn {
+.message-input__send {
   padding: 12px 16px;
   background: #169928;
   color: white;
@@ -34,12 +34,12 @@
   transition: all 0.3s;
 }
 
-.message-send-btn:hover:not(:disabled) {
+.message-input__send:hover:not(:disabled) {
   background: #0f6b1f;
   transform: translateY(-2px);
 }
 
-.message-send-btn:disabled {
+.message-input__send:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }

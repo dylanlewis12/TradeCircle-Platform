@@ -1,4 +1,3 @@
-// src/components/MessageInput.tsx
 import { useState } from 'react';
 import { useChat } from './store/useChat.tsx';
 import { Send } from 'lucide-react';
@@ -21,18 +20,22 @@ export default function MessageInput() {
     }
   };
 
+  /*
+    Add grouping for message dates, Typing indicator
+  */
+
   return (
         <form className="message-input" onSubmit={handleSendMessage}>
-        <input
-            type="text"
-            placeholder="Type a message..."
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            className="message-input__field"
-        />
-        <button type="submit" className="message-input__send">
-            <Send size={20} />
-        </button>
+          <input
+              type="text"
+              placeholder="Type a message..."
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              className="message-input__field"
+          />
+          <button type="submit" className="message-input__send">
+              <Send size={20} />
+          </button>
         </form>
   );
 }

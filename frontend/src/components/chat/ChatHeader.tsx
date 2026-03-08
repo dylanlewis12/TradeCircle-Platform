@@ -1,4 +1,3 @@
-// src/components/chat/ChatHeader.tsx
 import { useNavigate } from 'react-router-dom';
 import { useChat } from './store/useChat.tsx';
 //import { useAuth } from '../../context/authContext/AuthContext';
@@ -41,6 +40,8 @@ export default function ChatHeader({ skillName }: ChatHeaderProps) {
 
           <div className="chat-header__user">
             <div className="chat-header__avatar">
+              {/* profilePicture upload needs to be fixed
+
               {selectedUser.profilePicture ? (
                 <img 
                   src={selectedUser.profilePicture || 'logo.svg'} 
@@ -51,6 +52,7 @@ export default function ChatHeader({ skillName }: ChatHeaderProps) {
                   {selectedUser.userName.charAt(0).toUpperCase()}
                 </div>
               )}
+              */}
             </div>
 
             <div className="chat-header__info">
