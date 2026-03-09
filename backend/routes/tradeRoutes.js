@@ -14,17 +14,16 @@ import { protect } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
+
+router.get('/history/user', protect, getUserTradeHistory);  
+router.get('/count/user', protect, getUserTradeCount);   
+
 // Create trade
 router.post('/', protect, createTrade);
 
 // Get all trades
 router.get('/', protect, getTrades);
 
-// Get trade history and count (MUST come before /:id route)
-router.get('/history', protect, getUserTradeHistory);
-router.get('/count', protect, getUserTradeCount);
-
-// Get specific trade
 router.get('/:id', protect, getTrade);
 
 // Trade actions

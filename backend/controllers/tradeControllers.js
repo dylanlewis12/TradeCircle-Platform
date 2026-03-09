@@ -98,7 +98,7 @@ export const getTrades = async (req, res) => {
       .populate('initiator', 'userName profilePicture rating')
       .populate('receiver', 'userName profilePicture rating')
       .populate('skillOffering', 'name category')
-      .populate('skillInExchange', 'name category')
+      .populate('skillExchange', 'name category')
       .skip(skip)
       .limit(parseInt(limit))
       .sort({ createdAt: -1 });
@@ -130,7 +130,7 @@ export const getTrade = async (req, res) => {
       .populate('initiator', 'userName profilePicture rating email')
       .populate('receiver', 'userName profilePicture rating email')
       .populate('skillOffering', 'name category description')
-      .populate('skillInExchange', 'name category description');
+      .populate('skillExchange', 'name category description');
 
     if (!trade) {
       return res.status(404).json({ message: "Trade not found" });
@@ -174,7 +174,7 @@ export const acceptTrade = async (req, res) => {
       { path: 'initiator', select: 'userName profilePicture' },
       { path: 'receiver', select: 'userName profilePicture' },
       { path: 'skillOffering', select: 'name category' },
-      { path: 'skillInExchange', select: 'name category' }
+      { path: 'skillExchange', select: 'name category' }
     ]);
 
     res.status(200).json({
@@ -281,7 +281,7 @@ export const completeTrade = async (req, res) => {
       { path: 'initiator', select: 'userName profilePicture' },
       { path: 'receiver', select: 'userName profilePicture' },
       { path: 'skillOffering', select: 'name category' },
-      { path: 'skillInExchange', select: 'name category' }
+      { path: 'skillExchange', select: 'name category' }
     ]);
 
     res.status(200).json({
@@ -311,7 +311,7 @@ export const getUserTradeHistory = async (req, res) => {
       .populate('initiator', 'userName profilePicture rating')
       .populate('receiver', 'userName profilePicture rating')
       .populate('skillOffering', 'name category')
-      .populate('skillInExchange', 'name category')
+      .populate('skillExchange', 'name category')
       .skip(skip)
       .limit(parseInt(limit))
       .sort({ completedAt: -1 });

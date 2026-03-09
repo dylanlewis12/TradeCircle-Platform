@@ -6,6 +6,7 @@ import { useAuth } from '../context/authContext/AuthContext.tsx';
 //import { Filter } from 'lucide-react'
 import axios from 'axios';
 import API_BASE_URL from '../config/api.ts';
+import TradeHistory from '../components/TradeHistory';
 
 interface Skill {
   _id: string;
@@ -432,14 +433,7 @@ export default function Dashboard() {
           skills={skills}
         />
 
-        {activeTab === 'history' && (
-          <div className="tab-content">
-            <div className="empty-state">
-              <div className="empty-state__title">No Trade History Yet</div>
-              <div className="empty-state__text">Complete your first trade to see your history here</div>
-            </div>
-          </div>
-        )}
+        {activeTab === 'history' && <TradeHistory />}
 
         {activeTab === 'analytics' && (
           <div className="tab-content">
