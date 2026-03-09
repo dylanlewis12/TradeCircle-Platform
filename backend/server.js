@@ -17,7 +17,7 @@ import { server, io, app } from './lib/socket.js';
 // Setups
 dotenv.config();
 //const app = server.app || express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3000;
 const ACCESS_SECRET = process.env.ACCESS_SECRET;
 const REFRESH_SECRET = process.env.REFRESH_SECRET;
 

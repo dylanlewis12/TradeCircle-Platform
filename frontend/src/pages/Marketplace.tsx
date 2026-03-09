@@ -4,6 +4,7 @@ import '../styles/pages/Marketplace.css';
 import axios from 'axios';
 import { useAuth } from '../context/authContext/AuthContext.tsx';
 import MarketSkillCard from '../components/MarketSkillCard.tsx';
+import API_BASE_URL from '../config/api.ts';
 
 interface Skill {
   _id: string;
@@ -72,7 +73,7 @@ export default function Marketplace() {
         }
 
         const response = await axios.get(
-          `http://localhost:3000/api/skills/marketplace/${user!.id}?${params.toString()}`,
+          `${API_BASE_URL}/api/skills/marketplace/${user!.id}?${params.toString()}`,
           {
             headers: {
               'Authorization': `Bearer ${cookies.accessToken}`
@@ -113,15 +114,6 @@ export default function Marketplace() {
     fetchSkills();
   }, [selectedCategories, selectedProficiencies, searchQuery, sortBy, user?.id, cookies.accessToken]);
 
-  /*
-  function handleContact() {
-    try {
-
-    } catch(error) {
-
-    }
-    console.log('Open contact');
-  }*/
 
   function handleView() {
     console.log('View profile');

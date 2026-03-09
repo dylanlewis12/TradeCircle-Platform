@@ -6,7 +6,7 @@ import User from '../models/User.js';
 export const createTrade = async (req, res) => {
   try {
     const initiatorId = req.user.id;
-    const { receiverId, skillOfferingId, skillInExchangeId, transactionType, hoursRequested, message } = req.body;
+    const { receiverId, skillOfferingId, skillExchange, transactionType, hoursRequested, notes, timeframe } = req.body;
 
     // Validate required fields
     if (!receiverId || !skillOfferingId || !transactionType) {
@@ -33,10 +33,10 @@ export const createTrade = async (req, res) => {
     }
 
     // If exchange, verify skill in exchange exists
-    let skillInExchange = null;
-    if (transactionType === "exchange" && skillInExchangeId) {
-      skillInExchange = await Skill.findById(skillInExchangeId);
-      if (!skillInExchange) {
+    let skillInExchangeData = null;
+    if (transactionType === "exchange" && skillExchange) { 
+      skillInExchangeData = await Skill.findById(skillExchange);
+      if (!skillInExchangeData) {
         return res.status(404).json({ message: "Skill in exchange not found" });
       }
     }
@@ -46,10 +46,11 @@ export const createTrade = async (req, res) => {
       initiator: initiatorId,
       receiver: receiverId,
       skillOffering: skillOfferingId,
-      skillInExchange: skillInExchangeId || null,
+      skillExchange: skillExchange || null,  
       transactionType,
       hoursRequested: hoursRequested || 0,
-      message: message || "",
+      timeframe: timeframe || 'flexible',  
+      notes: notes || "",  
       status: "pending"
     });
 
@@ -60,7 +61,7 @@ export const createTrade = async (req, res) => {
       { path: 'initiator', select: 'userName profilePicture' },
       { path: 'receiver', select: 'userName profilePicture' },
       { path: 'skillOffering', select: 'name category' },
-      { path: 'skillInExchange', select: 'name category' }
+      { path: 'skillExchange', select: 'name category' }  
     ]);
 
     res.status(201).json({
@@ -68,6 +69,7 @@ export const createTrade = async (req, res) => {
       trade: newTrade
     });
   } catch (error) {
+    console.error('Error creating trade:', error);  
     res.status(500).json({ message: error.message });
   }
 };

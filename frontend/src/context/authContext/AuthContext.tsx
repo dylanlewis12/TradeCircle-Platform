@@ -5,6 +5,7 @@ import { jwtDecode } from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
 import { io, Socket } from 'socket.io-client';
 import toast from "react-hot-toast";
+import API_BASE_URL from '../../config/api.ts';
 
 interface User {
   id: string;
@@ -28,7 +29,9 @@ interface AuthContextType {
   signUp: (formData: Object) => Promise<void>;
 }
 
-const BASE_URL = import.meta.env.MODE === "development" ? "http://localhost:3000" : "/";
+const BASE_URL = API_BASE_URL;
+
+console.log('🔧 AuthContext BASE_URL:', BASE_URL);  // ✅ Debug
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 

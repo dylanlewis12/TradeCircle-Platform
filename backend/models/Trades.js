@@ -99,7 +99,7 @@ const TradeSchema = new mongoose.Schema({
     max: 5,
   },
   
-  receiverRating: {
+  receiverRating: {    
     type: Number,
     min: 1,
     max: 5,

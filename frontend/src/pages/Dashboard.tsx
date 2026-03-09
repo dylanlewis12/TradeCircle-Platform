@@ -5,6 +5,7 @@ import AddSkillModal from '../components/modals/skills/AddSkill.tsx';
 import { useAuth } from '../context/authContext/AuthContext.tsx';
 //import { Filter } from 'lucide-react'
 import axios from 'axios';
+import API_BASE_URL from '../config/api.ts';
 
 interface Skill {
   _id: string;
@@ -94,10 +95,10 @@ export default function Dashboard() {
         }
 
         // Log to verify URL
-        console.log(`http://localhost:3000/api/skills/user/${user!.id}?${params.toString()}`);
+        //console.log(`http://localhost:3000/api/skills/user/${user!.id}?${params.toString()}`);
 
         const response = await axios.get(
-          `http://localhost:3000/api/skills/user/${user!.id}?${params.toString()}`,
+          `${API_BASE_URL}/api/skills/user/${user!.id}?${params.toString()}`,
           {
             headers: {
               'Authorization': `Bearer ${cookies.accessToken}`

@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { Eye, EyeOff } from 'lucide-react';
 import logo from '../styles/images/logo.png';
 import toast from "react-hot-toast";
+import API_BASE_URL from '../config/api';
 
 
 export default function Register() {
@@ -118,7 +119,7 @@ export default function Register() {
 
             console.log(copy);
 
-            let res = await axios.post('http://localhost:3000/api/auth/register', copy);
+            let res = await axios.post(`${API_BASE_URL}/api/auth/register`, copy);
 
             // Store token if provided
             if (res.data.accessToken) {

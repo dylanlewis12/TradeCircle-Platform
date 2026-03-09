@@ -6,6 +6,7 @@ import { Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '../context/authContext/AuthContext';
 import logo from '../styles/images/logo.png';
 import toast from "react-hot-toast";
+import API_BASE_URL from '../config/api';
 
 
 export default function Login() {
@@ -75,7 +76,7 @@ export default function Login() {
             let copy = {...formData}
             console.log(copy);
 
-            let res = await axios.post('http://localhost:3000/api/auth/login', copy);
+            let res = await axios.post(`${API_BASE_URL}/api/auth/login`, copy);
             console.log(res.data);
 
             await login(copy);

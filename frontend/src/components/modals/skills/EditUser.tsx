@@ -2,6 +2,7 @@ import { useAuth } from "../../../context/authContext/AuthContext.tsx";
 import { useState } from "react";
 import axios from 'axios';
 import Modal from '../../Modal.tsx';
+import API_BASE_URL from "../../../config/api.ts";
 
 export function EditUser() {
   const [isEditOpen, setIsEditOpen] = useState(false);
@@ -11,7 +12,7 @@ export function EditUser() {
   const handleEditUser = async () => {
     try {
       await axios.put(
-        `http://localhost:3000/api/users/${user?.id}`,
+        `${API_BASE_URL}/api/users/${user?.id}`,
         formData,
         {
           headers: {

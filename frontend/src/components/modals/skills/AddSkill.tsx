@@ -4,6 +4,7 @@ import axios from 'axios';
 import Modal from "../../Modal.tsx";
 import '../../../styles/components/modals/AddSkill.css';
 import toast from "react-hot-toast";
+import API_BASE_URL from "../../../config/api.ts";
 
 interface Skill {
   _id: string;
@@ -63,7 +64,7 @@ export default function AddSkill({ isOpen, onClose, onSkillAdded, skills }: AddS
       setError(null);
 
       const response = await axios.post(
-        'http://localhost:3000/api/skills',
+        `${API_BASE_URL}/api/skills`,
         formData,
         {
           headers: {

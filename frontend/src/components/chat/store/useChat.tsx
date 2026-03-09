@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import toast from 'react-hot-toast';
 import axios from 'axios';
+import API_BASE_URL from '../../../config/api';
 
 interface User {
   _id: string;
@@ -42,7 +43,7 @@ interface ChatStore {
   sendMessage: (receiverId: string, text: string, image?: string) => Promise<void>;
 }
 
-const BASE_URL = 'http://localhost:3000/api/messages';
+const BASE_URL = `${API_BASE_URL}/api/messages`;
 
 export const useChat = create<ChatStore>((set, get) => ({
   messages: [],

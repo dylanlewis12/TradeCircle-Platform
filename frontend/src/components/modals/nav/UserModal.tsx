@@ -4,6 +4,7 @@ import { User } from 'lucide-react';
 import { useState, useEffect } from "react";
 import axios from "axios";
 import '../../../styles/components/modals/UserModal.css';
+import API_BASE_URL from "../../../config/api.ts";
 
 interface UserModalProps {
     isOpen: boolean;
@@ -36,7 +37,7 @@ export default function UserModal({ isOpen, onClose }: UserModalProps) {
             setError(null);
 
             await axios.put(
-                `http://localhost:3000/api/users/${user?.id}`,
+                `${API_BASE_URL}/api/users/${user?.id}`,
                 formData,
                 {
                 headers: {
