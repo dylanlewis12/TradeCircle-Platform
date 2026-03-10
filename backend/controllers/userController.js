@@ -115,9 +115,22 @@ export const getUser = async (req, res) => {
             return res.status(404).json({ message: "User not found" });
         }
 
+        // Calculate total trades dynamically
+        const totalTrades = await Trade.countDocuments({
+            $or: [
+                { initiator: id },
+                { receiver: id }
+            ],
+            status: "completed"  // Only count completed trades
+        });
+
+
         res.status(200).json({
-            message: "User found successfully",
-            user: user // Added user to response
+            message: "User retrieved successfully",
+            user: {
+                ...user.toObject(),
+                totalTrades  // ✅ Include calculated value
+            }
         });
     } catch(error) {
         res.status(500).json({ message: error.message });

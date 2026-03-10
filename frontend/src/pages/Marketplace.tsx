@@ -5,6 +5,7 @@ import axios from 'axios';
 import { useAuth } from '../context/authContext/AuthContext.tsx';
 import MarketSkillCard from '../components/MarketSkillCard.tsx';
 import API_BASE_URL from '../config/api.ts';
+import UserModal from '../components/modals/UserModal.tsx';
 
 interface Skill {
   _id: string;
@@ -30,6 +31,7 @@ export default function Marketplace() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [skills, setSkills] = useState<Skill[]>([]);
+  const [selectedUserId, setSelectedUserId] = useState<string | null>(null); 
 
   function handleCategoryChange(category: string) {
     setSelectedCategories(prev =>
@@ -115,16 +117,13 @@ export default function Marketplace() {
   }, [selectedCategories, selectedProficiencies, searchQuery, sortBy, user?.id, cookies.accessToken]);
 
 
-  function handleView() {
-    console.log('View profile');
-  }
-
   const cards = skills.map((skill: Skill) => {
     return (
       <MarketSkillCard 
         key={skill._id}
-        skill={skill} 
-        handleView={handleView} 
+        skill={skill}
+        handleView={() => { }}
+        onViewProfile={(userId) => setSelectedUserId(userId)}  
       />
     );
   });
@@ -357,6 +356,11 @@ export default function Marketplace() {
           ) : skills.length > 0 ? (
             <div className='marketplace__skills-grid'>
               {cards}
+                <UserModal
+                  isOpen={!!selectedUserId}
+                  onClose={() => setSelectedUserId(null)}
+                  userId={selectedUserId || undefined}
+                />
             </div>
           ) : (
             <div className="marketplace__empty">

@@ -33,6 +33,7 @@ export default function Dashboard() {
   const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
 
   const [completedTradesCount, setCompletedTradesCount] = useState(0);
+  const [userRating, setUserRating] = useState(1);
   
   const [skills, setSkills] = useState<Skill[]>([]);
 
@@ -387,7 +388,7 @@ export default function Dashboard() {
               <div className="stat-card__label">Active Listings</div>
             </div>
             <div className="stat-card">
-              <div className="stat-card__number">4.8★</div>
+              <div className="stat-card__number">{userRating}★</div>
               <div className="stat-card__label">Success Rate</div>
             </div>
           </div>

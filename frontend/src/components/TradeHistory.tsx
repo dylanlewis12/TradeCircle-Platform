@@ -36,12 +36,13 @@ interface Trade {
 }
 
 interface TradeHistoryProps {
-  onCompletedTradesUpdate?: (count: number) => void;  
+  onCompletedTradesUpdate?: (count: number) => void;
+  userRating: number;
 }
 
 type TabType = 'incoming' | 'outgoing' | 'completed';
 
-export default function TradeHistory({ onCompletedTradesUpdate }: TradeHistoryProps) {
+export default function TradeHistory({ onCompletedTradesUpdate, userRating }: TradeHistoryProps) {
   const { cookies, user } = useAuth();
   const [activeTab, setActiveTab] = useState<TabType>('incoming');
   const [trades, setTrades] = useState<Trade[]>([]);
@@ -96,7 +97,7 @@ export default function TradeHistory({ onCompletedTradesUpdate }: TradeHistoryPr
           (trade: Trade) => trade.initiator._id === user?.id && trade.status === 'pending'
         );
       } else if (activeTab === 'completed') {
-        // ✅ Show both accepted and completed trades
+        // Show both accepted and completed trades
         filteredTrades = allTrades.filter(
           (trade: Trade) => 
             (trade.status === 'accepted' || trade.status === 'completed') &&

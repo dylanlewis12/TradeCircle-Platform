@@ -3,24 +3,21 @@ import { User, Star } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/authContext/AuthContext';
 import { useChat } from './chat/store/useChat';
-import toast from 'react-hot-toast';
+import { useState } from 'react';
+import UserModal from '../components/modals/UserModal.tsx';
 
-interface User {
-  id: string;
-  userName: string;
-  profilePicture?: string;
-  email?: string;
-}
+import toast from 'react-hot-toast';
 
 interface MarketSkill {
   skill: any;
   handleView: () => void;
+  onViewProfile: (userId: string) => void;
 }
 
-export default function MarketSkillCard({ skill, handleView}: MarketSkill) {
+export default function MarketSkillCard({ skill, handleView, onViewProfile}: MarketSkill) {
   const navigate = useNavigate();
-  const { setSelectedUser, createOrGetConversation, getMessages, setAccessToken } = useChat();  // ✅ Add setAccessToken
-  const { user, cookies } = useAuth();  // ✅ Add cookies
+  const { setSelectedUser, createOrGetConversation, getMessages, setAccessToken } = useChat();
+  const { user, cookies } = useAuth();  
 
   // Handle contact seller - initiates trade conversation
   async function handleContactSeller() {
@@ -121,7 +118,7 @@ export default function MarketSkillCard({ skill, handleView}: MarketSkill) {
         </button>
         <button 
           className='view-button' 
-          onClick={handleView}
+          onClick={() => onViewProfile(skill.userId._id)}
         >
           View Profile
         </button>

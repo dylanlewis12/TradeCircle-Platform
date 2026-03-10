@@ -5,7 +5,7 @@ import { LogOut, Bell, User } from 'lucide-react';
 import logo from '../styles/images/logo.png';
 import { useState } from 'react';
 import { useAuth } from '../context/authContext/AuthContext.js';
-import UserModal from './modals/nav/UserModal.tsx';
+import UserModal from './modals/nav/CurrentUserModal.tsx';
 import { useNavigate } from 'react-router-dom';
 import LogoutModal from './modals/nav/LogoutModal.tsx';
 
