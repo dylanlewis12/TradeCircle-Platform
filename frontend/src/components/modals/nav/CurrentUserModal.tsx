@@ -3,7 +3,7 @@ import { useAuth } from "../../../context/authContext/AuthContext.tsx";
 import { User } from 'lucide-react';
 import { useState, useEffect } from "react";
 import axios from "axios";
-import '../../../styles/components/modals/UserModal.css';
+import '../../../styles/components/modals/CurrentUserModal.css';
 import API_BASE_URL from "../../../config/api.ts";
 
 interface UserModalProps {

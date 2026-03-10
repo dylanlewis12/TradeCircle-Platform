@@ -84,15 +84,11 @@ export default function Dashboard() {
         }
       );
 
-      console.log('🔧 User stats response:', response.data.user);  // ✅ Debug
-      console.log('🔧 Rating:', response.data.user.rating);  // ✅ Debug
-      console.log('🔧 Total trades:', response.data.user.totalTrades);  // ✅ Debug
 
       setUserRating(response.data.user.rating || 0);
       setCompletedTradesCount(response.data.user.totalTrades || 0);
     } catch (err: any) {
-      console.error('❌ Error fetching user stats:', err);
-      console.error('❌ Error response:', err.response?.data);  // ✅ Debug
+      console.error('Error fetching user stats:', err.message);
     }
   }
 

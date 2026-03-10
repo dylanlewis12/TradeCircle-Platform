@@ -80,7 +80,7 @@ export default function UserModal({ isOpen, onClose, userId }: UserModalProps) {
         <p style={{ color: 'red' }}>{error}</p>
       ) : user ? (
         <div className='user-profile-view'>
-          <div className='user-profile__parent' style={{ marginBottom: '15px' }}>
+          <div className='user-profile__header' style={{ marginBottom: '15px' }}>
             {user.profilePicture ? (
               <img src={user.profilePicture} alt='User Profile' />
             ) : (
