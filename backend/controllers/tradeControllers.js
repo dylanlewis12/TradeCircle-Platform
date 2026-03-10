@@ -369,49 +369,69 @@ export const rateTrade = async (req, res) => {
     const { id } = req.params;
     const { review, rating } = req.body;
 
-    // Validate rating
     if (!rating || rating < 1 || rating > 5) {
       return res.status(400).json({ message: "Rating must be between 1 and 5" });
     }
 
     const trade = await Trade.findById(id);
-
     if (!trade) {
       return res.status(404).json({ message: "Trade not found" });
     }
 
     if (trade.status !== "completed") {
-      return res.status(400).json({ message: "Trade must be completed before rating" });
+      return res.status(400).json({ message: "Trade must be completed" });
     }
 
-    // Convert ObjectIds to strings for comparison
-    if (userId === trade.receiver.toString()) {
-      trade.receiverRating = rating;
-      trade.receiverReview = review || "";
-    } else if (userId === trade.initiator.toString()) { 
+    // Determine who is rating whom
+    let ratedUserId = null;
+    if (userId === trade.initiator.toString()) {
       trade.initiatorRating = rating;
       trade.initiatorReview = review || "";
+      ratedUserId = trade.receiver.toString();  // Initiator is rating receiver
+    } else if (userId === trade.receiver.toString()) {
+      trade.receiverRating = rating;
+      trade.receiverReview = review || "";
+      ratedUserId = trade.initiator.toString();  // Receiver is rating initiator
     } else {
       return res.status(403).json({ message: "You are not involved in this trade" });
     }
 
-    // Save the changes
     await trade.save();
 
-    // Populate before returning
-    await trade.populate([
-      { path: 'initiator', select: 'userName profilePicture' },
-      { path: 'receiver', select: 'userName profilePicture' },
-      { path: 'skillOffering', select: 'name category' },
-      { path: 'skillExchange', select: 'name category' }
-    ]);
+    // Recalculate and update the rated user's average rating
+    const trades = await Trade.find({
+      $or: [
+        { initiator: ratedUserId },
+        { receiver: ratedUserId }
+      ],
+      status: "completed"
+    }).select("initiator receiver initiatorRating receiverRating");
+
+    let totalRating = 0;
+    let ratingCount = 0;
+
+    trades.forEach(t => {
+      if (t.initiator.toString() === ratedUserId && t.receiverRating) {
+        totalRating += t.receiverRating;
+        ratingCount++;
+      }
+      if (t.receiver.toString() === ratedUserId && t.initiatorRating) {
+        totalRating += t.initiatorRating;
+        ratingCount++;
+      }
+    });
+
+    const averageRating = ratingCount > 0 ? parseFloat((totalRating / ratingCount).toFixed(1)) : 0;
+
+    //Update user's rating in database
+    await User.findByIdAndUpdate(ratedUserId, { rating: averageRating });
 
     res.status(200).json({
-      message: 'Trade rating and review created successfully',
+      message: "Rating submitted successfully",
       trade
     });
-  } catch(error) {
-    console.error('Error rating trade:', error);
+  } catch (error) {
+    console.error("Error rating trade:", error);
     res.status(500).json({ message: error.message });
   }
 };

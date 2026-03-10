@@ -37,12 +37,11 @@ interface Trade {
 
 interface TradeHistoryProps {
   onCompletedTradesUpdate?: (count: number) => void;
-  userRating: number;
 }
 
 type TabType = 'incoming' | 'outgoing' | 'completed';
 
-export default function TradeHistory({ onCompletedTradesUpdate, userRating }: TradeHistoryProps) {
+export default function TradeHistory({ onCompletedTradesUpdate }: TradeHistoryProps) {
   const { cookies, user } = useAuth();
   const [activeTab, setActiveTab] = useState<TabType>('incoming');
   const [trades, setTrades] = useState<Trade[]>([]);
@@ -259,7 +258,10 @@ console.log(`Rating changed to: ${response.data.trade.initiatorRating}★ - THE 
         ) : (
           <div className="trade-history__list">
             {trades.map(trade => {
-              const otherUserName = activeTab === 'incoming' ? trade.initiator.userName : trade.receiver.userName;
+              const otherUserName = activeTab === 'incoming' ? trade.initiator.userName  // Incoming: show who initiated
+                  : activeTab === 'outgoing' ? trade.receiver.userName   // Outgoing: show who receives
+                  : activeTab === 'completed' && user?.id === trade.initiator._id ? trade.receiver.userName : trade.initiator.userName; // Completed: show the other person
+
               const userIsInitiator = user?.id === trade.initiator._id;
               const userRating = userIsInitiator ? trade.initiatorRating : trade.receiverRating;
               const hasRated = userRating !== null && userRating !== undefined;

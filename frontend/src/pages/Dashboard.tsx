@@ -3,7 +3,6 @@ import '../styles/pages/Dashboard.css';
 import SkillCard from '../components/DashboardSkillCard.tsx';
 import AddSkillModal from '../components/modals/skills/AddSkill.tsx';
 import { useAuth } from '../context/authContext/AuthContext.tsx';
-//import { Filter } from 'lucide-react'
 import axios from 'axios';
 import API_BASE_URL from '../config/api.ts';
 import TradeHistory from '../components/TradeHistory';
@@ -21,7 +20,6 @@ interface Skill {
 }
 
 export default function Dashboard() {
-  let activeListingsCount = 0;
   const { user, cookies } = useAuth();
   const [activeTab, setActiveTab] = useState('skills');
   const [loading, setLoading] = useState(false);
@@ -33,42 +31,77 @@ export default function Dashboard() {
   const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
 
   const [completedTradesCount, setCompletedTradesCount] = useState(0);
-  const [userRating, setUserRating] = useState(1);
-  
+  const [userRating, setUserRating] = useState(0);
   const [skills, setSkills] = useState<Skill[]>([]);
+
+  // ✅ Calculate active listings count
+  const activeListingsCount = skills.filter(skill => skill.status === 'active').length;
 
   const handleAddSkillOpen = () => setIsAddSkillOpen(true);
   const handleAddSkillClose = () => setIsAddSkillOpen(false);
 
-  //Handler for category checkboxes
+  // Handler for category checkboxes
   function handleCategoryChange(category: string) {
     setSelectedCategories(prev =>
       prev.includes(category)
         ? prev.filter(c => c !== category)
         : [...prev, category]
     );
-  };
+  }
 
-  //Handler for level checkboxes
+  // Handler for level checkboxes
   function handleLevelChange(level: string) {
     setSelectedLevels(prev =>
       prev.includes(level)
         ? prev.filter(l => l !== level)
         : [...prev, level]
     );
-  };
+  }
 
-  //Handler for status checkboxes
+  // Handler for status checkboxes
   function handleStatusChange(status: string) {
     setSelectedStatuses(prev =>
       prev.includes(status)
         ? prev.filter(s => s !== status)
         : [...prev, status]
     );
-  };
+  }
 
+  // Fetch user stats (rating and totalTrades)
   useEffect(() => {
-    if (!user?.id) {
+    if (!user?.id || !cookies.accessToken) {
+      return;
+    }
+
+    async function fetchUserStats() {
+    try {
+      const response = await axios.get(
+        `${API_BASE_URL}/api/users/${user?.id}`,
+        {
+          headers: {
+            'Authorization': `Bearer ${cookies.accessToken}`
+          }
+        }
+      );
+
+      console.log('🔧 User stats response:', response.data.user);  // ✅ Debug
+      console.log('🔧 Rating:', response.data.user.rating);  // ✅ Debug
+      console.log('🔧 Total trades:', response.data.user.totalTrades);  // ✅ Debug
+
+      setUserRating(response.data.user.rating || 0);
+      setCompletedTradesCount(response.data.user.totalTrades || 0);
+    } catch (err: any) {
+      console.error('❌ Error fetching user stats:', err);
+      console.error('❌ Error response:', err.response?.data);  // ✅ Debug
+    }
+  }
+
+  fetchUserStats();
+}, [user?.id, cookies.accessToken]);
+
+  // Fetch user skills based on filters
+  useEffect(() => {
+    if (!user?.id || !cookies.accessToken) {
       return;
     }
 
@@ -98,11 +131,8 @@ export default function Dashboard() {
           });
         }
 
-        // Log to verify URL
-        //console.log(`http://localhost:3000/api/skills/user/${user!.id}?${params.toString()}`);
-
         const response = await axios.get(
-          `${API_BASE_URL}/api/skills/user/${user!.id}?${params.toString()}`,
+          `${API_BASE_URL}/api/skills/user/${user?.id}?${params.toString()}`,
           {
             headers: {
               'Authorization': `Bearer ${cookies.accessToken}`
@@ -122,14 +152,6 @@ export default function Dashboard() {
     fetchUserSkills();
   }, [selectedCategories, selectedLevels, selectedStatuses, user?.id, cookies.accessToken]);
 
-  //get active skill count for dashboard
-  skills.forEach((skill) => {
-      if(skill.status === 'active') {
-        activeListingsCount += 1
-      }
-    })
-  activeListingsCount;
-
   function handleSkillAdded(newSkill: Skill) {
     setSkills([...skills, newSkill]);
     handleAddSkillClose();
@@ -147,12 +169,10 @@ export default function Dashboard() {
 
   function handleTabSwitch(tabName: string) {
     setActiveTab(tabName);
-  };
-
+  }
 
   return (
     <div className="dashboard">
-      {/* Sidebar */}
       <aside className="dashboard__sidebar">
         {/* Category Filter - Checkboxes */}
         <div className="sidebar__section">
@@ -388,8 +408,8 @@ export default function Dashboard() {
               <div className="stat-card__label">Active Listings</div>
             </div>
             <div className="stat-card">
-              <div className="stat-card__number">{userRating}★</div>
-              <div className="stat-card__label">Success Rate</div>
+              <div className="stat-card__number">{userRating.toFixed(1)}★</div>
+              <div className="stat-card__label">Rating</div>
             </div>
           </div>
         </div>
@@ -437,7 +457,7 @@ export default function Dashboard() {
           skills={skills}
         />
 
-        {activeTab === 'history' && <TradeHistory onCompletedTradesUpdate={setCompletedTradesCount} />}
+        {activeTab === 'history' && <TradeHistory />}
 
         {activeTab === 'analytics' && (
           <div className="tab-content">

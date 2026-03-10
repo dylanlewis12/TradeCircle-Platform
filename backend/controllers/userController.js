@@ -103,94 +103,90 @@ export const getTotalTrades = async (req, res) => {
     }
 }
 
-
 // Get a specific user
 export const getUser = async (req, res) => {
-    try {
-        const userId = req.params.id;
-
-        const user = await User.findById(userId).select("-password");
-
-        if(!user) {
-            return res.status(404).json({ message: "User not found" });
-        }
-
-        // Calculate total trades dynamically
-        const totalTrades = await Trade.countDocuments({
-            $or: [
-                { initiator: id },
-                { receiver: id }
-            ],
-            status: "completed"  // Only count completed trades
-        });
-
-
-        res.status(200).json({
-            message: "User retrieved successfully",
-            user: {
-                ...user.toObject(),
-                totalTrades  // ✅ Include calculated value
-            }
-        });
-    } catch(error) {
-        res.status(500).json({ message: error.message });
+  try {
+    const userId = req.params.id; 
+    const user = await User.findById(userId).select("-password");
+    
+    if(!user) {
+      return res.status(404).json({ message: "User not found" });
     }
-}
 
-// Get user rating
+    // Calculate total trades 
+    const totalTrades = await Trades.countDocuments({
+      $or: [
+        { initiator: userId },  
+        { receiver: userId }    
+      ],
+      status: "completed"
+    });
+
+    res.status(200).json({
+      message: "User retrieved successfully",
+      user: {
+        ...user.toObject(),
+        totalTrades,
+        rating: user.rating 
+      }
+    });
+  } catch(error) {
+    console.error('❌ Error in getUser:', error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
 export const getUserRating = async (req, res) => {
-    try {
-        const userId = req.params.id;
-
-        // Validate user exists
-        const user = await User.findById(userId).select("userName email rating totalTrades profilePicture");
-        if (!user) {
-            return res.status(404).json({ message: "User not found" });
-        }
-
-        // Find all completed trades where user is either initiator or receiver
-        const trades = await Trade.find({
-            $or: [
-                { initiator: userId },
-                { receiver: userId }
-            ],
-            status: "completed"
-        }).select("initiator receiver iniatorRating receiverRating");
-
-
-        // Calculate average rating
-        let totalRating = 0;
-        let ratingCount = 0;
-
-        trades.forEach(trade => {
-            // If user is the initiator, they received ratingFromReceiver
-            if (trade.initiator.toString() === userId && trade.receiverRating) {
-                totalRating += trade.receiverRating;
-                ratingCount++;
-            }
-            // If user is the receiver, they received ratingFromInitiator
-            if (trade.receiver.toString() === userId && trade.initiatorRating) {
-                totalRating += trade.iniatorRating;
-                ratingCount++;
-            }
-        });
-
-        // Calculate average (or 0 if no ratings yet)
-        const averageRating = ratingCount > 0 ? (totalRating / ratingCount).toFixed(1) : 0;
-
-        res.status(200).json({
-            message: "User rating retrieved successfully",
-            user: {
-                ...user.toObject(),
-                averageRating: parseFloat(averageRating),
-                totalRatings: ratingCount
-            }
-        });
-    } catch (error) {
-        console.error("Error getting user rating:", error);
-        res.status(500).json({ message: error.message });
+  try {
+    const userId = req.params.id;
+    
+    const user = await User.findById(userId).select("userName email rating totalTrades profilePicture");
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
     }
-}
+
+    // Find all completed trades where user is either initiator or receiver
+    const trades = await Trades.find({
+      $or: [
+        { initiator: userId },
+        { receiver: userId }
+      ],
+      status: "completed"
+    }).select("initiator receiver initiatorRating receiverRating"); 
+
+    // Calculate average rating
+    let totalRating = 0;
+    let ratingCount = 0;
+
+    trades.forEach(trade => {
+      // If user is the initiator, they received receiverRating
+      if (trade.initiator.toString() === userId && trade.receiverRating) {
+        totalRating += trade.receiverRating;
+        ratingCount++;
+      }
+      // If user is the receiver, they received initiatorRating
+      if (trade.receiver.toString() === userId && trade.initiatorRating) {
+        totalRating += trade.initiatorRating;
+        ratingCount++;
+      }
+    });
+
+    // Calculate average (or 0 if no ratings yet)
+    const averageRating = ratingCount > 0 ? parseFloat((totalRating / ratingCount).toFixed(1)) : 0;
+
+    res.status(200).json({
+      message: "User rating retrieved successfully",
+      user: {
+        ...user.toObject(),
+        averageRating,
+        totalRatings: ratingCount
+      }
+    });
+  } catch (error) {
+    console.error("Error getting user rating:", error);
+    res.status(500).json({ message: error.message });
+  }
+};
 
 // Delete all users 
 export const deleteAllUsers = async (req, res) => {
