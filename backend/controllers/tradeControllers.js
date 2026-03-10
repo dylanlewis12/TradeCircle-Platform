@@ -362,3 +362,56 @@ export const getUserTradeCount = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+export const rateTrade = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { id } = req.params;
+    const { review, rating } = req.body;
+
+    // Validate rating
+    if (!rating || rating < 1 || rating > 5) {
+      return res.status(400).json({ message: "Rating must be between 1 and 5" });
+    }
+
+    const trade = await Trade.findById(id);
+
+    if (!trade) {
+      return res.status(404).json({ message: "Trade not found" });
+    }
+
+    if (trade.status !== "completed") {
+      return res.status(400).json({ message: "Trade must be completed before rating" });
+    }
+
+    // Convert ObjectIds to strings for comparison
+    if (userId === trade.receiver.toString()) {
+      trade.receiverRating = rating;
+      trade.receiverReview = review || "";
+    } else if (userId === trade.initiator.toString()) { 
+      trade.initiatorRating = rating;
+      trade.initiatorReview = review || "";
+    } else {
+      return res.status(403).json({ message: "You are not involved in this trade" });
+    }
+
+    // Save the changes
+    await trade.save();
+
+    // Populate before returning
+    await trade.populate([
+      { path: 'initiator', select: 'userName profilePicture' },
+      { path: 'receiver', select: 'userName profilePicture' },
+      { path: 'skillOffering', select: 'name category' },
+      { path: 'skillExchange', select: 'name category' }
+    ]);
+
+    res.status(200).json({
+      message: 'Trade rating and review created successfully',
+      trade
+    });
+  } catch(error) {
+    console.error('Error rating trade:', error);
+    res.status(500).json({ message: error.message });
+  }
+};

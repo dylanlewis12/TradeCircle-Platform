@@ -121,6 +121,10 @@
   align-items: center;
 }
 
+.trade-card__timeframe {
+  text-transform: capitalize;
+}
+
 .trade-card__body {
   padding: 16px;
 }
@@ -230,6 +234,24 @@
   border-radius: 6px;
   font-weight: 600;
   font-size: 13px;
+}
+
+.trade-card__btn--rate {
+  background: #fbbf24;
+  color: #000;
+}
+
+.trade-card__btn--rate:hover {
+  background: #f59e0b;
+}
+
+.trade-card__btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.trade-card__btn:disabled:hover {
+  transform: none;
 }
 
 @media (max-width: 768px) {

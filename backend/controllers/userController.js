@@ -2,6 +2,7 @@ import express from 'express';
 import jwt from "jsonwebtoken";
 import User from '../models/User.js';
 import { protect } from '../middleware/authMiddleware.js';
+import Trades from '../models/Trades.js';
 
 // Update profile picture
 export const updateProfilePicture = async (req, res) => {
@@ -102,6 +103,7 @@ export const getTotalTrades = async (req, res) => {
     }
 }
 
+
 // Get a specific user
 export const getUser = async (req, res) => {
     try {
@@ -127,18 +129,52 @@ export const getUserRating = async (req, res) => {
     try {
         const userId = req.params.id;
 
-        const user = await User.findById(userId).select("userName email rating totalTrades");
-
-        if(!user) {
+        // Validate user exists
+        const user = await User.findById(userId).select("userName email rating totalTrades profilePicture");
+        if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
 
-        res.status(200).json({
-            message: "User rating returned successfully",
-            user: user
+        // Find all completed trades where user is either initiator or receiver
+        const trades = await Trade.find({
+            $or: [
+                { initiator: userId },
+                { receiver: userId }
+            ],
+            status: "completed"
+        }).select("initiator receiver iniatorRating receiverRating");
+
+
+        // Calculate average rating
+        let totalRating = 0;
+        let ratingCount = 0;
+
+        trades.forEach(trade => {
+            // If user is the initiator, they received ratingFromReceiver
+            if (trade.initiator.toString() === userId && trade.receiverRating) {
+                totalRating += trade.receiverRating;
+                ratingCount++;
+            }
+            // If user is the receiver, they received ratingFromInitiator
+            if (trade.receiver.toString() === userId && trade.initiatorRating) {
+                totalRating += trade.iniatorRating;
+                ratingCount++;
+            }
         });
 
-    } catch(error) {
+        // Calculate average (or 0 if no ratings yet)
+        const averageRating = ratingCount > 0 ? (totalRating / ratingCount).toFixed(1) : 0;
+
+        res.status(200).json({
+            message: "User rating retrieved successfully",
+            user: {
+                ...user.toObject(),
+                averageRating: parseFloat(averageRating),
+                totalRatings: ratingCount
+            }
+        });
+    } catch (error) {
+        console.error("Error getting user rating:", error);
         res.status(500).json({ message: error.message });
     }
 }

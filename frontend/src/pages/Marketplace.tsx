@@ -184,7 +184,7 @@ export default function Marketplace() {
                   checked={selectedCategories.includes('linguistic')}
                   onChange={() => handleCategoryChange('linguistic')}
                 />
-                <span>Language</span>
+                <span>Lingustic</span>
               </label>
 
               <label className='filter-option'>

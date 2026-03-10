@@ -31,6 +31,8 @@ export default function Dashboard() {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedLevels, setSelectedLevels] = useState<string[]>([]);
   const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
+
+  const [completedTradesCount, setCompletedTradesCount] = useState(0);
   
   const [skills, setSkills] = useState<Skill[]>([]);
 
@@ -142,9 +144,10 @@ export default function Dashboard() {
     ));
   }
 
-  const handleTabSwitch = (tabName: string) => {
+  function handleTabSwitch(tabName: string) {
     setActiveTab(tabName);
   };
+
 
   return (
     <div className="dashboard">
@@ -376,7 +379,7 @@ export default function Dashboard() {
               <div className="stat-card__label">Skills</div>
             </div>
             <div className="stat-card">
-              <div className="stat-card__number">12</div>
+              <div className="stat-card__number">{completedTradesCount}</div>
               <div className="stat-card__label">Completed Trades</div>
             </div>
             <div className="stat-card">
@@ -433,7 +436,7 @@ export default function Dashboard() {
           skills={skills}
         />
 
-        {activeTab === 'history' && <TradeHistory />}
+        {activeTab === 'history' && <TradeHistory onCompletedTradesUpdate={setCompletedTradesCount} />}
 
         {activeTab === 'analytics' && (
           <div className="tab-content">
