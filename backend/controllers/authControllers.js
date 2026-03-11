@@ -8,6 +8,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 // User Registration
+// User Registration
 export const userRegistration = async (req, res) => {
     try {
         const { userName, email, password } = req.body;
@@ -51,7 +52,40 @@ export const userRegistration = async (req, res) => {
 
         await newUser.save();
 
-        res.status(201).json({ message: "User created successfully" });
+        // ✅ Generate tokens and return user data
+        const { accessToken, refreshToken } = generateTokens(newUser);
+
+        // Store refresh token
+        await RefreshToken.findOneAndUpdate(
+          { userId: newUser._id },
+          { 
+            token: refreshToken,
+            expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+          },
+          { upsert: true, new: true }
+        );
+
+        // Store refresh token in httpOnly cookie
+        res.cookie('refreshToken', refreshToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'lax',
+            maxAge: 7 * 24 * 60 * 60 * 1000
+        });
+
+        res.status(201).json({ 
+            message: "User created successfully",
+            accessToken: accessToken,
+            user: {
+                id: newUser._id,
+                userName: newUser.userName,
+                email: newUser.email,
+                profilePicture: newUser.profilePicture,
+                bio: newUser.bio,
+                location: newUser.location,
+                rating: newUser.rating
+            }
+        });
     } catch (error) {
         console.error('Registration error:', error);
         res.status(500).json({ message: error.message });
@@ -108,7 +142,7 @@ export const userLogin = async (req, res) => {
             maxAge: 7 * 24 * 60 * 60 * 1000
         });
         
-        // Success response
+        //Success response with all user fields
         res.status(200).json({
             message: "Login successful",
             accessToken: accessToken,
@@ -116,6 +150,10 @@ export const userLogin = async (req, res) => {
                 id: user._id,
                 userName: user.userName,
                 email: user.email,
+                profilePicture: user.profilePicture,  
+                bio: user.bio,                       
+                location: user.location,             
+                rating: user.rating                 
             },
         });
     } catch (error) {

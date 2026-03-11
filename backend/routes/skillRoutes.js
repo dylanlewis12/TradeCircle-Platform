@@ -15,7 +15,7 @@ router.post('/', protect, addSkill);
 
 router.get('/', getAllSkills); //gets skills for all user
 
-router.get('/category/:category', getAllSkills); // Can reuse getAllSkills with category filter
+router.get('/category/:category', getAllSkills);
 
 router.get('/user/:userId', getUserSkills); //gets skills of current user
 

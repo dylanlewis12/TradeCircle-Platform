@@ -29,7 +29,7 @@ export default function UserModal({ isOpen, onClose, userId }: UserModalProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // ✅ Fetch user when modal opens
+  // Fetch user when modal opens
   useEffect(() => {
     if (isOpen && userId) {
       fetchUser();

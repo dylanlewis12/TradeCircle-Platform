@@ -10,12 +10,14 @@ import {
     getUser, 
     getUserRating, 
     getTotalTrades, 
-    deleteAllUsers 
+    deleteAllUsers,
+    updateUser
 } from '../controllers/userController.js';
 
 const router = express.Router();
 
 
+router.put("/:id", protect, updateUser);
 router.put("/profile-picture", protect, updateProfilePicture);
 router.put("/bio", protect, updateBio);
 router.get("/", getUsers);

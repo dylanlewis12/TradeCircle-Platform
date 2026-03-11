@@ -20,6 +20,7 @@ interface User {
 interface AuthContextType {
   cookies: { [x: string]: any };
   user: User | null;
+  setUser: (user: User | null) => void;
   onlineUsers: string[];
   socket: Socket | null;
   isLoggingIn: boolean;
@@ -142,12 +143,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
         console.log('Token expires in:', Math.floor(timeUntilExpiry / 1000), 'seconds');
 
-        /*
+        
         if (timeUntilExpiry < 60000) {
           console.log('Token expired or expiring soon, logging out automatically');
           handleAutoLogout();
         }
-        */
+        
       } catch (error) {
         console.error('Error checking token expiration:', error);
       }
@@ -159,7 +160,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [cookies.accessToken]);
 
   // Handle automatic logout
-  /*
   const handleAutoLogout = async () => {
     try {
       await axios.post(
@@ -181,7 +181,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       navigate('/');
     }
   };
-  */
+  
 
   async function login(formData: Object): Promise<void> {
     setIsLoggingIn(true);
@@ -255,6 +255,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     () => ({
       cookies,
       user,
+      setUser,
       socket,
       onlineUsers,
       isLoggingIn,

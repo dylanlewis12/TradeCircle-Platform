@@ -1,7 +1,5 @@
 import express from 'express';
-import jwt from "jsonwebtoken";
 import User from '../models/User.js';
-import { protect } from '../middleware/authMiddleware.js';
 import Trades from '../models/Trades.js';
 
 // Update profile picture
@@ -33,6 +31,43 @@ export const updateProfilePicture = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 }
+
+//Update User
+export const updateUser = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const { profilePicture, userName, bio, location } = req.body;
+
+    if (!userName) {
+      return res.status(400).json({ message: "Username is a required field" });
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      {
+        profilePicture,
+        userName,
+        bio,
+        location,
+        updatedAt: Date.now()
+      },
+      { new: true }
+    ).select("-password");
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({
+      message: "User updated successfully",
+      user: updatedUser
+    });
+  } catch (error) {
+    console.error('Error updating user:', error);
+    res.status(500).json({ message: error.message });
+  }
+};
 
 // Update bio
 export const updateBio = async (req, res) => {
@@ -131,7 +166,7 @@ export const getUser = async (req, res) => {
       }
     });
   } catch(error) {
-    console.error('❌ Error in getUser:', error);
+    console.error('Error in getUser:', error);
     res.status(500).json({ message: error.message });
   }
 };
