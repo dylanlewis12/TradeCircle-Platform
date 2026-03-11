@@ -296,8 +296,8 @@ export default function Marketplace() {
               <label className='filter-option'>
                 <input 
                   type='checkbox'
-                  checked={selectedProficiencies.includes('Beginner')}
-                  onChange={() => handleProficiencyChange('Beginner')}
+                  checked={selectedProficiencies.includes('beginner')}
+                  onChange={() => handleProficiencyChange('beginner')}
                 />
                 <span>Beginner</span>
               </label>
@@ -305,8 +305,8 @@ export default function Marketplace() {
               <label className='filter-option'>
                 <input 
                   type='checkbox'
-                  checked={selectedProficiencies.includes('Intermediate')}
-                  onChange={() => handleProficiencyChange('Intermediate')}
+                  checked={selectedProficiencies.includes('intermediate')}
+                  onChange={() => handleProficiencyChange('intermediate')}
                 />
                 <span>Intermediate</span>
               </label>
@@ -314,8 +314,8 @@ export default function Marketplace() {
               <label className='filter-option'>
                 <input 
                   type='checkbox'
-                  checked={selectedProficiencies.includes('Advanced')}
-                  onChange={() => handleProficiencyChange('Advanced')}
+                  checked={selectedProficiencies.includes('advanced')}
+                  onChange={() => handleProficiencyChange('advanced')}
                 />
                 <span>Advanced</span>
               </label>
@@ -323,8 +323,8 @@ export default function Marketplace() {
               <label className='filter-option'>
                 <input 
                   type='checkbox'
-                  checked={selectedProficiencies.includes('Expert')}
-                  onChange={() => handleProficiencyChange('Expert')}
+                  checked={selectedProficiencies.includes('expert')}
+                  onChange={() => handleProficiencyChange('expert')}
                 />
                 <span>Expert</span>
               </label>

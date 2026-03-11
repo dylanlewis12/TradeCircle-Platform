@@ -1,5 +1,5 @@
 export default function Community() {
     return <>
-        <h1>Apple</h1>
+        <h1>Page still in development</h1>
     </>
 }

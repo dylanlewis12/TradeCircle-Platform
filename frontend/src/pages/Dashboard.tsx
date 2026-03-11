@@ -309,8 +309,8 @@ export default function Dashboard() {
             <label className="filter-label">
               <input 
                 type="checkbox"
-                checked={selectedLevels.includes('Beginner')}
-                onChange={() => handleLevelChange('Beginner')}
+                checked={selectedLevels.includes('beginner')}
+                onChange={() => handleLevelChange('beginner')}
               /> 
               Beginner
             </label>
@@ -318,8 +318,8 @@ export default function Dashboard() {
             <label className="filter-label">
               <input 
                 type="checkbox"
-                checked={selectedLevels.includes('Intermediate')}
-                onChange={() => handleLevelChange('Intermediate')}
+                checked={selectedLevels.includes('intermediate')}
+                onChange={() => handleLevelChange('intermediate')}
               /> 
               Intermediate
             </label>
@@ -327,8 +327,8 @@ export default function Dashboard() {
             <label className="filter-label">
               <input 
                 type="checkbox"
-                checked={selectedLevels.includes('Advanced')}
-                onChange={() => handleLevelChange('Advanced')}
+                checked={selectedLevels.includes('advanced')}
+                onChange={() => handleLevelChange('advanced')}
               /> 
               Advanced
             </label>
@@ -336,8 +336,8 @@ export default function Dashboard() {
             <label className="filter-label">
               <input 
                 type="checkbox"
-                checked={selectedLevels.includes('Expert')}
-                onChange={() => handleLevelChange('Expert')}
+                checked={selectedLevels.includes('expert')}
+                onChange={() => handleLevelChange('expert')}
               /> 
               Expert
             </label>

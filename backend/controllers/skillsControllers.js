@@ -112,7 +112,7 @@ export const getUserSkills = async(req, res) => {
         const { userId } = req.params;
         const { category, proficiencyLevel, status } = req.query;
         
-        console.log('getUserSkills called with userId:', userId); // Debug
+        console.log('getUserSkills called with userId:', userId); 
         
         let filter = { userId };
 
