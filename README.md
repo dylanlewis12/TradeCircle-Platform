@@ -2,7 +2,7 @@
 
 A modern, full-stack web application that empowers communities to exchange skills and services without monetary transactions. TradeCircle connects people who want to learn new skills with experts willing to share their knowledge, fostering community collaboration and mutual growth.
 
-## 🚀 Quick Overview
+## Quick Overview
 
 **What is TradeCircle?**
 TradeCircle is a peer-to-peer skill exchange platform where users can post skills they want to teach or services they want to provide, browse available skills in their community, initiate trades, and build a reputation through ratings and reviews. Whether you want to trade web development for graphic design or volunteer your skills to help others, TradeCircle makes it easy.
@@ -13,9 +13,9 @@ TradeCircle is a peer-to-peer skill exchange platform where users can post skill
 
 ---
 
-## ✨ Core Features
+## Core Features
 
-### 🔐 Authentication & User Management
+### Authentication & User Management
 - User registration with secure password hashing (bcryptjs)
 - Email/password login with JWT authentication
 - Persistent sessions with refresh tokens
@@ -23,7 +23,7 @@ TradeCircle is a peer-to-peer skill exchange platform where users can post skill
 - Auto-logout on token expiration
 - Account deletion with password verification
 
-### 🎯 Skill Management
+### Skill Management
 - Create, read, update, and delete skill listings
 - 13+ skill categories (Technology, Language, Arts & Design, Business, etc.)
 - Proficiency levels (Beginner, Intermediate, Advanced, Expert)
@@ -31,7 +31,7 @@ TradeCircle is a peer-to-peer skill exchange platform where users can post skill
 - Filter and search by category, level, and status
 - Active/inactive/archived skill status management
 
-### 🛍️ Marketplace Discovery
+### Marketplace Discovery
 - Browse all available skills with advanced filtering
 - Search by name, category, and proficiency level
 - View user profiles directly from skill cards
@@ -39,7 +39,7 @@ TradeCircle is a peer-to-peer skill exchange platform where users can post skill
 - Multi-criteria filtering
 - Skill cards with complete information
 
-### 🤝 Trading System
+### Trading System
 - **Exchange Trades:** Mutual skill exchanges between users
 - **Volunteer Offers:** Free services for community members
 - Full trade lifecycle (pending → accepted → completed → rated)
@@ -47,7 +47,7 @@ TradeCircle is a peer-to-peer skill exchange platform where users can post skill
 - Automatic conversation creation
 - Complete trade history tracking
 
-### 💬 Real-Time Messaging
+### Real-Time Messaging
 - Direct messaging using Socket.io
 - Real-time message delivery
 - Conversation history persistence
@@ -55,7 +55,7 @@ TradeCircle is a peer-to-peer skill exchange platform where users can post skill
 - Integration with trade proposals
 - Message notifications
 
-### ⭐ Reputation & Rating System
+### Reputation & Rating System
 - 1-5 star rating system
 - Written reviews for qualitative feedback
 - Average rating calculation
@@ -63,7 +63,7 @@ TradeCircle is a peer-to-peer skill exchange platform where users can post skill
 - Trade-specific ratings
 - Community trust building
 
-### 📊 Dashboard & Analytics
+### Dashboard & Analytics
 - Personal statistics dashboard
 - Skills count and active listings
 - Completed trades count
@@ -72,7 +72,7 @@ TradeCircle is a peer-to-peer skill exchange platform where users can post skill
 - Skill management interface
 - Accept/decline/complete trade actions
 
-### 👥 User Profiles
+### User Profiles
 - Public user profile viewing
 - Profile information display
 - Profile picture support
@@ -152,7 +152,7 @@ TradeCircle-Platform/
 ```
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 - Node.js v14+
@@ -190,7 +190,7 @@ See `backend/README.md` and `frontend/README.md` for detailed setup instructions
 
 ---
 
-## 📡 API Overview
+## API Overview
 
 ### Base URL
 ```
@@ -326,31 +326,31 @@ http://localhost:3000/api
 
 ---
 
-## 🔐 Security Features
+## Security Features
 
-✅ **Authentication**
+**Authentication**
 - JWT tokens with 1-hour expiration
 - Refresh tokens with persistent storage
 - httpOnly, secure cookies
 
-✅ **Password Security**
+**Password Security**
 - bcryptjs hashing (10 salt rounds)
 - Required validation patterns
 - Password verification for critical actions
 
-✅ **Authorization**
+**Authorization**
 - Middleware-based route protection
 - User ID verification in requests
 - Role-based access (admin flag)
 
-✅ **API Security**
+**API Security**
 - CORS enabled for trusted origins
 - Request validation
 - Error message sanitization
 
 ---
 
-## 👤 Author
+## Author
 
 **Dylan Lewis**
 - GitHub: [dylanlewis12](https://github.com/dylanlewis12)
