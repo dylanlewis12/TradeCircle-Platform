@@ -4,7 +4,6 @@ import { useCookies } from 'react-cookie';
 import { jwtDecode } from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
 import { io, Socket } from 'socket.io-client';
-import toast from "react-hot-toast";
 import API_BASE_URL from '../../config/api.ts';
 
 interface User {
@@ -148,7 +147,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           console.log('Token expired or expiring soon, logging out automatically');
           handleAutoLogout();
         }
-        
+
       } catch (error) {
         console.error('Error checking token expiration:', error);
       }
@@ -194,13 +193,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       
       setCookies("accessToken", res.data.accessToken);
       setUser(res.data.user);
-      toast.success("Logged in successfully");
       
       // Connect socket after login
       connectSocket(res.data.user.id);
     } catch (error: any) {
       console.error('Login error:', error);
-      toast.error(error.response?.data?.message || 'Login failed');
       throw error;
     } finally {
       setIsLoggingIn(false);
@@ -212,13 +209,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const res = await axios.post(`${BASE_URL}/api/auth/register`, formData);
       setCookies("accessToken", res.data.accessToken);
       setUser(res.data.user);
-      toast.success("Account created successfully");
       
       // Connect socket after signup
       connectSocket(res.data.user.id);
     } catch (error: any) {
       console.error('SignUp error:', error);
-      toast.error(error.response?.data?.message || 'Sign up failed');
       throw error;
     }
   }
@@ -239,10 +234,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
       );
       
-      toast.success("Logged out successfully");
     } catch (error: any) {
       console.error('Logout error:', error);
-      toast.error(error.response?.data?.message || 'Logout failed');
     } finally {
       removeCookies("accessToken");
       setUser(null);

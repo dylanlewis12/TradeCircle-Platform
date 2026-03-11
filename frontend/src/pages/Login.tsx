@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '../context/authContext/AuthContext';
 import logo from '../styles/images/logo.png';
-import toast from "react-hot-toast";
+import toast from 'react-hot-toast'; 
 import API_BASE_URL from '../config/api';
 
 

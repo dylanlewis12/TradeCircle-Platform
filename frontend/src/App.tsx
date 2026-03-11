@@ -11,6 +11,8 @@ import ProtectRoute from './components/ProtectedRoutes.tsx';
 import './App.css';
 import Navbar from './components/NavBar.tsx';
 import { useLocation } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast';
+import 'react-toastify/dist/ReactToastify.css'; // Don't forget the CSS!
 
 function App() {
   const location = useLocation();
@@ -19,6 +21,7 @@ function App() {
 
   return (
     <>
+        <Toaster />
         {/* Conditionally render the Navbar */}
         {!excludedRoutes.includes(location.pathname) && <Navbar />}
         
