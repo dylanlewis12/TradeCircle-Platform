@@ -113,7 +113,7 @@ export default function ChatHeader({ skillName }: ChatHeaderProps) {
       );
 
       console.log('Trade created:', response.data);
-      toast.success('Trade proposal created!');
+      toast.success('Trade proposal create sucessfully!');
       setIsModalOpen(false);
 
       setFormData({
@@ -124,7 +124,7 @@ export default function ChatHeader({ skillName }: ChatHeaderProps) {
       });
     } catch (error: any) {
       console.error('Error creating trade:', error.response?.data || error.message);
-      setError(error.response?.data?.message || 'Failed to create trade.');
+      //setError(error.response?.data?.message || 'Failed to create trade.');
       toast.error('Failed to create trade. Try again!');
     } finally {
       setIsLoading(false);

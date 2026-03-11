@@ -60,10 +60,10 @@ export default function MarketSkillCard({ skill, handleView, onViewProfile}: Mar
         }
       });
 
-      toast.success('Chat opened');
+      //toast.success('Chat opened');
     } catch (error: any) {
       console.error('Error starting conversation:', error);
-      toast.error('Failed to open chat');
+      //toast.error('Failed to open chat');
     }
   }
 

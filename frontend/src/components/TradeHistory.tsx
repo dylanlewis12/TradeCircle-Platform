@@ -178,7 +178,7 @@ export default function TradeHistory({ onCompletedTradesUpdate }: TradeHistoryPr
       
       fetchTrades();
     } catch (error: any) {
-      toast.error(error.response?.data?.message || 'Failed to complete trade');
+      toast.error('Failed to complete trade');
     }
   }
 

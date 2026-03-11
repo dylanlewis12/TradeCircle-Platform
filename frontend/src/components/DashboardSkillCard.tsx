@@ -20,6 +20,7 @@ import '../styles/components/DashboardSkillCard.css';
 import '../styles/components/modals/AddSkill.css'
 import Modal from '../components/Modal.tsx';
 import API_BASE_URL from '../config/api.ts';
+import toast from 'react-hot-toast';
 
 interface Skill {
   _id: string;
@@ -118,8 +119,10 @@ export default function SkillCard({ skills, onSkillEdited, onSkillDeleted }: Ski
       onSkillDeleted(skillToDelete);
       setIsDeleteModalOpen(false)
       setSkillToDelete(null);
+      toast.success("Skill deleted successfully!")
     } catch(error) {
       console.error('Error deleting skill:', error);
+      toast.error('Error deleting skill');
     }
   }
 
@@ -148,9 +151,11 @@ export default function SkillCard({ skills, onSkillEdited, onSkillDeleted }: Ski
       setIsEditModalOpen(false);
       setSkillToEdit(null);
       setEditFormData({ name: '', category: 'other', proficiencyLevel: '', yearsOfExperience: 0, status: 'active', hoursAvailable: 0, description: '' });
+      toast.success('Skill updated successfully');
     } catch(error: any) {
       console.error('Error editing skill:', error);
       setError(error.response?.data?.message || 'Failed to update skill');
+      toast.error('Failed to update skill');
     } finally {
       setLoading(false);
     }

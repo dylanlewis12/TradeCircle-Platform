@@ -72,9 +72,8 @@ export default function UserModal({ isOpen, onClose }: UserModalProps) {
 
             console.log('✅ User updated:', response.data.user);
 
-            // ✅ Update AuthContext with complete user data
             const updatedUser: User = {
-                id: response.data.user._id || response.data.user.id,  // ✅ Handle both _id and id
+                id: response.data.user._id || response.data.user.id,  
                 userName: response.data.user.userName,
                 email: response.data.user.email,
                 bio: response.data.user.bio,
@@ -90,10 +89,10 @@ export default function UserModal({ isOpen, onClose }: UserModalProps) {
             onClose();
 
         } catch (error: any) {
-            console.error('❌ Error editing user:', error);
-            console.error('❌ Error response:', error.response?.data);
+            console.error('Error editing user:', error);
+            console.error('Error response:', error.response?.data);
             setError(error.response?.data?.message || 'Failed to update user');
-            toast.error(error.response?.data?.message || 'Failed to update user');
+            toast.error('Failed to update profile');
         } finally {
             setLoading(false);
         }
