@@ -6,6 +6,7 @@ import { useAuth } from '../context/authContext/AuthContext.tsx';
 import MarketSkillCard from '../components/MarketSkillCard.tsx';
 import API_BASE_URL from '../config/api.ts';
 import UserModal from '../components/modals/UserModal.tsx';
+import toast from 'react-hot-toast';
 
 interface Skill {
   _id: string;
@@ -29,7 +30,7 @@ export default function Marketplace() {
   const [sortBy, setSortBy] = useState('newest');
   const { user, cookies } = useAuth();
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  //const [error, setError] = useState<string | null>(null);
   const [skills, setSkills] = useState<Skill[]>([]);
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null); 
 
@@ -56,7 +57,7 @@ export default function Marketplace() {
     async function fetchSkills() {
       try {
         setLoading(true);
-        setError(null);
+        //setError(null);
 
         const params = new URLSearchParams();
         
@@ -107,7 +108,9 @@ export default function Marketplace() {
         setSkills(fetchedSkills);
       } catch (err: any) {
         console.error('Error fetching skills:', err);
-        setError('Failed to fetch skills');
+        toast.error('Failed to fetch skills');
+        
+        //setError('Failed to fetch skills');
       } finally {
         setLoading(false);
       }
@@ -122,7 +125,6 @@ export default function Marketplace() {
       <MarketSkillCard 
         key={skill._id}
         skill={skill}
-        handleView={() => { }}
         onViewProfile={(userId) => setSelectedUserId(userId)}  
       />
     );

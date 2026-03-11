@@ -3,18 +3,17 @@ import { User, Star } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/authContext/AuthContext';
 import { useChat } from './chat/store/useChat';
-import { useState } from 'react';
-import UserModal from '../components/modals/UserModal.tsx';
+//import { useState } from 'react';
+//import UserModal from '../components/modals/UserModal.tsx';
 
 import toast from 'react-hot-toast';
 
 interface MarketSkill {
   skill: any;
-  handleView: () => void;
   onViewProfile: (userId: string) => void;
 }
 
-export default function MarketSkillCard({ skill, handleView, onViewProfile}: MarketSkill) {
+export default function MarketSkillCard({ skill, onViewProfile}: MarketSkill) {
   const navigate = useNavigate();
   const { setSelectedUser, createOrGetConversation, getMessages, setAccessToken } = useChat();
   const { user, cookies } = useAuth();  
