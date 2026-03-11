@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import toast from 'react-hot-toast';
 import axios from 'axios';
+import { io, Socket } from 'socket.io-client';
 import API_BASE_URL from '../../../config/api';
 
 interface User {
@@ -13,7 +14,7 @@ interface User {
 interface Message {
   _id: string;
   conversationId: string;
-  senderId: string;
+  senderId: string | { _id?: string; id?: string; userName?: string; profilePicture?: string };
   receiverId: string;
   text?: string;
   image?: string;
@@ -35,15 +36,37 @@ interface ChatStore {
   isUsersLoading: boolean;
   isMessageLoading: boolean;
   accessToken: string | null;
-  setAccessToken: (token: string | null) => void;
+  setAccessToken: (token: string | null, userId?: string) => void;
   getUsers: () => Promise<void>;
   getMessages: (userId: string) => Promise<void>;
   setSelectedUser: (user: User | null) => void;
   createOrGetConversation: (userId: string) => Promise<string>;
   sendMessage: (receiverId: string, text: string, image?: string) => Promise<void>;
+  subscribeToMessages: (userId: string) => void;
+  unsubscribeFromMessages: () => void;
 }
 
 const BASE_URL = `${API_BASE_URL}/api/messages`;
+let socket: Socket | null = null;
+let messageListener: ((newMessage: Message) => void) | null = null;
+
+// ✅ Initialize Socket.io with userId parameter
+export const initializeSocket = (token: string, userId: string) => {
+  if (socket?.connected) return;
+
+  socket = io(API_BASE_URL, {
+    auth: { token },
+    query: { userId },  // ✅ userId is now defined
+    reconnection: true
+  });
+
+  socket.on('connect', () => {
+    console.log('✅ Socket connected');
+    console.log('📡 Emitting userOnline event with userId:', userId);
+    socket?.emit('userOnline', userId);
+  });
+  socket.on('disconnect', () => console.log('❌ Socket disconnected'));
+};
 
 export const useChat = create<ChatStore>((set, get) => ({
   messages: [],
@@ -54,15 +77,20 @@ export const useChat = create<ChatStore>((set, get) => ({
   isMessageLoading: false,
   accessToken: null,
 
-  setAccessToken: (token: string | null) => {
+  // ✅ setAccessToken receives both token and userId
+  setAccessToken: (token: string | null, userId?: string) => {
     set({ accessToken: token });
+    if (token && userId) {
+      initializeSocket(token, userId);  // ✅ Pass both parameters
+    }
   },
 
+  // Get conversation list
   getUsers: async () => {
     set({ isUsersLoading: true });
     try {
       const { accessToken } = get();
-      
+
       const response = await axios.get(
         `${BASE_URL}/users`,
         {
@@ -80,11 +108,12 @@ export const useChat = create<ChatStore>((set, get) => ({
     }
   },
 
+  // Get messages with user
   getMessages: async (userId: string) => {
     set({ isMessageLoading: true });
     try {
       const { accessToken } = get();
-      
+
       const response = await axios.get(
         `${BASE_URL}/${userId}`,
         {
@@ -102,13 +131,11 @@ export const useChat = create<ChatStore>((set, get) => ({
     }
   },
 
+  // Create or get conversation
   createOrGetConversation: async (userId: string) => {
     try {
       const { accessToken } = get();
-      
-      console.log('Creating conversation with userId:', userId);  
-      console.log('Access token:', accessToken?.substring(0, 20));  
-      
+
       const response = await axios.post(
         `${BASE_URL}/create-or-get`,
         { participantId: userId },
@@ -118,24 +145,40 @@ export const useChat = create<ChatStore>((set, get) => ({
           }
         }
       );
-      
-      console.log('Conversation response:', response.data);
+
       return response.data.conversationId;
     } catch (error: any) {
       console.error('Error creating conversation:', error);
-      console.error('Backend error:', error.response?.data); 
       toast.error(error.response?.data?.message || 'Failed to create conversation');
       throw error;
     }
   },
 
-  sendMessage: async (receiverId: string, text: string, image?: string) => {
+  sendMessage: async (
+    receiverId: string,
+    text: string,
+    image?: string
+  ) => {
     try {
-      const { accessToken } = get();
-      
+      const { accessToken, messages, selectedUser } = get();
+
+      // Get conversationId from existing messages
+      let conversationId = messages[0]?.conversationId;
+
+      if (!conversationId && selectedUser) {
+        // If no messages yet, create conversation first
+        conversationId = await get().createOrGetConversation(selectedUser._id);
+      }
+
+      console.log('📤 Sending message:', { receiverId, text, conversationId });
+
       const response = await axios.post(
         `${BASE_URL}/send/${receiverId}`,
-        { text, image },
+        {
+          text,
+          image,
+          conversationId
+        },
         {
           headers: {
             'Authorization': `Bearer ${accessToken}`
@@ -143,20 +186,60 @@ export const useChat = create<ChatStore>((set, get) => ({
         }
       );
 
-      // Add message to store
+      const newMessage = response.data.data || response.data;
+
+      console.log('✅ Message sent:', newMessage);
+
       set((state) => ({
-        messages: [...state.messages, response.data]
+        messages: [...state.messages, newMessage]
       }));
 
       toast.success('Message sent');
     } catch (error: any) {
-      console.error('Error sending message:', error);
-      toast.error(error.response?.data?.error || 'Failed to send message');
+      console.error('❌ Error sending message:', error);
+      console.error('❌ Error details:', error.response?.data);
+      toast.error(error.response?.data?.message || 'Failed to send message');
       throw error;
     }
   },
 
   setSelectedUser: (user: User | null) => {
     set({ selectedUser: user });
+  },
+
+  // Subscribe to real-time messages
+  subscribeToMessages: (userId: string) => {
+    if (!socket?.connected) {
+      console.error('❌ Socket not connected');
+      return;
+    }
+
+    console.log('📡 Setting up subscription for user:', userId);
+
+    // Always clean up old listener first
+    if (messageListener) {
+      socket.off('receiveMessage', messageListener);
+      console.log('🧹 Cleaned up old listener');
+    }
+
+    // Create new listener
+    messageListener = (newMessage: Message) => {
+      console.log('📨 NEW MESSAGE RECEIVED:', newMessage);
+      set((state) => ({
+        messages: [...state.messages, newMessage]
+      }));
+    };
+
+    // Register new listener
+    socket.on('receiveMessage', messageListener);
+    console.log('✅ New listener registered for user:', userId);
+  },
+
+  unsubscribeFromMessages: () => {
+    if (socket && messageListener) {
+      socket.off('receiveMessage', messageListener);
+      messageListener = null;
+      console.log('❌ Listener unregistered');
+    }
   }
 }));

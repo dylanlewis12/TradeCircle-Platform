@@ -4,17 +4,15 @@ import Conversation from "../models/Conversation.js";
 import cloudinary from "../lib/cloudinary.js";
 import { getReceiverSocketId, io } from "../lib/socket.js";
 
-//Get users with existing conversations
+// Get users with existing conversations
 export const getUsersforSidebar = async (req, res) => {
   try {
     const loggedInUserId = req.user.id;
 
-    // Find all conversations for the logged-in user
     const conversations = await Conversation.find({
       participants: loggedInUserId
     }).populate("participants");
 
-    // Extract other participants (not the logged-in user)
     const usersWithConversations = conversations.map(conversation => {
       const otherUser = conversation.participants.find(
         participant => participant.id.toString() !== loggedInUserId.toString()
@@ -29,22 +27,20 @@ export const getUsersforSidebar = async (req, res) => {
   }
 };
 
-//Get messages for a conversation
+// Get messages for a conversation
 export const getMessages = async (req, res) => {
   try {
     const { id: userToChatId } = req.params;
     const myId = req.user.id;
 
-    // Find the conversation between two users
     const conversation = await Conversation.findOne({
       participants: { $all: [myId, userToChatId] }
     });
 
     if (!conversation) {
-      return res.status(200).json([]); // No conversation yet
+      return res.status(200).json([]);
     }
 
-    // Find all messages in this conversation
     const messages = await Message.find({
       conversationId: conversation._id
     }).sort({ createdAt: 1 });
@@ -56,112 +52,98 @@ export const getMessages = async (req, res) => {
   }
 };
 
-// Send message
+// ✅ Send message - FIXED
 export const sendMessage = async (req, res) => {
   try {
-    const { text, image } = req.body;
-    const { id: receiverId } = req.params;
     const senderId = req.user.id;
+    const { id: receiverId } = req.params;
+    const { text, image, conversationId } = req.body;
 
-    console.log('Sending message from:', senderId, 'to:', receiverId);
+    console.log('📤 SEND MESSAGE CALLED');
+    console.log('   senderId:', senderId);
+    console.log('   receiverId:', receiverId);
 
-    // Validate message content
     if (!text && !image) {
-      return res.status(400).json({ 
-        message: 'Message must contain text or image' 
-      });
+      return res.status(400).json({ message: "Message text or image required" });
     }
 
-    // Validate IDs are valid MongoDB ObjectIds
-    if (!senderId || !receiverId) {
-      return res.status(400).json({ 
-        message: 'Invalid sender or receiver ID' 
-      });
-    }
-
-    let imageUrl;
-    if (image) {
-      try {
-        const uploadResponse = await cloudinary.uploader.upload(image);
-        imageUrl = uploadResponse.secure_url;
-      } catch (uploadError) {
-        console.error('Cloudinary upload error:', uploadError);
-        return res.status(500).json({ 
-          message: 'Failed to upload image' 
-        });
-      }
-    }
-
-    // Find or create conversation
-    let conversation = await Conversation.findOne({
-      participants: { $all: [senderId, receiverId] }
-    });
-
-    if (!conversation) {
-      conversation = new Conversation({
-        participants: [senderId, receiverId]
-      });
-      await conversation.save();
-      console.log('Created new conversation:', conversation._id);
-    }
-
-    // Create message with conversationId
-    const newMessage = new Message({
-      conversationId: conversation._id,
+    // Create message
+    const message = await Message.create({
+      conversationId,
       senderId,
       receiverId,
       text,
-      image: imageUrl
+      image
     });
 
-    await newMessage.save();
-    console.log('Message saved:', newMessage._id);
+    await message.populate('senderId', 'userName profilePicture');
 
-    // Update conversation's lastMessage
-    conversation.lastMessage = newMessage._id;
-    conversation.lastMessageAt = new Date();
-    await conversation.save();
+    // ✅ Use imported function, not require()
+    const receiverSocketId = getReceiverSocketId(receiverId);
+    
+    console.log('🔍 Looking for receiver socket ID');
+    console.log('   receiverId:', receiverId);
+    console.log('   Found socket ID:', receiverSocketId);
 
-    // Send via Socket.io
-    const receiverSocketId = getReceiverSocketId(receiverId.toString());
     if (receiverSocketId) {
-      io.to(receiverSocketId).emit("newMessage", newMessage);
+      const messageData = {
+        _id: message._id,
+        conversationId: message.conversationId,
+        senderId: message.senderId,
+        receiverId: message.receiverId,
+        text: message.text,
+        image: message.image,
+        createdAt: message.createdAt
+      };
+
+      console.log('✅ EMITTING receiveMessage');
+      console.log('   to socket:', receiverSocketId);
+      console.log('   message:', messageData);
+      
+      // ✅ Use imported io
+      io.to(receiverSocketId).emit('receiveMessage', messageData);
+    } else {
+      console.log('⚠️⚠️⚠️ RECEIVER NOT CONNECTED:', receiverId);
     }
 
-    res.status(201).json(newMessage);
-  } catch (error) {
-    console.error('Error in sendMessage controller:', error.message);
-    console.error('Full error:', error);
-    res.status(500).json({ 
-      message: 'Internal server error',
-      error: error.message 
+    res.status(201).json({
+      message: "Message sent successfully",
+      data: {
+        _id: message._id,
+        conversationId: message.conversationId,
+        senderId: message.senderId,
+        receiverId: message.receiverId,
+        text: message.text,
+        image: message.image,
+        createdAt: message.createdAt
+      }
     });
+  } catch (error) {
+    console.error('❌ ERROR in sendMessage:', error);
+    res.status(500).json({ message: error.message });
   }
 };
 
-// backend/controllers/messageController.js
+// Create or get conversation
 export const createOrGetConversation = async (req, res) => {
   try {
     const { participantId } = req.body;
-    const userId = req.user.id;  // From JWT token
+    const userId = req.user.id;
 
     console.log('Creating conversation between:', userId, participantId);
 
-    // Validate both IDs exist
     if (!userId || !participantId) {
       return res.status(400).json({ 
         message: 'User ID and participant ID are required' 
       });
     }
 
-    // Can't create conversation with yourself
-    if (userId.toString() === participantId.toString()) {  //Convert to string for comparison
+    if (userId.toString() === participantId.toString()) {
       return res.status(400).json({ 
         message: "You can't create a conversation with yourself" 
       });
     }
 
-    // Find or create conversation
     let conversation = await Conversation.findOne({
       participants: { $all: [userId, participantId] }
     });

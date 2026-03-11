@@ -17,8 +17,11 @@ export default function ChatContainer({ skillName }: ChatContainerProps) {
     messages,
     isMessageLoading,
     selectedUser,
+    subscribeToMessages, 
+    unsubscribeFromMessages,
   } = useChat();
   
+  // ✅ Remove socket from here - only get user
   const { user } = useAuth();
   const messageEndRef = useRef<HTMLDivElement>(null);
 
@@ -29,6 +32,21 @@ export default function ChatContainer({ skillName }: ChatContainerProps) {
     }
   }, [messages]);
 
+  // Subscribe to messages when user is selected
+  useEffect(() => {
+    if (selectedUser?._id) {
+      console.log('📡 Selected user:', selectedUser._id);
+      console.log('🎯 About to subscribe to messages');
+      
+      subscribeToMessages(selectedUser._id);
+      
+      return () => {
+        console.log('🔌 User changed, unsubscribing');
+        unsubscribeFromMessages();
+      };
+    }
+  }, [selectedUser?._id, subscribeToMessages, unsubscribeFromMessages]);
+
   if (!selectedUser) {
     return (
       <div className="chat__container-empty">
@@ -38,39 +56,50 @@ export default function ChatContainer({ skillName }: ChatContainerProps) {
   }
 
   return (
-    <div className="chat__container" style={{backgroundColor: "#f0f8f4"}}>
+    <div className="chat__container" style={{ backgroundColor: "#f0f8f4" }}>
       <ChatHeader skillName={skillName} />
-
       {isMessageLoading ? (
         <MessageSkeleton />
       ) : (
-        <div className="messages__area" >
-          {messages.map(message => (
-            <div
-              key={message._id}
-              className={`message ${message.senderId === user?.id ? 'message__sent' : 'message__received'}`}
-              ref={messageEndRef}
-            >
-              <div className="message__content">
-                {message.image && (
-                  <img
-                    src={message.image}
-                    alt="attachment"
-                    className="message__image"
-                  />
-                )}
-                {message.text && <p className="message__text">{message.text}</p>}
+        <div className="messages__area">
+          {messages.map(message => {
+            // ✅ Handle both object and string senderId
+            const senderId = typeof message.senderId === 'string' 
+    ? message.senderId 
+    : message.senderId?._id;
+  
+  const isOwnMessage = senderId === user?.id;
+
+
+            return (
+              <div
+                key={message._id}
+                className={`message ${
+                  isOwnMessage ? 'message__sent' : 'message__received'
+                }`}
+                ref={messageEndRef}
+              >
+                <div className="message__content">
+                  {message.image && (
+                    <img
+                      src={message.image}
+                      alt="attachment"
+                      className="message__image"
+                    />
+                  )}
+                  {message.text && <p className="message__text">{message.text}</p>}
+                </div>
+                <span className="message__time">
+                  {formatMessageTime(message.createdAt)}
+                </span>
               </div>
-              <span className="message__time">
-                {formatMessageTime(message.createdAt)}
-              </span>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
-        <div className='message-input__container'>
-          <MessageInput />
-        </div>
+      <div className="message-input__container">
+        <MessageInput />
+      </div>
     </div>
   );
 }

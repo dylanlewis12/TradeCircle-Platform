@@ -3,8 +3,8 @@ import axios from 'axios';
 import { useCookies } from 'react-cookie';
 import { jwtDecode } from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
-import { io, Socket } from 'socket.io-client';
 import API_BASE_URL from '../../config/api.ts';
+import { useChat } from '../../components/chat/store/useChat.tsx';
 
 interface User {
   id: string;
@@ -20,8 +20,6 @@ interface AuthContextType {
   cookies: { [x: string]: any };
   user: User | null;
   setUser: (user: User | null) => void;
-  onlineUsers: string[];
-  socket: Socket | null;
   isLoggingIn: boolean;
   isLoggingOut: boolean;
   login: (formData: Object) => Promise<void>;
@@ -31,53 +29,15 @@ interface AuthContextType {
 
 const BASE_URL = API_BASE_URL;
 
-console.log('🔧 AuthContext BASE_URL:', BASE_URL);  // ✅ Debug
-
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const navigate = useNavigate();
   const [cookies, setCookies, removeCookies] = useCookies();
   const [user, setUser] = useState<User | null>(null);
-  const [socket, setSocket] = useState<Socket | null>(null);
-  const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
-
-  // Connect Socket
-  const connectSocket = (userId: string) => {
-    if (socket?.connected) return;
-    
-    const newSocket = io(BASE_URL, {
-      query: {
-        userId: userId,
-      },
-      withCredentials: true
-    });
-    
-    newSocket.on("connect", () => {
-      console.log("Socket connected");
-      setSocket(newSocket);
-    });
-
-    newSocket.on("getOnlineUsers", (userIds: string[]) => {
-      console.log("Online users:", userIds);
-      setOnlineUsers(userIds);
-    });
-
-    newSocket.on("disconnect", () => {
-      console.log("Socket disconnected");
-      setSocket(null);
-    });
-  };
-
-  // Disconnect Socket
-  const disconnectSocket = () => {
-    if (socket?.connected) {
-      socket.disconnect();
-      setSocket(null);
-    }
-  };
+  const { setAccessToken } = useChat();
 
   // Restore user from token on app mount
   useEffect(() => {
@@ -112,10 +72,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         };
         
         setUser(restoredUser);
+        // ✅ Initialize socket with token
+        setAccessToken(token);
         console.log('User restored from token');
-
-        // Connect socket when user is restored
-        connectSocket(restoredUser.id);
       } catch (error) {
         console.error('Error restoring user from token:', error);
         removeCookies("accessToken");
@@ -142,7 +101,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
         console.log('Token expires in:', Math.floor(timeUntilExpiry / 1000), 'seconds');
 
-        
         if (timeUntilExpiry < 60000) {
           console.log('Token expired or expiring soon, logging out automatically');
           handleAutoLogout();
@@ -176,7 +134,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } finally {
       removeCookies("accessToken");
       setUser(null);
-      disconnectSocket();
       navigate('/');
     }
   };
@@ -194,8 +151,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setCookies("accessToken", res.data.accessToken);
       setUser(res.data.user);
       
-      // Connect socket after login
-      connectSocket(res.data.user.id);
+      // ✅ Initialize socket with token
+      setAccessToken(res.data.accessToken, res.data.user.id);
     } catch (error: any) {
       console.error('Login error:', error);
       throw error;
@@ -210,8 +167,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setCookies("accessToken", res.data.accessToken);
       setUser(res.data.user);
       
-      // Connect socket after signup
-      connectSocket(res.data.user.id);
+      // ✅ Initialize socket with token
+      setAccessToken(res.data.accessToken, res.data.user.id);
     } catch (error: any) {
       console.error('SignUp error:', error);
       throw error;
@@ -239,7 +196,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } finally {
       removeCookies("accessToken");
       setUser(null);
-      disconnectSocket();
       setIsLoggingOut(false);
     }
   }
@@ -249,15 +205,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       cookies,
       user,
       setUser,
-      socket,
-      onlineUsers,
       isLoggingIn,
       isLoggingOut,
       login,
       logout,
       signUp,
     }),
-    [cookies, user, socket, onlineUsers, isLoggingIn, isLoggingOut],
+    [cookies, user, isLoggingIn, isLoggingOut],
   );
 
   return (

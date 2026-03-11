@@ -17,27 +17,44 @@ const io = new Server(server, {
 const userSocketMap = {};
 
 // Socket.io connection
+// backend/lib/socket.js
 io.on("connection", (socket) => {
-  console.log("A user connected", socket.id);
+  console.log("👤 A user connected", socket.id);
+  
+  // ✅ Get userId from query
   const userId = socket.handshake.query.userId;
+  console.log('🔑 UserId from query:', userId);
   
   if (userId) {
     userSocketMap[userId] = socket.id;
-    console.log("User mapped:", userId, "->", socket.id);
+    console.log('✅ USER MAPPED:', userId, '->', socket.id);
   }
 
-  // Broadcast online users to all clients
+  // ✅ Also handle userOnline event
+  socket.on('userOnline', (id) => {
+    userSocketMap[id] = socket.id;
+    console.log('✅ User online via event:', id, '->', socket.id);
+    io.emit('getOnlineUsers', Object.keys(userSocketMap));
+  });
+
   io.emit("getOnlineUsers", Object.keys(userSocketMap));
 
   socket.on("disconnect", () => {
     console.log("A user disconnected", socket.id);
-    delete userSocketMap[userId];
+
+    for (let [id, socketId] of Object.entries(userSocketMap)) {
+      if (socketId === socket.id) {
+        delete userSocketMap[id];
+        console.log("User removed:", id);
+        break;
+      }
+    }
+
     io.emit("getOnlineUsers", Object.keys(userSocketMap));
   });
 });
 
+export { io, app, server, userSocketMap };
 export function getReceiverSocketId(userId) {
   return userSocketMap[userId];
 }
-
-export { io, app, server };
