@@ -1,8 +1,5 @@
 const API_BASE_URL = import.meta.env.MODE === "development"
-  ? "http://localhost:3000" 
-  : "/";
-
-  console.log('🔧 API_BASE_URL:', API_BASE_URL);
-  console.log('🔧 import.meta.env.MODE:', import.meta.env.MODE);
+  ? "http://localhost:3000"
+  : import.meta.env.VITE_API_BASE_URL || "https://tradecircle-backend.onrender.com";
 
 export default API_BASE_URL;

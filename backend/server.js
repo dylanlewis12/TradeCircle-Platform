@@ -10,23 +10,25 @@ import messageRoutes from './routes/messageRoutes.js';
 import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from 'cookie-parser';
-
 // Import socket setup
 import { server, io, app } from './lib/socket.js';
 
 // Setups
 dotenv.config();
-//const app = server.app || express();
 const PORT = process.env.PORT || 3000;
-const ACCESS_SECRET = process.env.ACCESS_SECRET;
-const REFRESH_SECRET = process.env.REFRESH_SECRET;
 
 // Connect to DB
 connectDB();
 
-// CORS Middleware - only ONE call
+// ✅ CORS Middleware - dynamic for development & production
+const allowedOrigins = [
+  'http://localhost:5173',  // Local development
+  'http://localhost:3000',  // Local testing
+  process.env.FRONTEND_URL  // Production frontend URL
+].filter(Boolean);
+
 app.use(cors({
-  origin: 'http://localhost:5173', // Vite default port
+  origin: allowedOrigins,
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
@@ -45,22 +47,21 @@ app.use("/api/skills", skillRoutes);
 app.use("/api/trades", tradeRoutes);
 app.use("/api/messages/", messageRoutes);
 
+// ✅ Health check endpoint
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'Server is running' });
+});
+
 // Global Err Middlewares
 app.use(globalErr);
 
-//Listener
+// Listener
 server.listen(PORT, () => {
   console.log(`✅ Server listening on PORT: ${PORT}`);
   console.log(`✅ Socket.io is ready`);
+  console.log(`✅ Allowed origins: ${allowedOrigins.join(', ')}`);
 });
 
 server.on('error', (error) => {
   console.error('❌ Server error:', error);
 });
-
-/*
-app.listen(PORT, () => {
-  console.log(`✅ Server listening on PORT: ${PORT}`);
-  console.log(`✅ Socket.io is ready`);
-});
-*/
