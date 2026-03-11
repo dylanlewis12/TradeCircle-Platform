@@ -86,7 +86,7 @@ TradeCircle is a peer-to-peer skill exchange platform where users can post skill
 
 ---
 
-## 🛠️ Technology Stack
+## Technology Stack
 
 ### Frontend
 ```
