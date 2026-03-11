@@ -28,7 +28,7 @@ export default function MessageInput() {
         conversationId = await createOrGetConversation(selectedUser._id);
       }
 
-      // ✅ Pass all 3 arguments including image
+      // Pass all 3 arguments including image
       await sendMessage(selectedUser._id, text, image);
       
       setText('');
