@@ -21,7 +21,6 @@ export default function ChatContainer({ skillName }: ChatContainerProps) {
     unsubscribeFromMessages,
   } = useChat();
   
-  // ✅ Remove socket from here - only get user
   const { user } = useAuth();
   const messageEndRef = useRef<HTMLDivElement>(null);
 
@@ -35,8 +34,8 @@ export default function ChatContainer({ skillName }: ChatContainerProps) {
   // Subscribe to messages when user is selected
   useEffect(() => {
     if (selectedUser?._id) {
-      console.log('📡 Selected user:', selectedUser._id);
-      console.log('🎯 About to subscribe to messages');
+      console.log('Selected user:', selectedUser._id);
+      console.log('About to subscribe to messages');
       
       subscribeToMessages(selectedUser._id);
       
@@ -63,7 +62,6 @@ export default function ChatContainer({ skillName }: ChatContainerProps) {
       ) : (
         <div className="messages__area">
           {messages.map(message => {
-            // ✅ Handle both object and string senderId
             const senderId = typeof message.senderId === 'string' 
     ? message.senderId 
     : message.senderId?._id;

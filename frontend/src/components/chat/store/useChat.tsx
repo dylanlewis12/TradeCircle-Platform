@@ -50,19 +50,17 @@ const BASE_URL = `${API_BASE_URL}/api/messages`;
 let socket: Socket | null = null;
 let messageListener: ((newMessage: Message) => void) | null = null;
 
-// ✅ Initialize Socket.io with userId parameter
+// Initialize Socket.io 
 export const initializeSocket = (token: string, userId: string) => {
   if (socket?.connected) return;
 
   socket = io(API_BASE_URL, {
     auth: { token },
-    query: { userId },  // ✅ userId is now defined
+    query: { userId }, 
     reconnection: true
   });
 
   socket.on('connect', () => {
-    console.log('✅ Socket connected');
-    console.log('📡 Emitting userOnline event with userId:', userId);
     socket?.emit('userOnline', userId);
   });
   socket.on('disconnect', () => console.log('❌ Socket disconnected'));
@@ -77,11 +75,11 @@ export const useChat = create<ChatStore>((set, get) => ({
   isMessageLoading: false,
   accessToken: null,
 
-  // ✅ setAccessToken receives both token and userId
+  // setAccessToken receives both token and userId
   setAccessToken: (token: string | null, userId?: string) => {
     set({ accessToken: token });
     if (token && userId) {
-      initializeSocket(token, userId);  // ✅ Pass both parameters
+      initializeSocket(token, userId);  
     }
   },
 
@@ -216,7 +214,6 @@ export const useChat = create<ChatStore>((set, get) => ({
 
     console.log('📡 Setting up subscription for user:', userId);
 
-    // Always clean up old listener first
     if (messageListener) {
       socket.off('receiveMessage', messageListener);
       console.log('🧹 Cleaned up old listener');

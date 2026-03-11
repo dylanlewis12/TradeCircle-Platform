@@ -72,7 +72,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         };
         
         setUser(restoredUser);
-        // ✅ Initialize socket with token
+        // Initialize socket with token
         setAccessToken(token);
         console.log('User restored from token');
       } catch (error) {
@@ -151,7 +151,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setCookies("accessToken", res.data.accessToken);
       setUser(res.data.user);
       
-      // ✅ Initialize socket with token
+      // Initialize socket with token
       setAccessToken(res.data.accessToken, res.data.user.id);
     } catch (error: any) {
       console.error('Login error:', error);
@@ -167,7 +167,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setCookies("accessToken", res.data.accessToken);
       setUser(res.data.user);
       
-      // ✅ Initialize socket with token
+      // Initialize socket with token
       setAccessToken(res.data.accessToken, res.data.user.id);
     } catch (error: any) {
       console.error('SignUp error:', error);
