@@ -1,6 +1,10 @@
 # TradeCircle - Community Skill Sharing Platform
-
 A modern, full-stack web application that empowers communities to exchange skills and services without monetary transactions. TradeCircle connects people who want to learn new skills with experts willing to share their knowledge, fostering community collaboration and mutual growth.
+
+## Other Repositories
+Main Repository: https://github.com/dylanlewis12/TradeCircle-Platform <br />
+Frontend Repository: https://github.com/dylanlewis12/TradeCircle-Frontend <br />
+BackendRepository: https://github.com/dylanlewis12/TradeCircle-Backend <br />
 
 ## Quick Overview
 
