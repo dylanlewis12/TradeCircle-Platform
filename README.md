@@ -244,7 +244,7 @@ http://localhost:3000/api
 
 ---
 
-## 🗄️ Database Models
+## Database Models
 
 ### User Model
 ```javascript
@@ -304,11 +304,7 @@ http://localhost:3000/api
   createdAt: Date
 }
 ```
-
-**Detailed schema information in `BACKEND_README.md`**
-
 ---
-## 💻 Development Workflow
 
 ### Local Development
 1. Start MongoDB connection (Atlas or local)
@@ -328,30 +324,30 @@ http://localhost:3000/api
 
 ## Security Features
 
-**Authentication**
+ **Authentication**
 - JWT tokens with 1-hour expiration
 - Refresh tokens with persistent storage
 - httpOnly, secure cookies
 
-**Password Security**
+ **Password Security**
 - bcryptjs hashing (10 salt rounds)
 - Required validation patterns
 - Password verification for critical actions
 
-**Authorization**
+ **Authorization**
 - Middleware-based route protection
 - User ID verification in requests
 - Role-based access (admin flag)
 
-**API Security**
+ **API Security**
 - CORS enabled for trusted origins
 - Request validation
 - Error message sanitization
 
 ---
 
-## Author
+## 👤 Author
 
 **Dylan Lewis**
 - GitHub: [dylanlewis12](https://github.com/dylanlewis12)
-- LinkedIn: [dylanlewis12](https://linkedin.com/in/dylanlewis12)
+- LinkedIn: [dylanlewis12](https://linkedin.com/in/the-dylanlewis/)
