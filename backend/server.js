@@ -24,6 +24,7 @@ connectDB();
 const allowedOrigins = [
   'http://localhost:5173',  // Local development
   'http://localhost:3000',  // Local testing
+  'https://tradecircle-frontend.onrender.com',  // ✅ Add this
   process.env.FRONTEND_URL  // Production frontend URL
 ].filter(Boolean);
 

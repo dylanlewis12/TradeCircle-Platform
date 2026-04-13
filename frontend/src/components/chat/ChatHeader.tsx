@@ -145,8 +145,7 @@ export default function ChatHeader({ skillName }: ChatHeaderProps) {
 
           <div className="chat-header__user">
             <div className="chat-header__avatar">
-              {/* profilePicture upload needs to be fixed
-
+              {/*}
               {selectedUser.profilePicture ? (
                 <img 
                   src={selectedUser.profilePicture || 'logo.svg'} 
