@@ -1,7 +1,7 @@
 import Modal from "../../Modal.tsx";
 import { useAuth } from "../../../context/authContext/AuthContext.tsx";
-import { User } from 'lucide-react';
-import { useState, useEffect } from "react";
+import { User, Upload, X } from 'lucide-react';
+import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import '../../../styles/components/modals/CurrentUserModal.css';
 import API_BASE_URL from "../../../config/api.ts";
@@ -25,6 +25,7 @@ interface UserModalProps {
 
 export default function UserModal({ isOpen, onClose }: UserModalProps) {
     const { user, cookies, setUser } = useAuth();
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
     const [formData, setFormData] = useState({
         userName: '',
@@ -35,6 +36,8 @@ export default function UserModal({ isOpen, onClose }: UserModalProps) {
     });
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
+    const [imageLoading, setImageLoading] = useState(false);
+    const [previewImage, setPreviewImage] = useState<string | null>(null);
 
     // Initialize form data when modal opens AND user is loaded
     useEffect(() => {
@@ -47,8 +50,69 @@ export default function UserModal({ isOpen, onClose }: UserModalProps) {
                 location: user.location || '',
                 profilePicture: user.profilePicture || ''
             });
+            setPreviewImage(user.profilePicture || null);
         }
     }, [user, isOpen]);
+
+    // ✅ Handle image file selection
+    async function handleImageChange(event: React.ChangeEvent<HTMLInputElement>) {
+        const file = event.target.files?.[0];
+        
+        if (!file) return;
+
+        // Validate file type
+        if (!file.type.startsWith('image/')) {
+            toast.error('Please select an image file');
+            return;
+        }
+
+        // Validate file size (max 5MB)
+        if (file.size > 5 * 1024 * 1024) {
+            toast.error('Image size must be less than 5MB');
+            return;
+        }
+
+        try {
+            setImageLoading(true);
+
+            // ✅ Convert to base64
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                const base64String = reader.result as string;
+                
+                // Show preview
+                setPreviewImage(base64String);
+                
+                // Store in form data
+                setFormData({
+                    ...formData,
+                    profilePicture: base64String
+                });
+
+                toast.success('Image selected! Click Save to upload.');
+            };
+            reader.readAsDataURL(file);
+
+        } catch (error) {
+            console.error('Error processing image:', error);
+            toast.error('Error processing image');
+        } finally {
+            setImageLoading(false);
+        }
+    }
+
+    // ✅ Remove selected image
+    function handleRemoveImage() {
+        setPreviewImage(null);
+        setFormData({
+            ...formData,
+            profilePicture: ''
+        });
+        if (fileInputRef.current) {
+            fileInputRef.current.value = '';
+        }
+        toast.success('Image removed');
+    }
 
     async function handleEditUser() {
         try {
@@ -122,11 +186,78 @@ export default function UserModal({ isOpen, onClose }: UserModalProps) {
                     (<form onSubmit={(e) => { e.preventDefault(); handleEditUser(); }}>
                         {error && <p style={{ color: 'red', textAlign: 'right' }}>{error}</p>}
 
-                        <div className='user-profile__parent' style={{ marginBottom: '15px' }}>
-                            {formData.profilePicture ?
-                                (<img src={formData.profilePicture} alt='User Profile Picture' />) :
-                                (<User size={40} className="user-profile__picture" />)
-                            }
+                        {/* ✅ Profile Picture Section */}
+                        <div className='user-profile__container' style={{ marginBottom: '20px' }}>
+                            <div className='user-profile__parent'>
+                                {previewImage ? (
+                                    <img 
+                                        src={previewImage} 
+                                        alt='User Profile Picture'
+                                        style={{
+                                            width: '120px',
+                                            height: '120px',
+                                            borderRadius: '50%',
+                                            objectFit: 'cover'
+                                        }}
+                                    />
+                                ) : (
+                                    <User size={60} className="user-profile__picture" />
+                                )}
+                            </div>
+
+                            {/* ✅ Upload Buttons */}
+                            <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
+                                <button
+                                    type="button"
+                                    onClick={() => fileInputRef.current?.click()}
+                                    disabled={imageLoading}
+                                    style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: '8px',
+                                        padding: '8px 16px',
+                                        backgroundColor: '#169928',
+                                        color: 'white',
+                                        border: 'none',
+                                        borderRadius: '5px',
+                                        cursor: imageLoading ? 'not-allowed' : 'pointer',
+                                        opacity: imageLoading ? 0.6 : 1
+                                    }}
+                                >
+                                    <Upload size={18} />
+                                    {imageLoading ? 'Processing...' : 'Upload Photo'}
+                                </button>
+
+                                {previewImage && (
+                                    <button
+                                        type="button"
+                                        onClick={handleRemoveImage}
+                                        style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '8px',
+                                            padding: '8px 16px',
+                                            backgroundColor: '#dc3545',
+                                            color: 'white',
+                                            border: 'none',
+                                            borderRadius: '5px',
+                                            cursor: 'pointer'
+                                        }}
+                                    >
+                                        <X size={18} />
+                                        Remove
+                                    </button>
+                                )}
+                            </div>
+
+                            {/* ✅ Hidden File Input */}
+                            <input
+                                ref={fileInputRef}
+                                type="file"
+                                accept="image/*"
+                                onChange={handleImageChange}
+                                style={{ display: 'none' }}
+                            />
                         </div>
 
                         <div className='user-modal-input__container'>
