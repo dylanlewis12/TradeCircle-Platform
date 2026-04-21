@@ -44,8 +44,10 @@ app.use(cors({
 
 // Other Middlewares
 app.use(cookieParser());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// Base64 profile pictures exceed the default ~100kb JSON limit
+const bodyLimit = process.env.JSON_BODY_LIMIT || "15mb";
+app.use(express.json({ limit: bodyLimit }));
+app.use(express.urlencoded({ extended: true, limit: bodyLimit }));
 app.use(logReq);
 
 // Routes

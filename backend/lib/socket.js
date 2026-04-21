@@ -1,15 +1,26 @@
 import { Server } from "socket.io";
 import http from "http";
 import express from "express";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+// Keep in sync with backend/server.js allowedOrigins (Socket.IO handles its own CORS for polling)
+const allowedSocketOrigins = [
+  "http://localhost:5173",
+  "http://localhost:3000",
+  "https://tradecircle-frontend.onrender.com",
+  process.env.FRONTEND_URL,
+].filter(Boolean);
 
 const app = express();
 const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: ["http://localhost:5173"],
+    origin: allowedSocketOrigins,
     credentials: true,
-    methods: ["GET", "POST"]
+    methods: ["GET", "POST"],
   },
 });
 
