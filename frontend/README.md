@@ -2,21 +2,11 @@
 
 Comprehensive documentation for the TradeCircle React + TypeScript frontend application. This guide covers architecture, component structure, state management, styling, and development practices.
 
----
+## Other Repositories
+Main Repository: https://github.com/dylanlewis12/TradeCircle-Platform <br />
+Frontend Repository: https://github.com/dylanlewis12/TradeCircle-Frontend <br />
+BackendRepository: https://github.com/dylanlewis12/TradeCircle-Backend <br />
 
-## 📋 Table of Contents
-
-1. [Project Setup](#project-setup)
-2. [Architecture Overview](#architecture-overview)
-3. [Directory Structure](#directory-structure)
-4. [Components Guide](#components-guide)
-5. [State Management](#state-management)
-6. [Authentication Flow](#authentication-flow)
-7. [Real-Time Messaging](#real-time-messaging)
-8. [Styling Guide](#styling-guide)
-9. [API Integration](#api-integration)
-10. [Development Practices](#development-practices)
-11. [Troubleshooting](#troubleshooting)
 
 ---
 
@@ -58,9 +48,6 @@ npm run build
 
 # Preview production build
 npm run preview
-
-# Lint TypeScript
-npm run lint
 ```
 
 ---
@@ -99,25 +86,6 @@ React 18 + TypeScript
     ├── React Hot Toast (Notifications)
     └── CSS (BEM Methodology)
 ```
-
-### Data Flow Architecture
-
-```
-User Action
-    ↓
-Component State Update
-    ↓
-API Call (Axios)
-    ↓
-Backend Processing
-    ↓
-Response Handler
-    ↓
-Update Global State (Context/Zustand)
-    ↓
-Re-render Components
-```
-
 ---
 
 ## 📁 Directory Structure
@@ -564,59 +532,6 @@ const {
    ↓
 6. Redirect to Dashboard
 ```
-
-### Token Refresh Flow
-
-```
-1. Access token expires (1 hour)
-   ↓
-2. API request fails with 401
-   ↓
-3. Axios interceptor detects 401
-   ↓
-4. Call /api/auth/refresh
-   ↓
-5. Backend validates refresh token
-   ↓
-6. Returns new access token
-   ↓
-7. Retry original request
-```
-
-### Logout Flow
-
-```
-1. User clicks logout
-   ↓
-2. Call /api/auth/logout
-   ↓
-3. Backend deletes refresh token
-   ↓
-4. Clear cookies and AuthContext
-   ↓
-5. Disconnect Socket.io
-   ↓
-6. Redirect to login
-```
-
-### Session Restoration
-
-```
-1. App loads
-   ↓
-2. Check for existing token in cookies
-   ↓
-3. If token exists, restore from storage
-   ↓
-4. Verify token with /api/auth/me
-   ↓
-5. Set user in AuthContext
-   ↓
-6. Connect Socket.io
-   ↓
-7. Load user data
-```
-
 ---
 
 ## 💬 Real-Time Messaging
@@ -710,52 +625,6 @@ TradeCircle uses BEM (Block Element Modifier) CSS naming convention:
 .trade-card__status--accepted { ... }
 .trade-card__btn--accept { ... }
 ```
-
-### CSS Organization
-
-**pages/** - Page-level styles
-```css
-.dashboard { ... }
-.marketplace { ... }
-.chat { ... }
-```
-
-**components/** - Component styles
-```css
-.navbar { ... }
-.skill-card { ... }
-.modal { ... }
-```
-
-**Color Scheme**
-```css
-/* Primary green */
---primary: #169928;
---primary-light: #1a9b2a;
---primary-dark: #0f6b1f;
-
-/* Grays */
---text-dark: #1a1a1a;
---text-light: #666666;
---bg-light: #f9f9f9;
---border: #e0e0e0;
-```
-
-### Responsive Design
-
-```css
-/* Mobile first approach */
-.component { /* mobile styles */ }
-
-@media (min-width: 768px) {
-  .component { /* tablet styles */ }
-}
-
-@media (min-width: 1024px) {
-  .component { /* desktop styles */ }
-}
-```
-
 ---
 
 ## 🌐 API Integration
@@ -772,132 +641,7 @@ const API_BASE_URL = import.meta.env.MODE === "development"
 export default API_BASE_URL;
 ```
 
-### Common API Calls
-
-**Authentication**
-```typescript
-// Login
-await axios.post(`${API_BASE_URL}/api/auth/login`, {
-  email, password
-});
-
-// Logout
-await axios.post(`${API_BASE_URL}/api/auth/logout`, {}, {
-  headers: { 'Authorization': `Bearer ${token}` }
-});
-```
-
-**Skills**
-```typescript
-// Get user's skills
-await axios.get(`${API_BASE_URL}/api/skills/user/${userId}`, {
-  headers: { 'Authorization': `Bearer ${token}` }
-});
-
-// Create skill
-await axios.post(`${API_BASE_URL}/api/skills`, skillData, {
-  headers: { 'Authorization': `Bearer ${token}` }
-});
-
-// Update skill
-await axios.put(`${API_BASE_URL}/api/skills/${skillId}`, updates, {
-  headers: { 'Authorization': `Bearer ${token}` }
-});
-```
-
-**Trades**
-```typescript
-// Get user's trades
-await axios.get(`${API_BASE_URL}/api/trades`, {
-  headers: { 'Authorization': `Bearer ${token}` }
-});
-
-// Create trade
-await axios.post(`${API_BASE_URL}/api/trades`, tradeData, {
-  headers: { 'Authorization': `Bearer ${token}` }
-});
-
-// Rate trade
-await axios.post(`${API_BASE_URL}/api/trades/${tradeId}/rate`, 
-  { rating, review }, 
-  { headers: { 'Authorization': `Bearer ${token}` } }
-);
-```
-
-**Messages**
-```typescript
-// Get conversations
-await axios.get(`${API_BASE_URL}/api/messages/users`, {
-  headers: { 'Authorization': `Bearer ${token}` }
-});
-
-// Get messages with user
-await axios.get(`${API_BASE_URL}/api/messages/${userId}`, {
-  headers: { 'Authorization': `Bearer ${token}` }
-});
-
-// Send message
-await axios.post(`${API_BASE_URL}/api/messages/send/${receiverId}`,
-  { text },
-  { headers: { 'Authorization': `Bearer ${token}` } }
-);
-```
-
 ---
-
-## 👨‍💻 Development Practices
-
-### TypeScript Usage
-
-All components use TypeScript with proper interfaces:
-
-```typescript
-interface ComponentProps {
-  onClose: () => void;
-  isOpen: boolean;
-  data: Trade;
-}
-
-export default function Component({ onClose, isOpen, data }: ComponentProps) {
-  // ...
-}
-```
-
-### Component Structure
-
-```typescript
-import { useState, useEffect } from 'react';
-import { useAuth } from '../context/authContext/AuthContext';
-import axios from 'axios';
-import '../styles/components/Component.css';
-
-interface ComponentProps {
-  // Props interface
-}
-
-export default function Component(props: ComponentProps) {
-  // 1. Hooks
-  const { user, cookies } = useAuth();
-  const [state, setState] = useState<Type>(initial);
-
-  // 2. Effects
-  useEffect(() => {
-    // Setup
-  }, []);
-
-  // 3. Handlers
-  const handleAction = async () => {
-    // Logic
-  };
-
-  // 4. Render
-  return (
-    <div className="component">
-      {/* JSX */}
-    </div>
-  );
-}
-```
 
 ### Error Handling
 
@@ -944,62 +688,8 @@ toast((t) => (
 
 ---
 
-## 🔧 Troubleshooting
+## 👤 Author
 
-### Common Issues
-
-**Token Not Persisting**
-- Check if cookies are enabled in browser
-- Verify `httpOnly` flag on backend
-- Check browser DevTools → Application → Cookies
-
-**Messages Not Updating Real-Time**
-- Verify Socket.io connection in DevTools
-- Check WebSocket status
-- Ensure user is authenticated before message operations
-- Check browser console for errors
-
-**CORS Errors**
-- Verify backend CORS configuration
-- Check API_BASE_URL in .env
-- Ensure credentials are included in requests
-
-**User Profile Not Updating**
-- Call `setUser()` after profile update
-- Verify API response includes all fields
-- Check if bio/location fields are being sent
-
-**Chat Not Loading**
-- Verify user is authenticated
-- Check conversation ID in URL
-- Ensure backend messages endpoint is working
-- Check Socket.io connection status
-
-### Debug Mode
-
-Enable detailed logging:
-
-```typescript
-// In components
-console.log('🔧 Debug:', variable);
-console.log('🔧 State:', state);
-console.log('🔧 API Response:', response.data);
-
-// In .env
-VITE_DEBUG=true
-```
-
----
-
-## 📚 Additional Resources
-
-- [React Documentation](https://react.dev)
-- [TypeScript Documentation](https://www.typescriptlang.org)
-- [Zustand Documentation](https://github.com/pmndrs/zustand)
-- [Socket.io Client Documentation](https://socket.io/docs/v4/client-api/)
-- [Axios Documentation](https://axios-http.com/docs/intro)
-
----
-
-**Last Updated:** March 10, 2026  
-**Frontend Version:** 1.0.0
+**Dylan Lewis**
+- GitHub: [dylanlewis12](https://github.com/dylanlewis12)
+- LinkedIn: [dylanlewis12](https://linkedin.com/in/the-dylanlewis/)

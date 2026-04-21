@@ -115,3 +115,11 @@ npm start       # Start server
 ---
 
 **See main README.md for full application overview**
+
+---
+
+## 👤 Author
+
+**Dylan Lewis**
+- GitHub: [dylanlewis12](https://github.com/dylanlewis12)
+- LinkedIn: [dylanlewis12](https://linkedin.com/in/the-dylanlewis/)
